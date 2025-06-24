@@ -13,6 +13,15 @@ type ImageKitUsage = {
   };
 };
 
+type Notification = {
+  _id: string;
+  title: string;
+  body: string;
+  createdAt: string;
+  createdBy: string;
+  published: boolean;
+};
+
 export const mudirDashboardAPI = {
   getImageKitUsage: (): Promise<{ data: ImageKitUsage; status: string }> => {
     return axios
@@ -33,6 +42,20 @@ export const mudirDashboardAPI = {
   }> => {
     return axios
       .get(`${API_BASE}/mudir/status/mongodb`)
+      .then((response) => response.data);
+  },
+  getDashboardNotifications: ({
+    authToken,
+  }): Promise<{
+    data: Notification[];
+    status: string;
+  }> => {
+    return axios
+      .get(`${API_BASE}/mudir/notifications`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => response.data);
   },
 };
