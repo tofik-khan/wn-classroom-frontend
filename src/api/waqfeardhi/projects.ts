@@ -27,4 +27,15 @@ export const projectsAPI = {
       headers: { Authorization: `Bearer ${authToken}` },
     });
   },
+  updateProjectsSortOrder: ({
+    authToken,
+    data,
+  }: {
+    authToken: string;
+    data: { _id: string; sortOrder: number }[];
+  }) => {
+    return axios.put(`${API_BASE}/waqfeardhi/projects/sortOrder`, data, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
+  },
 };

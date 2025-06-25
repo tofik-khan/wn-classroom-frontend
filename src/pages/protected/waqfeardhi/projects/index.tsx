@@ -1,28 +1,31 @@
 import { LazyImage } from "@/components/LazyImage";
 import { Loading } from "@/components/Loading";
-import { useProjectsQuery } from "@/queries/waqfeardhi/projects";
+import {
+  useProjectsQuery,
+  useUpdateProjectSortOrderMutation,
+} from "@/queries/waqfeardhi/projects";
+import { getRowSortOrder } from "@/utils/dataGrid";
 import { Add, CancelOutlined, CheckCircle } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import { DataGridPro, gridClasses, GridColDef } from "@mui/x-data-grid-pro";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 export const PageProjects = () => {
   const navigate = useNavigate();
   const { data, isLoading, isRefetching } = useProjectsQuery();
+  const [rows, setRows] = useState(data || []);
+  const updateProjectSortOrder = useUpdateProjectSortOrderMutation();
+
+  useEffect(() => {
+    if (data) setRows(data);
+  }, [data, isLoading]);
 
   if (isLoading) {
     return <Loading />;
   }
 
   const columns: GridColDef[] = [
-    {
-      field: "index",
-      headerName: "#",
-      renderCell: ({ row }) => row.index,
-      width: 50,
-      headerAlign: "center",
-      align: "center",
-    },
     {
       field: "thumbnail",
       headerName: "Thumbnail",
@@ -222,10 +225,21 @@ export const PageProjects = () => {
       </Box>
       <DataGridPro
         loading={isLoading || isRefetching}
-        rows={
-          data &&
-          data.map((project, index) => ({ ...project, index: index + 1 }))
-        }
+        rows={rows.map((project) => ({
+          ...project,
+          __reorder__: `${project.title}`,
+        }))}
+        rowReordering
+        onRowOrderChange={(params) => {
+          const updatedRows = getRowSortOrder(params, data);
+          setRows(updatedRows);
+          updateProjectSortOrder.mutate({
+            data: updatedRows.map((row) => ({
+              _id: row._id,
+              sortOrder: row.sortOrder,
+            })),
+          });
+        }}
         rowHeight={100}
         columns={columns}
         getRowId={(row) => row._id}

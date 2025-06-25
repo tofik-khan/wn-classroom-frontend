@@ -18,6 +18,7 @@ export type Project = {
   createdAt: string;
   editedBy: string;
   editedAt: string;
+  sortOrder: number;
 };
 
 export type Applicant = {
