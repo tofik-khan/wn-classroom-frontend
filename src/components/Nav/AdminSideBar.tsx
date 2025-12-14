@@ -37,60 +37,19 @@ export const AdminSideBar = () => {
         >
           <img src={AppLogo} width={150} height={70} />
         </Box>
-        {/* WN Expo Links */}
-        <Box>
-          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-            <Typography
-              sx={(theme) => ({ color: theme.palette.grey[600], ml: 4 })}
-            >
-              Expo
-            </Typography>
-            <Chip
-              label="Coming Soon"
-              variant="outlined"
-              color="primary"
-              size="small"
-            />
-          </Box>
-          <Button disabled fullWidth sx={{ mt: 1 }}>
-            Dashboard
-          </Button>
-          <Button disabled fullWidth sx={{ mt: 1 }}>
-            Sessions
-          </Button>
-          <Button disabled fullWidth sx={{ mt: 1 }}>
-            Presenters
-          </Button>
-          <Button disabled fullWidth sx={{ mt: 1 }}>
-            FAQs
-          </Button>
-        </Box>
-        <Divider
-          sx={{ my: 3 }}
-          orientation="horizontal"
-          variant="middle"
-          flexItem
-        />
         {/* WN Waqf-e-Ardhi Links */}
         <Box>
-          <Typography
-            sx={(theme) => ({ color: theme.palette.grey[600], ml: 4 })}
-          >
-            Waqf-e-Ardhi
-          </Typography>
-          <Button
-            fullWidth
-            sx={{ mt: 1 }}
-            onClick={() => navigate("/protected/waqfeardhi")}
-          >
-            Dashboard
+          <Button disabled fullWidth sx={{ mt: 1 }}>
+            Classes
           </Button>
-          <Button
-            fullWidth
-            sx={{ mt: 1 }}
-            onClick={() => navigate("/protected/waqfeardhi/projects")}
-          >
-            Projects
+          <Button disabled fullWidth sx={{ mt: 1 }}>
+            Teachers
+          </Button>
+          <Button disabled fullWidth sx={{ mt: 1 }}>
+            Students
+          </Button>
+          <Button disabled fullWidth sx={{ mt: 1 }}>
+            Accounts
           </Button>
           <Button
             fullWidth
@@ -108,13 +67,6 @@ export const AdminSideBar = () => {
         />
         <Button fullWidth onClick={() => navigate("/protected/admins")}>
           Admins
-        </Button>
-        <Button
-          fullWidth
-          sx={{ mt: 1 }}
-          onClick={() => navigate("/protected/images")}
-        >
-          Image Library
         </Button>
       </Box>
       <Box

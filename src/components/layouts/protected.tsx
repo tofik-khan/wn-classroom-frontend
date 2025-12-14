@@ -1,34 +1,20 @@
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { AdminBar } from "../Nav/AdminBar";
 import { AdminSideBar } from "../Nav/AdminSideBar";
 import { Box } from "@mui/material";
 import { Loading } from "../Loading";
-import { useEffect } from "react";
-import {
-  useAdminImageMutation,
-  useAdminLastLoginMutation,
-  useAdminsQuery,
-} from "@/queries/mudir/admins";
 import { useAppDispatch } from "@/hooks";
-import { setCurrentUser } from "@/reducers/admin";
+import { setCurrentUser } from "@/reducers/user";
+import { useUserQuery } from "@/queries/users";
 
 export const ProtectedLayout = withAuthenticationRequired(
   () => {
-    const { isLoading: isLoadingAuth, logout, user } = useAuth0();
-    const { isLoading: isLoadingAdmins, data: adminData } = useAdminsQuery();
-
-    const adminImageMutation = useAdminImageMutation();
-    const adminLastLoginMutation = useAdminLastLoginMutation();
+    const { isLoading: isLoadingAuth, logout } = useAuth0();
+    const { isLoading: isLoadingUser, data: currentUser } = useUserQuery();
+    const navigate = useNavigate();
 
     const dispatch = useAppDispatch();
-
-    const updateAdminImage = async ({ _id, image }) => {
-      await adminImageMutation.mutateAsync({
-        _id,
-        image,
-      });
-    };
 
     const handleLogout = () => {
       logout({
@@ -38,30 +24,19 @@ export const ProtectedLayout = withAuthenticationRequired(
       });
     };
 
-    useEffect(() => {
-      if (!(isLoadingAuth || isLoadingAdmins)) {
-        const currentUser = adminData?.find(
-          (admin) => admin.email === user?.email
-        );
+    if (isLoadingAuth || isLoadingUser) return <Loading />;
 
-        adminLastLoginMutation.mutate({ _id: currentUser!._id });
-        if (currentUser!.image !== user!.picture)
-          updateAdminImage({ _id: currentUser!._id, image: user!.picture });
-      }
-    }, [isLoadingAdmins, isLoadingAuth]);
-
-    if (isLoadingAuth || isLoadingAdmins) return <Loading />;
-
-    const currentUser =
-      adminData &&
-      user &&
-      adminData.find((admin) => admin.email === user.email);
+    /**
+     * Kitchen Sink for login issues and protection against unwanted signin
+     */
     if (!currentUser) {
       handleLogout();
       return <></>;
     }
 
     dispatch(setCurrentUser(currentUser));
+
+    if (currentUser.role === "unregistered") navigate("/protected/register");
 
     return (
       <>

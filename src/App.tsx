@@ -3,8 +3,8 @@ import { AppRoutes } from "./routes/appRoutes";
 const App = () => {
   return (
     <>
-      <title>Mudir | Waqf-e-Nau USA</title>
-        <AppRoutes />
+      <title>Classroom | Waqf-e-Nau USA</title>
+      <AppRoutes />
     </>
   );
 };

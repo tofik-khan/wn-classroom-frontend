@@ -9,6 +9,7 @@ import { PageCreateEditProject } from "@/pages/protected/waqfeardhi/projects/Cre
 import { PageApplicants } from "@/pages/protected/waqfeardhi/applicants";
 import { PageApplicant } from "@/pages/protected/waqfeardhi/applicants/applicant";
 import { PageWaqfeardhiDashboard } from "@/pages/protected/waqfeardhi/dashboard";
+import { PageRegister } from "@/pages/protected/register";
 
 export const ProtectedRoutes = () => {
   return (
@@ -21,6 +22,7 @@ export const ProtectedRoutes = () => {
           <Route path="/images" element={<PageImageLibrary />} />
           <Route path="/waqfeardhi/*" element={<WaqfeArdhiRoutes />} />
           <Route path="/expo/*" element={<ExpoRoutes />} />
+          <Route path="/register" element={<PageRegister />} />
         </Route>
       </Routes>
     </>
