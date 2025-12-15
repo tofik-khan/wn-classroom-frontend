@@ -1,8 +1,15 @@
-import {useState} from "react";
-import { Box, Button, Container, Drawer, AppBar as MUIAppBar, Toolbar } from "@mui/material";
-import AppLogo from "@/assets/mudir-logo.png"
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import MenuIcon from '@mui/icons-material/Menu';
+import { useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  Drawer,
+  AppBar as MUIAppBar,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import MenuIcon from "@mui/icons-material/Menu";
 import { Close } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -15,7 +22,7 @@ export const AppBar = () => {
   const handleLogin = async () => {
     await loginWithRedirect({
       appState: {
-        returnTo: "/protected/dashboard"
+        returnTo: "/protected/dashboard",
       },
     });
   };
@@ -54,7 +61,7 @@ export const AppBar = () => {
                 sx={{ "&:hover": { cursor: "pointer" } }}
                 onClick={() => navigate("/")}
               >
-                <img src={AppLogo} width={125} />
+                <Typography>WN Classroom</Typography>
               </Box>
               <Box
                 sx={{
@@ -90,7 +97,9 @@ export const AppBar = () => {
               }}
             >
               <Box>
-                <img src={AppLogo} onClick={() => navigate("/")} width={125} />
+                <Typography onClick={() => navigate("/")}>
+                  WN Classroom
+                </Typography>
               </Box>
               <Box
                 sx={{

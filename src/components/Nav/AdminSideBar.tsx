@@ -1,12 +1,13 @@
-import { Box, Button, Chip, Divider, Typography } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
-import AppLogo from "@/assets/mudir-logo.png";
 import { Logout } from "@mui/icons-material";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useAppSelector } from "@/hooks";
 
 export const AdminSideBar = () => {
   const navigate = useNavigate();
   const { logout } = useAuth0();
+  const { currentUser } = useAppSelector((state) => state.user);
 
   const handleLogout = () => {
     logout({
@@ -35,39 +36,62 @@ export const AdminSideBar = () => {
           sx={{ "&:hover": { cursor: "pointer" }, mt: 3, mb: 5 }}
           onClick={() => navigate("/protected/dashboard")}
         >
-          <img src={AppLogo} width={150} height={70} />
+          <Typography>WN Classroom</Typography>
         </Box>
-        {/* WN Waqf-e-Ardhi Links */}
+        {/* Admin Links */}
         <Box>
-          <Button disabled fullWidth sx={{ mt: 1 }}>
-            Classes
-          </Button>
-          <Button disabled fullWidth sx={{ mt: 1 }}>
-            Teachers
-          </Button>
-          <Button disabled fullWidth sx={{ mt: 1 }}>
-            Students
-          </Button>
-          <Button disabled fullWidth sx={{ mt: 1 }}>
-            Accounts
-          </Button>
-          <Button
-            fullWidth
-            sx={{ mt: 1 }}
-            onClick={() => navigate("/protected/waqfeardhi/applicants")}
-          >
-            Applicants
-          </Button>
+          {currentUser.role === "admin" && (
+            <>
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                Classes
+              </Button>
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                Teachers
+              </Button>
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                Students
+              </Button>
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                Parents
+              </Button>
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                Un-Enrolled
+              </Button>
+
+              <Divider
+                sx={{ my: 3 }}
+                orientation="horizontal"
+                variant="middle"
+                flexItem
+              />
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                Admins
+              </Button>
+            </>
+          )}
+          {/* Parent Links */}
+          {currentUser.role === "parent" && (
+            <>
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                Teachers
+              </Button>
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                Students
+              </Button>
+            </>
+          )}
+          {/* Student Links */}
+          {currentUser.role === "student" && (
+            <>
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                My Classes
+              </Button>
+              <Button disabled fullWidth sx={{ mt: 1 }}>
+                My Attendance
+              </Button>
+            </>
+          )}
         </Box>
-        <Divider
-          sx={{ my: 3 }}
-          orientation="horizontal"
-          variant="middle"
-          flexItem
-        />
-        <Button fullWidth onClick={() => navigate("/protected/admins")}>
-          Admins
-        </Button>
       </Box>
       <Box
         sx={{

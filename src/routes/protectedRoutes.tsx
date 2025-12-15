@@ -10,6 +10,7 @@ import { PageApplicants } from "@/pages/protected/waqfeardhi/applicants";
 import { PageApplicant } from "@/pages/protected/waqfeardhi/applicants/applicant";
 import { PageWaqfeardhiDashboard } from "@/pages/protected/waqfeardhi/dashboard";
 import { PageRegister } from "@/pages/protected/register";
+import { PageClass } from "@/pages/protected/dashboard/class";
 
 export const ProtectedRoutes = () => {
   return (
@@ -17,7 +18,7 @@ export const ProtectedRoutes = () => {
       <Routes>
         {/* Protected Routes */}
         <Route path="/" element={<ProtectedLayout />}>
-          <Route path="/dashboard" element={<PageDashboard />} />
+          <Route path="/dashboard/*" element={<DashboardRoutes />} />
           <Route path="/admins" element={<PageAdmins />} />
           <Route path="/images" element={<PageImageLibrary />} />
           <Route path="/waqfeardhi/*" element={<WaqfeArdhiRoutes />} />
@@ -26,6 +27,16 @@ export const ProtectedRoutes = () => {
         </Route>
       </Routes>
     </>
+  );
+};
+
+const DashboardRoutes = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<PageDashboard />} />
+      <Route path="/class" element={<PageClass />} />
+      <Route path="/class/:id" element={<h1>Class with ID</h1>} />
+    </Routes>
   );
 };
 

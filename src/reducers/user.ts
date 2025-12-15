@@ -2,11 +2,17 @@ import { User } from "@/types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type UserSliceType = {
-  currentUser: User | undefined;
+  currentUser: User;
 };
 
 const initialState: UserSliceType = {
-  currentUser: undefined,
+  currentUser: {
+    email: "",
+    name: "Logged In User",
+    _id: -1,
+    role: "unregistered",
+    isAuthorized: false,
+  },
 };
 
 export const userSlice = createSlice({

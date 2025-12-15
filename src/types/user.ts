@@ -1,9 +1,15 @@
 export type User = {
   _id: number;
-  name?: string;
+  name: string;
   email: string;
   image?: string | null;
-  role: "parent" | "student" | "unregistered";
+  role:
+    | "parent"
+    | "student"
+    | "unregistered"
+    | "admin"
+    | "teacher"
+    | "substitute";
   isProfileComplete?: boolean;
   isAuthorized: boolean;
   gender?: string;
@@ -12,7 +18,7 @@ export type User = {
   phone?: string;
   parentEmail?: string;
   waqfenauId?: string;
-  dob: {
+  dob?: {
     month: number;
     year: number;
   };

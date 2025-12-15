@@ -1,9 +1,9 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { Avatar, Box, Typography } from "@mui/material";
 import WNLogomarkBlue from "@/assets/wn-logomark-blue.png";
+import { useAppSelector } from "@/hooks";
 
 export const AdminBar = () => {
-  const { user } = useAuth0();
+  const { currentUser } = useAppSelector((state) => state.user);
   return (
     <>
       <Box
@@ -39,14 +39,13 @@ export const AdminBar = () => {
             py: 2,
           }}
         >
-          <Avatar src={user?.picture} />
+          <Avatar>{currentUser.name[0]}</Avatar>
           <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Typography
-              m={0}
-              variant="subtitle2"
-            >{`${user?.given_name} ${user?.family_name}`}</Typography>
+            <Typography m={0} variant="subtitle2">{`${
+              currentUser.name ?? ""
+            }`}</Typography>
             <Typography color="text.secondary" variant="subtitle2">
-              {user?.email}
+              {currentUser?.email}
             </Typography>
           </Box>
         </Box>

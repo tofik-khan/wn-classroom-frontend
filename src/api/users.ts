@@ -13,7 +13,7 @@ export const UserAPI = {
     return axios
       .post(
         `${API_BASE}/users/byEmail`,
-        { email, authToken },
+        { email },
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
