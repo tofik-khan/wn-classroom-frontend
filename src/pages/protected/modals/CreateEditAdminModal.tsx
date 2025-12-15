@@ -14,7 +14,10 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { useCreateAdminMutation, useUpdateAdminMutation } from "@/queries/mudir/admins";
+import {
+  useCreateAdminMutation,
+  useUpdateAdminMutation,
+} from "@/queries/admins";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export const CreateEditAdminModal = ({

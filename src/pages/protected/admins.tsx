@@ -1,4 +1,4 @@
-import { useAdminsQuery } from "@/queries/mudir/admins";
+import { useAdminsQuery } from "@/queries/admins";
 import { Add, Edit } from "@mui/icons-material";
 import {
   Avatar,
@@ -7,7 +7,6 @@ import {
   Chip,
   IconButton,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { DataGridPro, gridClasses, GridColDef } from "@mui/x-data-grid-pro";
 import dayjs from "dayjs";
@@ -24,7 +23,6 @@ export const PageAdmins = () => {
     isLoading: isLoadingAdmins,
     isRefetching: isRefetchingAdmins,
   } = useAdminsQuery();
-  const theme = useTheme();
   const [openCreateAdminDialog, setOpenCreateAdminDialog] = useState(false);
   const [admin, setAdmin] = useState(null);
 
@@ -73,49 +71,6 @@ export const PageAdmins = () => {
       flex: 2,
     },
     {
-      field: "isAuthorized",
-      headerName: "",
-      renderCell: ({ row }) =>
-        row.isAuthorized ? (
-          <Chip label={"Authorized"} color="success" variant="outlined" />
-        ) : (
-          <Chip label={"Unauthorized"} color="error" variant="outlined" />
-        ),
-      flex: 2,
-    },
-    {
-      field: "lastLogin",
-      headerName: "Last Active",
-      renderCell: ({ row }) =>
-        row.lastLogin ? (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
-            <Typography color={theme.palette.grey[700]}>
-              {dayjs(row.lastLogin).format("MM/DD/YYYY h:mma z")}
-            </Typography>
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-            }}
-          >
-            <Typography color={theme.palette.grey[500]} fontStyle={"italic"}>
-              never logged in
-            </Typography>
-          </Box>
-        ),
-      flex: 3,
-    },
-    {
       field: "actions",
       headerName: "Actions",
       renderCell: ({ row }) => (
@@ -155,7 +110,9 @@ export const PageAdmins = () => {
       </Box>
       <DataGridPro
         loading={isLoadingAdmins || isRefetchingAdmins}
-        rows={admins && admins.map((admin, index) => ({ ...admin, index }))}
+        rows={
+          (admins && admins.map((admin, index) => ({ ...admin, index }))) ?? []
+        }
         columns={columns}
         getRowId={(row) => row._id}
         disableColumnMenu

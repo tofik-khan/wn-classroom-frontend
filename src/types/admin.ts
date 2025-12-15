@@ -5,6 +5,4 @@ export type Admin = {
   image: string | null;
   title: string;
   isSuperuser: boolean;
-  isAuthorized: boolean;
-  lastLogin: string | null;
 };

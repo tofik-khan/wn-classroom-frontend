@@ -1,5 +1,4 @@
 import { API_BASE } from "@/api/constants";
-import { MongoDBUpdateResponseType } from "@/types";
 import { Admin } from "@/types/admin";
 import axios from "axios";
 
@@ -12,7 +11,7 @@ export const adminAPI = {
     data,
   }): Promise<{ data: string; status: string }> => {
     return axios.post(
-      `${API_BASE}/mudir/admins`,
+      `${API_BASE}/admins`,
       { ...data, email: `${data.email}@ahmadiyya.us` },
       {
         headers: {
@@ -26,7 +25,7 @@ export const adminAPI = {
     data,
   }): Promise<{ data: string; status: string }> => {
     return axios.put(
-      `${API_BASE}/mudir/admins`,
+      `${API_BASE}/admins`,
       { ...data, email: `${data.email}@ahmadiyya.us` },
       {
         headers: {
@@ -34,21 +33,5 @@ export const adminAPI = {
         },
       }
     );
-  },
-  updateAdminImage: ({
-    _id,
-    image,
-  }): Promise<{ data: MongoDBUpdateResponseType; status: string }> => {
-    return axios.put(`${API_BASE}/mudir/admins/image`, {
-      _id,
-      image,
-    });
-  },
-  updateLastLogin: ({
-    _id,
-  }): Promise<{ data: MongoDBUpdateResponseType; status: string }> => {
-    return axios.put(`${API_BASE}/mudir/admins/lastlogin`, {
-      _id,
-    });
   },
 };
