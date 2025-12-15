@@ -64,8 +64,15 @@ export const AdminSideBar = () => {
                 variant="middle"
                 flexItem
               />
-              <Button disabled fullWidth sx={{ mt: 1 }}>
+              <Button
+                fullWidth
+                sx={{ mt: 1 }}
+                onClick={() => navigate("/protected/admins")}
+              >
                 Admins
+              </Button>
+              <Button fullWidth sx={{ mt: 1 }} disabled>
+                Reports
               </Button>
             </>
           )}

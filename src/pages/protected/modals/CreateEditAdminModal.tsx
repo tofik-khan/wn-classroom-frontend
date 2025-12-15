@@ -59,7 +59,16 @@ export const CreateEditAdminModal = ({
   };
   return (
     <>
-      <Dialog open={open} onClose={onClose} fullWidth maxWidth={"sm"}>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setAdmin(null);
+          reset();
+          onClose();
+        }}
+        fullWidth
+        maxWidth={"sm"}
+      >
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogTitle>{`${editMode ? "Edit" : "Create"}`} Admin</DialogTitle>
           <IconButton
@@ -147,19 +156,6 @@ export const CreateEditAdminModal = ({
               control={control}
               key={"isSuperuser-input"}
               defaultValue={editMode ? admin.isSuperuser : false}
-            />
-            <Controller
-              render={({ field }) => (
-                <FormControlLabel
-                  {...field}
-                  control={<Switch checked={field.value === true} />}
-                  label="Authorized"
-                />
-              )}
-              name="isAuthorized"
-              control={control}
-              key={"isAuthorized-input"}
-              defaultValue={editMode ? admin.isAuthorized : false}
             />
           </DialogContent>
           <DialogActions>
