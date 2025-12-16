@@ -9,7 +9,6 @@ import { PageTeachers } from "@/pages/protected/teachers";
 import { PageEditTeacher } from "@/pages/protected/teachers/edit";
 
 export const ProtectedRoutes = () => {
-  const { currentUser } = useAppSelector((state) => state.user);
   return (
     <>
       <Routes>

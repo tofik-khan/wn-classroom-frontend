@@ -12,6 +12,7 @@ import { DataGridPro, gridClasses, GridColDef } from "@mui/x-data-grid-pro";
 import { useState } from "react";
 import { CreateTeacherModal } from "../modals/CreateTeacherModal";
 import { useNavigate } from "react-router";
+import { TIMEZONES } from "@/constants";
 
 export const PageTeachers = () => {
   const { data, isLoading, isRefetching } = useTeacherQuery();
@@ -43,6 +44,13 @@ export const PageTeachers = () => {
       headerName: "Jammat",
       renderCell: ({ row }) => row.jammat,
       flex: 2,
+    },
+    {
+      field: "timezone",
+      headerName: "Timezone",
+      renderCell: ({ row }) =>
+        TIMEZONES.find((zone) => zone.value === row.timezone)?.label,
+      flex: 3,
     },
     {
       field: "email",
