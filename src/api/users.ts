@@ -2,7 +2,7 @@ import { API_BASE } from "@/api/constants";
 import { User } from "@/types/user";
 import axios from "axios";
 
-export const UserAPI = {
+export const userAPI = {
   getUser: ({
     email,
     authToken,

@@ -1,7 +1,9 @@
 import { adminAPI } from "./admins";
-import { UserAPI } from "./users";
+import { teacherAPI } from "./teachers";
+import { userAPI } from "./users";
 
 export const API = {
   ...adminAPI,
-  ...UserAPI,
+  ...userAPI,
+  ...teacherAPI,
 };
