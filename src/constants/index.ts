@@ -26,3 +26,22 @@ export const YEARS = Array.from(
   { length: count + 1 },
   (_, i) => currentYear - i
 );
+
+export const TIMEZONES = [
+  {
+    value: "pst",
+    label: "Pacific Standard Time",
+  },
+  {
+    value: "mst",
+    label: "Mountain Standard Time",
+  },
+  {
+    value: "cst",
+    label: "Central Standard Time",
+  },
+  {
+    value: "est",
+    label: "Eastern Standard Time",
+  },
+];

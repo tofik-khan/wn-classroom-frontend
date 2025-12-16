@@ -45,7 +45,11 @@ export const AdminSideBar = () => {
               <Button disabled fullWidth sx={{ mt: 1 }}>
                 Classes
               </Button>
-              <Button disabled fullWidth sx={{ mt: 1 }}>
+              <Button
+                fullWidth
+                sx={{ mt: 1 }}
+                onClick={() => navigate("/protected/teachers")}
+              >
                 Teachers
               </Button>
               <Button disabled fullWidth sx={{ mt: 1 }}>
