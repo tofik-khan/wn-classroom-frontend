@@ -7,6 +7,7 @@ import { Loading } from "../Loading";
 import { useAppDispatch } from "@/hooks";
 import { setCurrentUser } from "@/reducers/user";
 import { useUserQuery } from "@/queries/users";
+import { useEffect } from "react";
 
 export const ProtectedLayout = withAuthenticationRequired(
   () => {
@@ -15,6 +16,21 @@ export const ProtectedLayout = withAuthenticationRequired(
     const navigate = useNavigate();
 
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+      /**
+       * Current user is not registered, send them to register page
+       */
+      if (currentUser && currentUser.role === "unregistered")
+        navigate("/protected/register");
+
+      /**
+       * Update reducer value if currentUser exists
+       */
+      if (!!currentUser) {
+        dispatch(setCurrentUser(currentUser));
+      }
+    }, [currentUser]);
 
     const handleLogout = () => {
       logout({
@@ -33,10 +49,6 @@ export const ProtectedLayout = withAuthenticationRequired(
       handleLogout();
       return <></>;
     }
-
-    dispatch(setCurrentUser(currentUser));
-
-    if (currentUser.role === "unregistered") navigate("/protected/register");
 
     return (
       <>

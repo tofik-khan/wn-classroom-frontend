@@ -39,7 +39,7 @@ export const AdminBar = () => {
             py: 2,
           }}
         >
-          <Avatar>{currentUser.name[0]}</Avatar>
+          <Avatar />
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography m={0} variant="subtitle2">{`${
               currentUser.name ?? ""
