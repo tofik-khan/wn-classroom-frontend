@@ -1,8 +1,9 @@
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import { useNavigate } from "react-router";
 import { Logout } from "@mui/icons-material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAppSelector } from "@/hooks";
+import AppLogo from "@/assets/app-logomark.png";
 
 export const AdminSideBar = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export const AdminSideBar = () => {
           sx={{ "&:hover": { cursor: "pointer" }, mt: 3, mb: 5 }}
           onClick={() => navigate("/protected/dashboard")}
         >
-          <Typography>WN Classroom</Typography>
+          <img src={AppLogo} width={"150px"} />
         </Box>
         {/* Admin Links */}
         <Box>

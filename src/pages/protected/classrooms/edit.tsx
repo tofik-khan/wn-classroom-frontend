@@ -33,7 +33,7 @@ export const PageEditClassroom = () => {
     },
   });
 
-  const { control, handleSubmit, reset } = useForm<Classroom>({
+  const { control, handleSubmit } = useForm<Classroom>({
     defaultValues: data,
   });
   const [schedule, setSchedule] = useState<Dayjs[]>([]);
