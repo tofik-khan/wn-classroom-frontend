@@ -1,9 +1,12 @@
+import { Loading } from "@/components/Loading";
 import { TIMEZONES } from "@/constants";
 import { JAMMAT } from "@/constants/jammat";
+import { useClassroomQuery } from "@/queries/classrooms";
 import { useTeachersMutation } from "@/queries/teachers";
 import { Teacher } from "@/types/teacher";
 import { Close } from "@mui/icons-material";
 import {
+  Autocomplete,
   Box,
   Button,
   Dialog,
@@ -27,6 +30,15 @@ export const CreateTeacherModal = ({
   open: boolean;
   onClose: any;
 }) => {
+  const { isLoading: isLoadingClassrooms, data: classrooms } =
+    useClassroomQuery();
+  const classroomsOptions =
+    (classrooms &&
+      classrooms.map((classroom) => ({
+        label: classroom.name,
+        value: classroom._id ?? "",
+      }))) ??
+    [];
   const createTeacher = useTeachersMutation({
     onSuccess: () => {
       onClose();
@@ -34,11 +46,13 @@ export const CreateTeacherModal = ({
     },
     onError: (error) => console.log(`error`, error),
   });
-  const { control, handleSubmit, reset } = useForm<Teacher>();
+  const { control, handleSubmit, reset, getValues } = useForm<Teacher>();
 
   const onSubmit = (data: Teacher) => {
     createTeacher.mutate({ data });
   };
+
+  if (isLoadingClassrooms) return <Loading />;
 
   return (
     <>
@@ -192,6 +206,30 @@ export const CreateTeacherModal = ({
               control={control}
               key={"role-input"}
               defaultValue="teacher"
+            />
+            <Controller
+              render={({ field }) => (
+                <Autocomplete
+                  className="materialUIInput"
+                  multiple
+                  options={classroomsOptions}
+                  onChange={(_, option) => {
+                    field.onChange(option);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Class Assigned"
+                      helperText={
+                        "Substitutes have all classes visible to them without assignment"
+                      }
+                    />
+                  )}
+                />
+              )}
+              name="class"
+              control={control}
+              key="class-input"
             />
           </DialogContent>
           <DialogActions>

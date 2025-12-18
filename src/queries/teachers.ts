@@ -47,6 +47,7 @@ export const useTeachersMutation = ({ onSuccess, onError }) => {
 
 export const useTeacherUpdateMutation = ({ onSuccess, onError }) => {
   const { getAccessTokenSilently } = useAuth0();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ data, id }: { data: any; id: string }) => {
       const token = await getAccessTokenSilently();
@@ -56,7 +57,15 @@ export const useTeacherUpdateMutation = ({ onSuccess, onError }) => {
         data,
       });
     },
-    onSuccess,
+    onSuccess: (params) => {
+      queryClient.invalidateQueries({
+        queryKey: ["teachers"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["teacher"],
+      });
+      onSuccess(params);
+    },
     onError,
   });
 };
