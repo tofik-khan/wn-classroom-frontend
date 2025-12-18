@@ -1,12 +1,14 @@
 import { Loading } from "@/components/Loading";
 import { TIMEZONES } from "@/constants";
 import { JAMMAT } from "@/constants/jammat";
+import { useClassroomQuery } from "@/queries/classrooms";
 import {
   useOneTeacherQuery,
   useTeacherUpdateMutation,
 } from "@/queries/teachers";
 import { Teacher } from "@/types/teacher";
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
@@ -23,6 +25,15 @@ import { useNavigate, useParams } from "react-router-dom";
 export const PageEditTeacher = () => {
   const { id } = useParams();
   const { isLoading, data } = useOneTeacherQuery(id);
+  const { isLoading: isLoadingClassrooms, data: classrooms } =
+    useClassroomQuery();
+  const classroomsOptions =
+    (classrooms &&
+      classrooms.map((classroom) => ({
+        label: classroom.name,
+        value: classroom._id ?? "",
+      }))) ??
+    [];
   const { control, handleSubmit, reset } = useForm<Teacher>({
     defaultValues: data,
   });
@@ -188,6 +199,28 @@ export const PageEditTeacher = () => {
             name="role"
             control={control}
             key={"role-input"}
+          />
+          <Controller
+            render={({ field }) => (
+              <Autocomplete
+                className="materialUIInput"
+                multiple
+                options={classroomsOptions}
+                loading={isLoadingClassrooms}
+                defaultValue={data?.class}
+                disableCloseOnSelect
+                isOptionEqualToValue={(opt, val) => opt.value === val.value}
+                onChange={(_, option) => {
+                  field.onChange(option);
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Class Assigned" />
+                )}
+              />
+            )}
+            name="class"
+            control={control}
+            key="class-input"
           />
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button

@@ -13,19 +13,20 @@ import { useState } from "react";
 import { CreateTeacherModal } from "../modals/CreateTeacherModal";
 import { useNavigate } from "react-router";
 import { TIMEZONES } from "@/constants";
+import { Teacher } from "@/types/teacher";
 
 export const PageTeachers = () => {
   const { data, isLoading, isRefetching } = useTeacherQuery();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  const columns: GridColDef[] = [
+  const columns: GridColDef<Teacher>[] = [
     {
       field: "name",
       headerName: "Name",
       renderCell: ({ row }) => (
         <Chip
-          avatar={<Avatar alt={row.name} src={row.image} />}
+          avatar={<Avatar alt={row.name} />}
           label={row.name}
           variant="outlined"
         />
@@ -53,16 +54,44 @@ export const PageTeachers = () => {
       flex: 3,
     },
     {
-      field: "email",
-      headerName: "Email",
-      renderCell: ({ row }) => row.email,
-      flex: 4,
+      field: "classes",
+      headerName: "Classes",
+      renderCell: ({ row }) => {
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            {row.class?.map((classroom) => (
+              <Typography key={classroom.value}>{classroom.label}</Typography>
+            ))}
+          </Box>
+        );
+      },
+
+      flex: 3,
     },
     {
-      field: "phone",
-      headerName: "Phone",
-      renderCell: ({ row }) => row.phone,
-      flex: 3,
+      field: "email",
+      headerName: "Email",
+      renderCell: ({ row }) => (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            height: "100%",
+          }}
+        >
+          <Typography>{row.email}</Typography>
+          <Typography color="secondary">{row.phone}</Typography>
+        </Box>
+      ),
+      flex: 4,
     },
     {
       field: "actions",
@@ -104,6 +133,7 @@ export const PageTeachers = () => {
         rows={data ?? []}
         columns={columns}
         getRowId={(row) => row._id}
+        rowHeight={100}
         disableColumnMenu
         disableColumnResize
         sx={{
