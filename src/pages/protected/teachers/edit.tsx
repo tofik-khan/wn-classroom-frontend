@@ -206,6 +206,7 @@ export const PageEditTeacher = () => {
                 className="materialUIInput"
                 multiple
                 options={classroomsOptions}
+                loading={isLoadingClassrooms}
                 defaultValue={data?.class}
                 disableCloseOnSelect
                 isOptionEqualToValue={(opt, val) => opt.value === val.value}

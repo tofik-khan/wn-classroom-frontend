@@ -46,7 +46,7 @@ export const CreateTeacherModal = ({
     },
     onError: (error) => console.log(`error`, error),
   });
-  const { control, handleSubmit, reset, getValues } = useForm<Teacher>();
+  const { control, handleSubmit, reset } = useForm<Teacher>();
 
   const onSubmit = (data: Teacher) => {
     createTeacher.mutate({ data });
