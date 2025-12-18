@@ -42,7 +42,11 @@ export const AdminSideBar = () => {
         <Box>
           {currentUser.role === "admin" && (
             <>
-              <Button disabled fullWidth sx={{ mt: 1 }}>
+              <Button
+                fullWidth
+                sx={{ mt: 1 }}
+                onClick={() => navigate("/protected/classrooms")}
+              >
                 Classes
               </Button>
               <Button

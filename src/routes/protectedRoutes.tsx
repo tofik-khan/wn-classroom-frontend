@@ -7,6 +7,8 @@ import { PageClass } from "@/pages/protected/dashboard/class";
 import { useAppSelector } from "@/hooks";
 import { PageTeachers } from "@/pages/protected/teachers";
 import { PageEditTeacher } from "@/pages/protected/teachers/edit";
+import { PageClassroom } from "@/pages/protected/classrooms";
+import { PageEditClassroom } from "@/pages/protected/classrooms/edit";
 
 export const ProtectedRoutes = () => {
   return (
@@ -18,10 +20,24 @@ export const ProtectedRoutes = () => {
           <Route path="/register" element={<PageRegister />} />
           <Route path="/admins/*" element={<AdminRoute />} />
           <Route path="/teachers/*" element={<TeachersRoute />} />
+          <Route path="/classrooms/*" element={<ClassroomRoute />} />
         </Route>
       </Routes>
     </>
   );
+};
+
+const ClassroomRoute = () => {
+  const { currentUser } = useAppSelector((state) => state.user);
+  const allowList = ["admin"];
+  if (allowList.includes(currentUser.role))
+    return (
+      <Routes>
+        <Route path="/" element={<PageClassroom />} />
+        <Route path="/:id" element={<PageEditClassroom />} />
+      </Routes>
+    );
+  else return <></>;
 };
 
 const AdminRoute = () => {
