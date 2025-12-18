@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import Footer from "./Footer";
 import { AuthProvider } from "./AuthProvider.tsx";
 import { BrowserRouter } from "react-router";
 import { ThemeProvider } from "@mui/material";
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")!).render(
           <AuthProvider>
             <ThemeProvider theme={theme}>
               <App />
+              <Footer />
             </ThemeProvider>
           </AuthProvider>
         </QueryClientProvider>
