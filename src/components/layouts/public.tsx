@@ -1,6 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Outlet } from "react-router";
 import AppBar from "@/components/Nav/AppBar";
+import Footer from "@/components/Nav/Footer";
 import { Loading } from "../Loading";
 
 export const PublicLayout = () => {
@@ -13,6 +14,7 @@ export const PublicLayout = () => {
     <>
       <AppBar />
       <Outlet />
+      <Footer />
     </>
   );
 };
