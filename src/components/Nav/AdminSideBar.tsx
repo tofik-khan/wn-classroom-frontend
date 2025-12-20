@@ -1,9 +1,10 @@
-import { Box, Button, Divider } from "@mui/material";
+import { Badge, Box, Button, Divider } from "@mui/material";
 import { useNavigate } from "react-router";
 import { Logout } from "@mui/icons-material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAppSelector } from "@/hooks";
 import AppLogo from "@/assets/app-logomark.png";
+import { useUnenrolledUserQuery } from "@/queries/users";
 
 export const AdminSideBar = () => {
   const navigate = useNavigate();
@@ -17,6 +18,11 @@ export const AdminSideBar = () => {
       },
     });
   };
+
+  /**
+   * Get Unenrolled users to display badge next to unenrolled link
+   */
+  const { data: unenrolled } = useUnenrolledUserQuery();
 
   return (
     <>
@@ -63,8 +69,14 @@ export const AdminSideBar = () => {
               <Button disabled fullWidth sx={{ mt: 1 }}>
                 Parents
               </Button>
-              <Button disabled fullWidth sx={{ mt: 1 }}>
-                Un-Enrolled
+              <Button
+                fullWidth
+                sx={{ mt: 1 }}
+                onClick={() => navigate("/protected/unenrolled")}
+              >
+                <Badge badgeContent={unenrolled?.length ?? 0} color="primary">
+                  Un-Enrolled
+                </Badge>
               </Button>
 
               <Divider
