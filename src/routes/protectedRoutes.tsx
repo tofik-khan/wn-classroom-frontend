@@ -9,6 +9,7 @@ import { PageTeachers } from "@/pages/protected/teachers";
 import { PageEditTeacher } from "@/pages/protected/teachers/edit";
 import { PageClassroom } from "@/pages/protected/classrooms";
 import { PageEditClassroom } from "@/pages/protected/classrooms/edit";
+import { PageUnenrolled } from "@/pages/protected/unenrolled";
 
 export const ProtectedRoutes = () => {
   return (
@@ -21,10 +22,24 @@ export const ProtectedRoutes = () => {
           <Route path="/admins/*" element={<AdminRoute />} />
           <Route path="/teachers/*" element={<TeachersRoute />} />
           <Route path="/classrooms/*" element={<ClassroomRoute />} />
+          <Route path="/unenrolled/*" element={<UnEnrolledRoute />} />
         </Route>
       </Routes>
     </>
   );
+};
+
+const UnEnrolledRoute = () => {
+  const { currentUser } = useAppSelector((state) => state.user);
+  const allowList = ["admin"];
+  if (allowList.includes(currentUser.role))
+    return (
+      <Routes>
+        <Route path="/" element={<PageUnenrolled />} />
+        <Route path="/:id" element={<h2>Edit Unenrolled Person</h2>} />
+      </Routes>
+    );
+  else return <></>;
 };
 
 const ClassroomRoute = () => {

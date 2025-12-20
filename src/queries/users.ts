@@ -18,10 +18,42 @@ export const useUserQuery = () => {
 };
 
 export const useUserMutation = ({ onSuccess, onError }) => {
+  const { getAccessTokenSilently } = useAuth0();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ authToken, data }: { authToken: string; data: User }) =>
-      API.updateUser({ authToken, data }),
+    mutationFn: async ({ data }: { data: User }) => {
+      const token = await getAccessTokenSilently();
+      return API.updateUser({ authToken: token, data });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      onSuccess();
+    },
+    onError,
+  });
+};
+
+export const useUnenrolledUserQuery = () => {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  return useQuery({
+    queryKey: ["users/unenrolled"],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently();
+      return API.getUnenrolledUsers({ authToken: token });
+    },
+    enabled: !!isAuthenticated,
+    select: (response) => response.data,
+  });
+};
+
+export const useEnrollInClassMutation = ({ onSuccess, onError }) => {
+  const { getAccessTokenSilently } = useAuth0();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ classrooms, id }: { classrooms: string[]; id }) => {
+      const token = await getAccessTokenSilently();
+      return API.enrollInClass({ authToken: token, classrooms, id });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       onSuccess();

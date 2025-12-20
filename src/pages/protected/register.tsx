@@ -20,7 +20,7 @@ import { useNavigate } from "react-router";
 
 export const PageRegister = () => {
   const { control, handleSubmit, watch } = useForm<User>();
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   const { currentUser } = useAppSelector((state) => state.user);
   const [btn, setBtn] = useState({ loading: false, error: "" });
   const navigate = useNavigate();
@@ -44,9 +44,7 @@ export const PageRegister = () => {
   const handleUpdate = async (data: User) => {
     setBtn({ loading: true, error: "" });
     if (isAuthenticated) {
-      const authToken = await getAccessTokenSilently();
       updateUser.mutate({
-        authToken,
         data: { ...data, email: currentUser!.email },
       });
     }
@@ -143,7 +141,7 @@ export const PageRegister = () => {
             name="gender"
             control={control}
             key={"gender-input"}
-            defaultValue=""
+            defaultValue={undefined}
           />
         </Box>
         {role === "parent" ? (
