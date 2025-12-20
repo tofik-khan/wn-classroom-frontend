@@ -72,3 +72,8 @@ export const TIMEOPTIONS = [
   { value: "22:00", label: "10:00 pm" },
   { value: "23:00", label: "11:00 pm" },
 ];
+
+export const GENDERS = [
+  { label: "Male", value: "male" },
+  { label: "Female", value: "female" },
+];
