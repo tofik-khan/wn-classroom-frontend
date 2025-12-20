@@ -12,7 +12,7 @@ export type User = {
     | "substitute";
   isProfileComplete?: boolean;
   isAuthorized: boolean;
-  gender?: string;
+  gender?: "male" | "female";
   jammat?: string;
   membercode?: string;
   phone?: string;
@@ -22,4 +22,13 @@ export type User = {
     month: number;
     year: number;
   };
+  classrooms: {
+    label: string;
+    value: string;
+  }[];
+  suggestedClass: {
+    label: string;
+    value: string;
+  }[];
+  urduClass: "none" | "beginner" | "intermediate";
 };
