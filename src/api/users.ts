@@ -32,4 +32,34 @@ export const userAPI = {
       },
     });
   },
+  getUnenrolledUsers: ({
+    authToken,
+  }: {
+    authToken: string;
+  }): Promise<{ data: User[]; status: string }> => {
+    return axios.get(`${API_BASE}/users/unenrolled`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
+  enrollInClass: ({
+    authToken,
+    id,
+    classrooms,
+  }: {
+    authToken: string;
+    id: string;
+    classrooms: string[];
+  }) => {
+    return axios.put(
+      `${API_BASE}/users/${id}/enroll`,
+      { classrooms },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+  },
 };
