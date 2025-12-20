@@ -11,6 +11,7 @@ import { PageClassroom } from "@/pages/protected/classrooms";
 import { PageEditClassroom } from "@/pages/protected/classrooms/edit";
 import { PageUnenrolled } from "@/pages/protected/unenrolled";
 import { PageStudents } from "@/pages/protected/students";
+import { PageEditStudent } from "@/pages/protected/students/edit";
 
 export const ProtectedRoutes = () => {
   return (
@@ -38,7 +39,7 @@ const StudentsRoute = () => {
     return (
       <Routes>
         <Route path="/" element={<PageStudents />} />
-        <Route path="/:id" element={<h2>Edit Student</h2>} />
+        <Route path="/:id" element={<PageEditStudent />} />
       </Routes>
     );
   else return <></>;
