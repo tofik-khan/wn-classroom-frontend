@@ -12,6 +12,7 @@ const initialState: UserSliceType = {
     _id: -1,
     role: "unregistered",
     isAuthorized: false,
+    urduClass: "none",
   },
 };
 

@@ -22,11 +22,11 @@ export type User = {
     month: number;
     year: number;
   };
-  classrooms: {
+  classrooms?: {
     label: string;
     value: string;
   }[];
-  suggestedClass: {
+  suggestedClass?: {
     label: string;
     value: string;
   }[];

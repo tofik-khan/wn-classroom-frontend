@@ -27,7 +27,7 @@ export const PageUnenrolled = () => {
 
   const handleClassUpdate = (id, classrooms) => {
     enrollInClass.mutate({
-      classrooms: classrooms.map((classroom) => classroom.value),
+      classrooms,
       id,
     });
   };
