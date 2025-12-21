@@ -1,19 +1,12 @@
 import { Box } from "@mui/material";
+import IntroSection from "../components/homepage/IntroSection";
+import CoreFeaturesSection from "../components/homepage/CoreFeaturesSection";
 
 export const PageHome = () => {
   return (
     <>
-      <Box
-        sx={{
-          width: "100%",
-          height: "1000px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        HomePage
-      </Box>
+      <IntroSection />
+      <CoreFeaturesSection />
     </>
   );
 };
