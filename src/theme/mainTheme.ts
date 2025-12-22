@@ -14,7 +14,7 @@ export const theme = createTheme({
   components: {
     MuiPaper: {
       styleOverrides: {
-        root: {
+        elevation1: {
           boxShadow: "0px 4px 16px rgba(0,0,0,0.08)",
         },
       },
