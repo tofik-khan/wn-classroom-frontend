@@ -49,7 +49,7 @@ export const PageEditClassroom = () => {
       data[key] === undefined ? delete data[key] : {}
     );
 
-    updateClassroom.mutate({ data, id: id ?? "" });
+    updateClassroom.mutate({ data: { ...data, schedule }, id: id ?? "" });
   };
 
   useEffect(() => {
