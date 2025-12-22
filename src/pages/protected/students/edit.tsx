@@ -46,10 +46,20 @@ export const PageEditStudent = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
+    /**
+     * The form values are only updated when the user changes the value of the
+     * field. This causes unchanged values to be undefined. If not removed, this
+     * will remove the values from the database. The next line removes any values
+     * that are undefined.
+     */
+    Object.keys(data).forEach((key) =>
+      data[key] === undefined ? delete data[key] : {}
+    );
+
     updateStudent.mutate({
       data: {
         ...data,
-        jammat: data.jammat.value,
+        jammat: data.jammat,
       },
       id: id ?? "",
     });
