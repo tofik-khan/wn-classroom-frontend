@@ -20,6 +20,9 @@ import { useNavigate, useParams } from "react-router";
 export const PageEditStudent = () => {
   const { id } = useParams();
   const { isLoading, data } = useOneStudentsQuery(id);
+
+  const selectedJammat = JAMMAT.find((jammat) => jammat.value === data?.jammat);
+
   const { isLoading: isLoadingClassrooms, data: classrooms } =
     useClassroomQuery();
   const classroomsOptions =
@@ -31,7 +34,10 @@ export const PageEditStudent = () => {
     [];
 
   const { control, handleSubmit } = useForm<User>({
-    defaultValues: data,
+    defaultValues: {
+      ...data,
+      jammat: selectedJammat?.value,
+    },
   });
 
   const updateStudent = useStudentUpdateMutation({
@@ -70,8 +76,6 @@ export const PageEditStudent = () => {
   const selectedMonth =
     MONTHS.find((month) => month.value === (data?.dob?.month ?? 0)) ??
     MONTHS[0];
-  const selectedJammat =
-    JAMMAT.find((jammat) => jammat.value === data?.jammat) ?? JAMMAT[0];
 
   return (
     <>
@@ -249,17 +253,18 @@ export const PageEditStudent = () => {
           <Controller
             render={({ field }) => (
               <Autocomplete
-                sx={{ width: "250px" }}
+                sx={{ width: "300px" }}
                 className="materialUIInput"
                 options={JAMMAT}
-                defaultValue={selectedJammat}
-                disableCloseOnSelect
+                value={
+                  JAMMAT.find((jammat) => jammat.value === field.value) ?? null
+                }
                 isOptionEqualToValue={(opt, val) => opt.value === val.value}
                 onChange={(_, option) => {
-                  field.onChange(option);
+                  field.onChange(option?.value);
                 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Jammat / Chapter" />
+                  <TextField {...params} required label="Jammat / Chapter" />
                 )}
               />
             )}
