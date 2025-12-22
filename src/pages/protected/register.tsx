@@ -1,11 +1,14 @@
 import { useForm, Controller } from "react-hook-form";
 import {
+  Autocomplete,
   Box,
   Button,
   FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
+  FormControlLabel,
+  FormLabel,
+  Paper,
+  Radio,
+  RadioGroup,
   TextField,
   Typography,
 } from "@mui/material";
@@ -17,9 +20,15 @@ import { MONTHS, YEARS } from "@/constants";
 import { useUserMutation } from "@/queries/users";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useClassroomQuery } from "@/queries/classrooms";
 
 export const PageRegister = () => {
-  const { control, handleSubmit, watch } = useForm<User>();
+  const { control, handleSubmit, watch } = useForm<User>({
+    defaultValues: {
+      role: "student",
+      parentEmail: "",
+    },
+  });
   const { isAuthenticated } = useAuth0();
   const { currentUser } = useAppSelector((state) => state.user);
   const [btn, setBtn] = useState({ loading: false, error: "" });
@@ -45,116 +54,155 @@ export const PageRegister = () => {
     setBtn({ loading: true, error: "" });
     if (isAuthenticated) {
       updateUser.mutate({
-        data: { ...data, email: currentUser!.email },
+        data: {
+          ...data,
+          urduClass: data.urduClass ?? "none",
+          email: currentUser!.email,
+        },
       });
     }
   };
 
   return (
     <>
-      <Typography variant="h2">Register</Typography>
+      <Typography variant="h2">Registeration Form</Typography>
       <form onSubmit={handleSubmit(handleUpdate)}>
-        <Box sx={{ my: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Controller
-            render={({ field }) => (
-              <TextField
-                required
-                {...field}
-                className="materialUIInput"
-                label="Name"
-              />
-            )}
-            name="name"
-            control={control}
-            key={"name-input"}
-          />
-        </Box>
-        <Box sx={{ my: 2 }}>
-          <Controller
-            render={({ field }) => (
-              <FormControl sx={{ minWidth: 250 }}>
-                <InputLabel htmlFor="role-selection">I am a ...</InputLabel>
-                <Select
-                  labelId="role-selection"
-                  id="role-selection"
-                  value={field.value}
-                  label="I am a ..."
-                  onChange={(event) => field.onChange(event.target.value)}
-                >
-                  <MenuItem disabled value=""></MenuItem>
-                  <MenuItem value={"parent"}>Parent</MenuItem>
-                  <MenuItem value={"student"}>Student</MenuItem>
-                </Select>
-              </FormControl>
-            )}
+            render={({ field }) => {
+              return (
+                <FormControl>
+                  <RadioGroup
+                    {...field}
+                    value={field.value}
+                    onChange={field.onChange}
+                    row
+                  >
+                    <FormControlLabel
+                      value={"student"}
+                      label="Student"
+                      control={<Radio />}
+                    />
+                    <FormControlLabel
+                      value={"parent"}
+                      label="Parent"
+                      control={<Radio />}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              );
+            }}
             name="role"
             control={control}
             key={"role-input"}
             defaultValue="student"
+            rules={{ required: true }}
           />
-        </Box>
-        <Box sx={{ my: 2 }}>
-          <Controller
-            render={({ field }) => (
-              <FormControl sx={{ minWidth: 250 }}>
-                <InputLabel htmlFor="jammat-selection">Jammat</InputLabel>
-                <Select
-                  labelId="jammat-selection"
-                  id="jammat-selection"
-                  value={field.value}
-                  label="Jammat"
-                  onChange={(event) => field.onChange(event.target.value)}
-                >
-                  <MenuItem disabled value="">
-                    Select One...
-                  </MenuItem>
-                  {JAMMAT.map((folder) => (
-                    <MenuItem value={folder.value}>{folder.label}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+          <Paper
+            elevation={2}
+            sx={{ p: 5, mt: 2, width: "360px", borderRadius: 2 }}
+          >
+            <Typography variant="h4" fontSize={24}>
+              Create a {role} account{" "}
+            </Typography>
+            <Box sx={{ my: 2 }}>
+              <Controller
+                render={({ field }) => (
+                  <TextField
+                    fullWidth
+                    required
+                    {...field}
+                    className="materialUIInput"
+                    label="Name"
+                  />
+                )}
+                name="name"
+                control={control}
+                key={"name-input"}
+              />
+            </Box>
+            <Box sx={{ my: 2 }}>
+              <Controller
+                render={({ field }) => (
+                  <Autocomplete
+                    className="materialUIInput"
+                    options={JAMMAT}
+                    isOptionEqualToValue={(opt, val) => opt.value === val.value}
+                    onChange={(_, option) => {
+                      field.onChange(option);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        required
+                        label="Jammat / Chapter"
+                      />
+                    )}
+                  />
+                )}
+                name="jammat"
+                control={control}
+                key="jammat-input"
+              />
+            </Box>
+            <Box sx={{ my: 2 }}>
+              <Controller
+                render={({ field }) => {
+                  return (
+                    <FormControl>
+                      <FormLabel>I am a ...</FormLabel>
+                      <RadioGroup
+                        {...field}
+                        value={field.value}
+                        onChange={field.onChange}
+                        row
+                      >
+                        <FormControlLabel
+                          value={"male"}
+                          label={role === "student" ? "Boy" : "Father"}
+                          control={<Radio />}
+                        />
+                        <FormControlLabel
+                          value={"female"}
+                          label={role === "student" ? "Girl" : "Mother"}
+                          control={<Radio />}
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  );
+                }}
+                name="gender"
+                control={control}
+                key={"gender-input"}
+                defaultValue="male"
+                rules={{ required: true }}
+              />
+            </Box>
+            {role === "parent" ? (
+              <ParentQuestionaire control={control} />
+            ) : role === "student" ? (
+              <StudentQuestionaire control={control} />
+            ) : (
+              <></>
             )}
-            name="jammat"
-            control={control}
-            key={"jammat-input"}
-            defaultValue=""
-          />
-        </Box>
-        <Box sx={{ my: 2 }}>
-          <Controller
-            render={({ field }) => (
-              <FormControl sx={{ minWidth: 250 }}>
-                <InputLabel htmlFor="gender-selection">Gender</InputLabel>
-                <Select
-                  labelId="gender-selection"
-                  id="gender-selection"
-                  value={field.value}
-                  label="Gender"
-                  onChange={(event) => field.onChange(event.target.value)}
-                >
-                  <MenuItem disabled value=""></MenuItem>
-                  <MenuItem value={"male"}>Male</MenuItem>
-                  <MenuItem value={"female"}>Female</MenuItem>
-                </Select>
-              </FormControl>
-            )}
-            name="gender"
-            control={control}
-            key={"gender-input"}
-            defaultValue={undefined}
-          />
-        </Box>
-        {role === "parent" ? (
-          <ParentQuestionaire control={control} />
-        ) : role === "student" ? (
-          <StudentQuestionaire control={control} />
-        ) : (
-          <></>
-        )}
 
-        <Button type="submit" loading={btn.loading}>
-          Save changes
-        </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              loading={btn.loading}
+            >
+              Save changes
+            </Button>
+          </Paper>
+        </Box>
       </form>
     </>
   );
@@ -167,6 +215,7 @@ const ParentQuestionaire = ({ control }) => {
         <Controller
           render={({ field }) => (
             <TextField
+              fullWidth
               required
               {...field}
               className="materialUIInput"
@@ -182,6 +231,7 @@ const ParentQuestionaire = ({ control }) => {
         <Controller
           render={({ field }) => (
             <TextField
+              fullWidth
               required
               {...field}
               className="materialUIInput"
@@ -198,12 +248,37 @@ const ParentQuestionaire = ({ control }) => {
 };
 
 const StudentQuestionaire = ({ control }) => {
+  const { isLoading: isLoadingClassrooms, data: classrooms } =
+    useClassroomQuery();
+  const classroomsOptions =
+    (classrooms &&
+      classrooms.map((classroom) => ({
+        label: classroom.name,
+        value: classroom._id ?? "",
+      }))) ??
+    [];
+
+  const urduClassOptions = [
+    {
+      label: "Not right now",
+      value: "none",
+    },
+    {
+      label: "Beginner Level",
+      value: "beginner",
+    },
+    {
+      label: "Intermediate Level",
+      value: "intermediate",
+    },
+  ];
   return (
     <>
       <Box sx={{ my: 2 }}>
         <Controller
           render={({ field }) => (
             <TextField
+              fullWidth
               required
               {...field}
               className="materialUIInput"
@@ -219,6 +294,7 @@ const StudentQuestionaire = ({ control }) => {
         <Controller
           render={({ field }) => (
             <TextField
+              fullWidth
               {...field}
               className="materialUIInput"
               label="Parent Email"
@@ -233,6 +309,23 @@ const StudentQuestionaire = ({ control }) => {
         <Controller
           render={({ field }) => (
             <TextField
+              fullWidth
+              required
+              {...field}
+              className="materialUIInput"
+              label="Phone Number"
+            />
+          )}
+          name="phone"
+          control={control}
+          key={"phone-input"}
+        />
+      </Box>
+      <Box sx={{ my: 2 }}>
+        <Controller
+          render={({ field }) => (
+            <TextField
+              fullWidth
               required
               {...field}
               className="materialUIInput"
@@ -245,56 +338,128 @@ const StudentQuestionaire = ({ control }) => {
         />
       </Box>
       <Box sx={{ my: 2 }}>
-        <Typography>Class Selection (TBD)</Typography>
+        <Controller
+          render={({ field, fieldState }) => (
+            <Autocomplete
+              className="materialUIInput"
+              multiple
+              options={classroomsOptions}
+              loading={isLoadingClassrooms}
+              value={field.value}
+              disableCloseOnSelect
+              isOptionEqualToValue={(opt, val) => opt.value === val.value}
+              onChange={(_, option) => {
+                field.onChange(option);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  error={!!fieldState.error}
+                  label="Choose Classes"
+                  helperText={
+                    fieldState.error?.message ??
+                    "Select the class that you think is the most appropriate for you. It may be a year above or below your actual age group"
+                  }
+                />
+              )}
+            />
+          )}
+          name="suggestedClass"
+          control={control}
+          key="suggestedClass-input"
+          rules={{
+            required: "Please select one Option",
+          }}
+        />
+      </Box>
+      <Box sx={{ my: 2 }}>
+        <Controller
+          render={({ field, fieldState }) => (
+            <Autocomplete
+              className="materialUIInput"
+              options={urduClassOptions}
+              value={
+                urduClassOptions.find((opt) => opt.value === field.value) ??
+                null
+              }
+              isOptionEqualToValue={(opt, val) => opt.value === val.value}
+              onChange={(_, option) => {
+                field.onChange(option?.value);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  error={!!fieldState.error}
+                  label="Choose Urdu Class"
+                  helperText={
+                    fieldState.error?.message ??
+                    "Urdu Classes are offered for Beginners and Intermediate students"
+                  }
+                />
+              )}
+            />
+          )}
+          name="urduClass"
+          control={control}
+          key="urduClass-input"
+          rules={{
+            required: "Please select one Option",
+          }}
+        />
       </Box>
       <Box sx={{ my: 2, gap: 2, display: "flex" }}>
         <Controller
-          render={({ field }) => (
-            <FormControl sx={{ minWidth: 150 }}>
-              <InputLabel htmlFor="dob-month-selection">
-                Month of Birth
-              </InputLabel>
-              <Select
-                labelId="dob-month-selection"
-                id="dob-month-selection"
-                value={field.value}
-                label="Month of Birth"
-                onChange={(event) => field.onChange(event.target.value)}
-              >
-                {MONTHS.map((object) => (
-                  <MenuItem value={object.value}>{object.label}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          render={({ field, fieldState }) => (
+            <Autocomplete
+              className="materialUIInput"
+              options={MONTHS}
+              value={field.value}
+              sx={{ width: "50%" }}
+              isOptionEqualToValue={(opt, val) => opt.value === val.value}
+              onChange={(_, option) => {
+                field.onChange(option);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  error={!!fieldState.error}
+                  required
+                  label="Month of Birth"
+                  helperText={fieldState.error?.message}
+                />
+              )}
+            />
           )}
           name="dob.month"
           control={control}
-          key={"dob-month-input"}
-          defaultValue=""
+          key="dob-month-input"
         />
         <Controller
-          render={({ field }) => (
-            <FormControl sx={{ minWidth: 100 }}>
-              <InputLabel htmlFor="dob-year-selection">
-                Year of Birth
-              </InputLabel>
-              <Select
-                labelId="dob-year-selection"
-                id="dob-year-selection"
-                value={field.value}
-                label="Year of Birth"
-                onChange={(event) => field.onChange(event.target.value)}
-              >
-                {YEARS.map((object) => (
-                  <MenuItem value={object}>{object}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          render={({ field, fieldState }) => (
+            <Autocomplete
+              className="materialUIInput"
+              getOptionLabel={(option) => `${option}`}
+              options={YEARS}
+              value={field.value}
+              sx={{ width: "50%" }}
+              isOptionEqualToValue={(opt, val) => opt.value === val.value}
+              onChange={(_, option) => {
+                field.onChange(option);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  error={!!fieldState.error}
+                  required
+                  label="Year of Birth"
+                  helperText={fieldState.error?.message}
+                />
+              )}
+            />
           )}
           name="dob.year"
           control={control}
-          key={"dob-year-input"}
-          defaultValue=""
+          key="dob-year-input"
         />
       </Box>
     </>
