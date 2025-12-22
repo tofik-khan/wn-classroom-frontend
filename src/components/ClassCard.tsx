@@ -17,6 +17,7 @@ export const ClassCard = ({ id }) => {
           border: `1px solid ${theme.palette.grey[300]}`,
           minHeight: "150px",
           marginTop: 2,
+          marginX: "4px",
         })}
       >
         <Loading height="150px" />
@@ -31,6 +32,7 @@ export const ClassCard = ({ id }) => {
           border: `1px solid ${theme.palette.grey[300]}`,
           minHeight: "150px",
           marginTop: 2,
+          marginX: "4px",
         })}
       >
         <Typography

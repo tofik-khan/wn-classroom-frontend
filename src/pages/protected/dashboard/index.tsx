@@ -29,9 +29,9 @@ const EmptyClassSection = () => {
 const ClassContainer = ({ classrooms }) => {
   return (
     <>
-      <Grid container gap={3}>
+      <Grid container>
         {classrooms.map((classroom) => (
-          <Grid key={classroom.value} size={{ xs: 12, md: 4 }}>
+          <Grid key={classroom.value} size={{ xs: 12, md: 6 }}>
             <ClassCard id={classroom.value} />
           </Grid>
         ))}
