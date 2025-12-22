@@ -134,9 +134,13 @@ export const PageRegister = () => {
                   <Autocomplete
                     className="materialUIInput"
                     options={JAMMAT}
+                    value={
+                      JAMMAT.find((jammat) => jammat.value === field.value) ??
+                      null
+                    }
                     isOptionEqualToValue={(opt, val) => opt.value === val.value}
                     onChange={(_, option) => {
-                      field.onChange(option);
+                      field.onChange(option?.value);
                     }}
                     renderInput={(params) => (
                       <TextField
@@ -413,11 +417,11 @@ const StudentQuestionaire = ({ control }) => {
             <Autocomplete
               className="materialUIInput"
               options={MONTHS}
-              value={field.value}
+              value={MONTHS.find((opt) => opt.value === field.value) ?? null}
               sx={{ width: "50%" }}
               isOptionEqualToValue={(opt, val) => opt.value === val.value}
               onChange={(_, option) => {
-                field.onChange(option);
+                field.onChange(option?.value);
               }}
               renderInput={(params) => (
                 <TextField
