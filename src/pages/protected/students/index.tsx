@@ -109,7 +109,9 @@ export const PageStudents = () => {
             }}
           >
             {row.classrooms?.map((classroom) => {
-              return <Typography>{classroom.label}</Typography>;
+              return (
+                <Typography key={classroom.value}>{classroom.label}</Typography>
+              );
             })}
           </Box>
         );
