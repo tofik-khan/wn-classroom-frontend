@@ -11,4 +11,13 @@ export const theme = createTheme({
       marginBottom: "8px",
     },
   },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          boxShadow: "0px 4px 16px rgba(0,0,0,0.08)",
+        },
+      },
+    },
+  },
 });
