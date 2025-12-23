@@ -1,7 +1,7 @@
 import { ProtectedLayout } from "@/components/layouts/protected";
 import { PageDashboard } from "@/pages/protected/dashboard";
 import { PageAdmins } from "@/pages/protected/admins";
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import { PageRegister } from "@/pages/protected/register";
 import { PageClass } from "@/pages/protected/dashboard/class";
 import { useAppSelector } from "@/hooks";
@@ -116,8 +116,8 @@ const DashboardRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<PageDashboard />} />
-      <Route path="/class" element={<PageClass />} />
-      <Route path="/class/:id" element={<h1>Class with ID</h1>} />
+      <Route path="/class" element={<Navigate to={"/protected/Dashboard"} />} />
+      <Route path="/class/:id" element={<PageClass />} />
     </Routes>
   );
 };
