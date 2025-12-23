@@ -3,10 +3,12 @@ import { Typography, Paper, Box } from "@mui/material";
 import { Loading } from "./Loading";
 import { getNextSession } from "@/utils/datetime";
 import { AccessTimeOutlined, CalendarTodayOutlined } from "@mui/icons-material";
+import { useNavigate } from "react-router";
 
 export const ClassCard = ({ id }) => {
   const { isLoading, isRefetching, data } = useOneClassroomQuery(id);
   const nextSession = getNextSession(data?.schedule);
+  const navigate = useNavigate();
 
   if (isLoading || isRefetching)
     return (
@@ -33,7 +35,11 @@ export const ClassCard = ({ id }) => {
           minHeight: "150px",
           marginTop: 2,
           marginX: "4px",
+          "&:hover": {
+            cursor: "pointer",
+          },
         })}
+        onClick={() => navigate(`/protected/dashboard/class/${id}`)}
       >
         <Typography
           variant="caption"

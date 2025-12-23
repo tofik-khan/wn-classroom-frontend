@@ -69,3 +69,16 @@ export const useTeacherUpdateMutation = ({ onSuccess, onError }) => {
     onError,
   });
 };
+
+export const useTeacherByClassIdQuery = (id) => {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  return useQuery({
+    queryKey: ["teacherByClassId", id],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently();
+      return API.getTeacherByClassId({ authToken: token, id });
+    },
+    enabled: isAuthenticated,
+    select: (response) => response.data,
+  });
+};
