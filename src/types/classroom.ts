@@ -4,7 +4,7 @@ export type Classroom = {
   _id?: string;
   name: string;
   description: string;
-  googleDrive: string;
+  type: "regular" | "urdu";
   schedule: Dayjs[];
   start: {
     label: string;
