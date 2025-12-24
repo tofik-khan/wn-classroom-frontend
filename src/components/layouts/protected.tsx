@@ -1,6 +1,5 @@
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { Outlet, useNavigate } from "react-router";
-import { AdminBar } from "../Nav/AdminBar";
 import { AdminSideBar } from "../Nav/AdminSideBar";
 import { Box } from "@mui/material";
 import { Loading } from "../Loading";
@@ -53,11 +52,10 @@ export const ProtectedLayout = withAuthenticationRequired(
     return (
       <>
         <AdminSideBar />
-        <AdminBar />
         <Box
           component={"main"}
           sx={{
-            ml: "200px",
+            ml: { md: "250px" },
             px: "20px",
             pt: "40px",
           }}
