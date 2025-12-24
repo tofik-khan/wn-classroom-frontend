@@ -11,8 +11,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   IconButton,
   InputLabel,
+  Radio,
+  RadioGroup,
   TextField,
 } from "@mui/material";
 import { Dayjs } from "dayjs";
@@ -39,7 +44,6 @@ export const CreateClassroomModal = ({
   const [schedule, setSchedule] = useState<Dayjs[]>([]);
 
   const onSubmit = (data: Classroom) => {
-    console.log(data, schedule);
     createClassroom.mutate({ data: { ...data, schedule } });
   };
 
@@ -108,17 +112,35 @@ export const CreateClassroomModal = ({
               key="description-input"
             />
             <Controller
-              render={({ field }) => (
-                <TextField
-                  required
-                  {...field}
-                  className="materialUIInput"
-                  label="Google Drive ID"
-                />
-              )}
-              name="googleDrive"
+              render={({ field }) => {
+                return (
+                  <FormControl>
+                    <FormLabel>Classroom Type</FormLabel>
+                    <RadioGroup
+                      {...field}
+                      value={field.value}
+                      onChange={field.onChange}
+                      row
+                    >
+                      <FormControlLabel
+                        value={"regular"}
+                        label="Regular"
+                        control={<Radio />}
+                      />
+                      <FormControlLabel
+                        value={"urdu"}
+                        label="Urdu"
+                        control={<Radio />}
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                );
+              }}
+              name="type"
               control={control}
-              key="googleDrive-input"
+              key={"type-input"}
+              defaultValue="regular"
+              rules={{ required: true }}
             />
             <Box
               sx={{

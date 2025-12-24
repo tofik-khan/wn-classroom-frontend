@@ -26,9 +26,9 @@ export const PageClassroom = () => {
       flex: 4,
     },
     {
-      field: "googleDrive",
-      headerName: "Google Drive ID",
-      renderCell: ({ row }) => row.googleDrive,
+      field: "type",
+      headerName: "Class Type",
+      renderCell: ({ row }) => row.type,
       flex: 2,
     },
     {
