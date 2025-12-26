@@ -53,3 +53,17 @@ export const useUpdateParentMutation = ({ onSuccess, onError }) => {
     onError,
   });
 };
+
+export const useMyStudentsQuery = () => {
+  const { getAccessTokenSilently, user } = useAuth0();
+
+  return useQuery({
+    queryKey: ["myStudents"],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently();
+      return API.getMyStudents({ authToken: token, email: user?.email });
+    },
+    enabled: !!user?.email,
+    select: (response) => response.data,
+  });
+};

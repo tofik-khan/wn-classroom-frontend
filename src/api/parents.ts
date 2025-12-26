@@ -42,4 +42,23 @@ export const parentsAPI = {
       },
     });
   },
+  getMyStudents: ({
+    authToken,
+    email,
+  }: {
+    authToken: string;
+    email?: string;
+  }): Promise<{ data: User[]; status: string }> => {
+    return axios.post(
+      `${API_BASE}/parents/myStudents`,
+      {
+        email,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+  },
 };
