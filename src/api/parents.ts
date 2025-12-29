@@ -61,4 +61,11 @@ export const parentsAPI = {
       }
     );
   },
+  createStudent: ({ authToken, data }) => {
+    return axios.post(`${API_BASE}/parents/createStudent`, data, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
 };

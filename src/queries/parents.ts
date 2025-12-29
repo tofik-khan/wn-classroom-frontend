@@ -67,3 +67,25 @@ export const useMyStudentsQuery = () => {
     select: (response) => response.data,
   });
 };
+
+export const useMyStudentsMutation = ({ onSuccess, onError }) => {
+  const { getAccessTokenSilently } = useAuth0();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ data }: { data: User }) => {
+      const token = await getAccessTokenSilently();
+      return API.createStudent({
+        authToken: token,
+        data,
+      });
+    },
+    onSuccess: (params) => {
+      queryClient.invalidateQueries({
+        queryKey: ["myStudents"],
+      });
+      onSuccess(params);
+    },
+    onError,
+  });
+};
