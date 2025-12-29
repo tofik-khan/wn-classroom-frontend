@@ -66,7 +66,7 @@ export const PageTeachers = () => {
               height: "100%",
             }}
           >
-            {row.class?.map((classroom) => (
+            {row.classrooms?.map((classroom) => (
               <Typography key={classroom.value}>{classroom.label}</Typography>
             ))}
           </Box>
