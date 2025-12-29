@@ -1,5 +1,13 @@
 import { useAppSelector } from "@/hooks";
-import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
 import {
   ImportContactsOutlined,
   PersonAddAlt1Outlined,
@@ -8,6 +16,8 @@ import { ClassCard } from "@/components/ClassCard";
 import { useMyStudentsQuery } from "@/queries/parents";
 import { Loading } from "@/components/Loading";
 import { User } from "@/types/user";
+import { CreateStudentByParentModal } from "../modals/CreateStudentByParentModal";
+import { useState } from "react";
 
 const EmptyClassSection = () => {
   return (
@@ -81,6 +91,7 @@ const StudentDashboard = () => {
 
 const ParentDashboard = () => {
   const { currentUser } = useAppSelector((state) => state.user);
+  const [open, setOpen] = useState(false);
 
   const { isLoading: isLoadingMyStudents, data: myStudets } =
     useMyStudentsQuery();
@@ -103,23 +114,48 @@ const ParentDashboard = () => {
           borderRadius: 2,
         })}
       >
-        <Typography variant="h4">My Students</Typography>
-        <Typography variant="subtitle1">
-          The students who are connected to your account show up here
-        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Box>
+            <Typography variant="h4">My Students</Typography>
+            <Typography variant="subtitle1">
+              The students who are connected to your account show up here
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            sx={{ display: "flex", gap: 1 }}
+            onClick={() => setOpen(true)}
+          >
+            <PersonAddAlt1Outlined /> Create Student
+          </Button>
+        </Box>
         {(myStudets?.length || 0) > 0 ? (
-          myStudets?.map((student) => (
-            <MyStudentCard key={student._id} student={student} />
-          ))
+          <Grid container>
+            {myStudets?.map((student) => (
+              <Grid size={{ xs: 12, md: 6 }}>
+                <MyStudentCard key={student._id} student={student} />
+              </Grid>
+            ))}
+          </Grid>
         ) : (
           <EmptyStudentCard />
         )}
       </Paper>
+      <CreateStudentByParentModal open={open} onClose={() => setOpen(false)} />
     </>
   );
 };
 
 const EmptyStudentCard = () => {
+  const [open, setOpen] = useState(false);
   return (
     <>
       <Paper
@@ -144,10 +180,15 @@ const EmptyStudentCard = () => {
         <Divider sx={{ width: "50%", my: 2 }} textAlign="center">
           or
         </Divider>
-        <Button variant="contained" sx={{ display: "flex", gap: 1 }}>
+        <Button
+          variant="contained"
+          sx={{ display: "flex", gap: 1 }}
+          onClick={() => setOpen(true)}
+        >
           <PersonAddAlt1Outlined /> Create Student
         </Button>
       </Paper>
+      <CreateStudentByParentModal open={open} onClose={() => setOpen(false)} />
     </>
   );
 };
@@ -160,14 +201,21 @@ const MyStudentCard = ({ student }: { student: User }) => {
         sx={(theme) => ({
           padding: 2,
           border: `1px solid ${theme.palette.grey[300]}`,
-
           marginTop: 2,
           marginX: "4px",
+          minHeight: "100px",
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: "center",
+          gap: 2,
         })}
       >
-        <Typography>{student.name}</Typography>
-        <Typography>{student.email}</Typography>
-        <Typography>{`${student.dob?.month} / ${student.dob?.year}`}</Typography>
+        <Avatar sx={{ width: "50px", height: "50px" }} />
+        <Box>
+          <Typography>{student.name}</Typography>
+          <Typography>{student.email}</Typography>
+          <Typography>{`${student.dob?.month} / ${student.dob?.year}`}</Typography>
+        </Box>
       </Paper>
     </>
   );
