@@ -6,7 +6,7 @@ export type Teacher = {
   phone: string;
   jammat: string;
   timezone: string;
-  class?: {
+  classrooms?: {
     label: string;
     value: string;
   }[];

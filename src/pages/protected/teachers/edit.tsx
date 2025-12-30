@@ -207,7 +207,7 @@ export const PageEditTeacher = () => {
                 multiple
                 options={classroomsOptions}
                 loading={isLoadingClassrooms}
-                defaultValue={data?.class}
+                defaultValue={data?.classrooms}
                 disableCloseOnSelect
                 isOptionEqualToValue={(opt, val) => opt.value === val.value}
                 onChange={(_, option) => {
@@ -218,7 +218,7 @@ export const PageEditTeacher = () => {
                 )}
               />
             )}
-            name="class"
+            name="classrooms"
             control={control}
             key="class-input"
           />

@@ -227,9 +227,9 @@ export const CreateTeacherModal = ({
                   )}
                 />
               )}
-              name="class"
+              name="classrooms"
               control={control}
-              key="class-input"
+              key="classrooms-input"
             />
           </DialogContent>
           <DialogActions>

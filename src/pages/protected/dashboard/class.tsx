@@ -1,7 +1,9 @@
+import { API_BASE } from "@/api/constants";
 import { MultiDatePicker } from "@/components/DatePicker";
 import { Loading } from "@/components/Loading";
 import { useAppSelector } from "@/hooks";
 import { useOneClassroomQuery } from "@/queries/classrooms";
+import { useSessionMutation, useSessionQuery } from "@/queries/session";
 import { useTeacherByClassIdQuery } from "@/queries/teachers";
 import { Classroom } from "@/types/classroom";
 import { User } from "@/types/user";
@@ -11,7 +13,7 @@ import {
   InsertDriveFileOutlined,
   SchoolOutlined,
 } from "@mui/icons-material";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { ClockIcon } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router";
@@ -23,6 +25,9 @@ const hasAccessToClass = (user: User, classroomId: string | undefined) => {
 };
 
 const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
+  const { data: classroomSession } = useSessionQuery(classroom?._id);
+  console.log(classroomSession);
+
   const schedule = classroom?.schedule.map((schedule) => dayjs(schedule));
   return (
     <Paper
@@ -38,12 +43,24 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <ClockIcon sx={{ width: "32px", height: "32px" }} />
             <Box>
-              <Typography>Class not in session right now</Typography>
-              <Typography>
-                Next Class:{" "}
-                {getNextSession(schedule)?.format("MM/DD/YYYY") ??
-                  "Not Scheduled"}
-              </Typography>
+              {!!classroomSession ? (
+                <Button
+                  variant="contained"
+                  href={classroomSession.link}
+                  target="_blank"
+                >
+                  Join Session
+                </Button>
+              ) : (
+                <>
+                  <Typography>Class not in session right now</Typography>
+                  <Typography>
+                    Next Class:{" "}
+                    {getNextSession(schedule)?.format("MM/DD/YYYY") ??
+                      "Not Scheduled"}
+                  </Typography>
+                </>
+              )}
             </Box>
           </Box>
         </Grid>
@@ -128,6 +145,19 @@ export const PageClass = () => {
    */
   if (!hasAccessToClass(currentUser, id)) navigate("/protected/dashboard");
 
+  const sessionMutation = useSessionMutation();
+
+  const createSession = () => {
+    const payload = {
+      classroomId: data?._id ?? "",
+      classroomName: data?.name,
+      teacherId: currentUser._id,
+      teacherRole: currentUser.role,
+      scheduledStartTime: data?.start.value,
+    };
+    sessionMutation.mutate({ data: payload });
+  };
+
   if (isLoading || isRefetching) return <Loading />;
 
   return (
@@ -143,28 +173,61 @@ export const PageClass = () => {
               {data?.name}
             </Typography>
             <Typography>{data?.description}</Typography>
-            <Paper
-              elevation={0}
-              sx={(theme) => ({
-                padding: 3,
-                border: `1px solid ${theme.palette.grey[300]}`,
-                my: 4,
-              })}
-            >
-              {isLoadingTeacher || isRefetchingTeacher ? (
-                <Loading height="100%" />
-              ) : (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <Box>
-                    <SchoolOutlined sx={{ width: "32px", height: "32px" }} />
-                  </Box>
-                  <Box>
-                    <Typography>{teacher?.name}</Typography>
-                    <Typography>{teacher?.email}</Typography>
-                  </Box>
+            {currentUser.role === "teacher" ? (
+              <Paper
+                elevation={0}
+                sx={(theme) => ({
+                  padding: 3,
+                  border: `1px solid ${theme.palette.grey[300]}`,
+                  my: 4,
+                })}
+              >
+                <Typography variant="h5">Start Session</Typography>
+                <Box my={2}>
+                  <Typography
+                    variant="body1"
+                    fontWeight={"bold"}
+                    sx={{ my: 1 }}
+                  >
+                    Step # 1
+                  </Typography>
+                  <Button
+                    href={`${API_BASE}/auth?id=${currentUser._id}`}
+                    target="_blank"
+                    variant="contained"
+                  >
+                    Login to Google
+                  </Button>
                 </Box>
-              )}
-            </Paper>
+                <Typography variant="body1" fontWeight={"bold"}>
+                  Step # 2
+                </Typography>
+                <Button onClick={createSession}>Create Session</Button>
+              </Paper>
+            ) : (
+              <Paper
+                elevation={0}
+                sx={(theme) => ({
+                  padding: 3,
+                  border: `1px solid ${theme.palette.grey[300]}`,
+                  my: 4,
+                })}
+              >
+                {isLoadingTeacher || isRefetchingTeacher ? (
+                  <Loading height="100%" />
+                ) : (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Box>
+                      <SchoolOutlined sx={{ width: "32px", height: "32px" }} />
+                    </Box>
+                    <Box>
+                      <Typography>{teacher?.name}</Typography>
+                      <Typography>{teacher?.email}</Typography>
+                    </Box>
+                  </Box>
+                )}
+              </Paper>
+            )}
             <ClassScheduleContainer classroom={data} />
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
