@@ -17,7 +17,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useAppSelector } from "@/hooks";
 import { JAMMAT } from "@/constants/jammat";
 import { MONTHS, YEARS } from "@/constants";
-import { useUserMutation } from "@/queries/users";
+import { useMembercodesQuery, useUserMutation } from "@/queries/users";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useClassroomQuery } from "@/queries/classrooms";
@@ -27,6 +27,7 @@ export const PageRegister = () => {
     defaultValues: {
       role: "student",
       parentEmail: "",
+      membercode: "",
     },
   });
   const { isAuthenticated } = useAuth0();
@@ -66,7 +67,7 @@ export const PageRegister = () => {
   return (
     <>
       <Typography variant="h2">Registeration Form</Typography>
-      <form onSubmit={handleSubmit(handleUpdate)}>
+      <form noValidate onSubmit={handleSubmit(handleUpdate)}>
         <Box
           sx={{
             display: "flex",
@@ -161,7 +162,7 @@ export const PageRegister = () => {
                 render={({ field }) => {
                   return (
                     <FormControl>
-                      <FormLabel>I am a ...</FormLabel>
+                      <FormLabel>Gender</FormLabel>
                       <RadioGroup
                         {...field}
                         value={field.value}
@@ -173,12 +174,11 @@ export const PageRegister = () => {
                           label={role === "student" ? "Boy" : "Father"}
                           control={<Radio />}
                         />
-                        <FormControlLabel
-                          value={"female"}
-                          label={role === "student" ? "Girl" : "Mother"}
-                          control={<Radio />}
-                        />
                       </RadioGroup>
+                      <Typography variant="caption" color={"text.secondary"}>
+                        The Online Classes are currently only available for
+                        Waqf-e-Nau Boys
+                      </Typography>
                     </FormControl>
                   );
                 }}
@@ -252,6 +252,7 @@ const ParentQuestionaire = ({ control }) => {
 };
 
 const StudentQuestionaire = ({ control }) => {
+  const { data: membercodes } = useMembercodesQuery();
   const { isLoading: isLoadingClassrooms, data: classrooms } =
     useClassroomQuery();
   const classroomsOptions =
@@ -280,18 +281,26 @@ const StudentQuestionaire = ({ control }) => {
     <>
       <Box sx={{ my: 2 }}>
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextField
               fullWidth
-              required
               {...field}
               className="materialUIInput"
               label="Member Code"
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
+              onChange={(event) => field.onChange(event.target.value)}
             />
           )}
           name="membercode"
           control={control}
           key={"membercode-input"}
+          rules={{
+            validate: (value) =>
+              membercodes.includes(value)
+                ? "This membercode already exists"
+                : "",
+          }}
         />
       </Box>
       <Box sx={{ my: 2 }}>
