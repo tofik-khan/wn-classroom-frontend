@@ -126,7 +126,7 @@ export const PageEditClassroom = () => {
             name="type"
             control={control}
             key={"type-input"}
-            defaultValue="regular"
+            defaultValue="syllabus"
             rules={{ required: true }}
           />
           <Box
