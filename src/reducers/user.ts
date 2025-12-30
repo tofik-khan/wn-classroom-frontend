@@ -23,9 +23,15 @@ export const userSlice = createSlice({
     setCurrentUser: (state, action: PayloadAction<User>) => {
       state.currentUser = action.payload;
     },
+    setCurrentUserRole: (
+      state,
+      action: PayloadAction<"admin" | "substitute">
+    ) => {
+      state.currentUser.role = action.payload;
+    },
   },
 });
 
-export const { setCurrentUser } = userSlice.actions;
+export const { setCurrentUser, setCurrentUserRole } = userSlice.actions;
 
 export default userSlice.reducer;
