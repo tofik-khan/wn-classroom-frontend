@@ -63,3 +63,16 @@ export const useEnrollInClassMutation = ({ onSuccess, onError }) => {
     onError,
   });
 };
+
+export const useMembercodesQuery = () => {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  return useQuery({
+    queryKey: ["membercodes"],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently();
+      return API.getMembercodes({ authToken: token });
+    },
+    enabled: isAuthenticated,
+    select: (response) => response.data,
+  });
+};
