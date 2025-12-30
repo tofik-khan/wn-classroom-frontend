@@ -221,10 +221,38 @@ const MyStudentCard = ({ student }: { student: User }) => {
   );
 };
 
+export const TeacherDashboard = () => {
+  const { currentUser } = useAppSelector((state) => state.user);
+  const { classrooms } = currentUser;
+  return (
+    <>
+      <Typography variant="h2">
+        Welcome {currentUser.name?.split(" ")[0] ?? ""} - Teacher
+      </Typography>
+      <Paper
+        sx={(theme) => ({
+          padding: 4,
+          marginTop: 4,
+          border: `1px solid ${theme.palette.grey[300]}`,
+          borderRadius: 2,
+        })}
+      >
+        <Typography variant="h4">My Classes</Typography>
+        {classrooms!.length > 0 ? (
+          <ClassContainer classrooms={classrooms} />
+        ) : (
+          <EmptyClassSection />
+        )}
+      </Paper>
+    </>
+  );
+};
+
 export const PageDashboard = () => {
   const { currentUser } = useAppSelector((state) => state.user);
   if (currentUser.role === "student") return <StudentDashboard />;
   if (currentUser.role === "parent") return <ParentDashboard />;
+  if (currentUser.role === "teacher") return <TeacherDashboard />;
   return (
     <>
       <Typography variant="h2">
