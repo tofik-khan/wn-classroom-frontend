@@ -257,10 +257,12 @@ const StudentQuestionaire = ({ control }) => {
     useClassroomQuery();
   const classroomsOptions =
     (classrooms &&
-      classrooms.map((classroom) => ({
-        label: classroom.name,
-        value: classroom._id ?? "",
-      }))) ??
+      classrooms
+        .filter((classroom) => classroom.type === "syllabus")
+        .map((classroom) => ({
+          label: classroom.name,
+          value: classroom._id ?? "",
+        }))) ??
     [];
 
   const urduClassOptions = [

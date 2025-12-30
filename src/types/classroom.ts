@@ -4,7 +4,7 @@ export type Classroom = {
   _id?: string;
   name: string;
   description: string;
-  type: "regular" | "urdu";
+  type: "syllabus" | "urdu";
   schedule: Dayjs[];
   start: {
     label: string;
