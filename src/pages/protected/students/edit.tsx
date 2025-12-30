@@ -237,7 +237,6 @@ export const PageEditStudent = () => {
           <Controller
             render={({ field }) => (
               <TextField
-                required
                 {...field}
                 label="Parent Email"
                 defaultValue={data?.parentEmail ?? ""}
