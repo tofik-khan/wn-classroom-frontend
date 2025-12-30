@@ -14,13 +14,15 @@ import { useNavigate } from "react-router";
 import { Close, Logout, Menu } from "@mui/icons-material";
 
 import { useAuth0 } from "@auth0/auth0-react";
-import { useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import AppLogo from "@/assets/app-logomark.png";
 import { useUnenrolledUserQuery } from "@/queries/users";
 import { useState } from "react";
+import { setCurrentUserRole } from "@/reducers/user";
 
 const MenuItems = () => {
   const { currentUser } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   /**
@@ -30,7 +32,7 @@ const MenuItems = () => {
 
   return (
     <>
-      <Box>
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
         {currentUser.role === "admin" && (
           <>
             <Button
@@ -86,6 +88,13 @@ const MenuItems = () => {
             </Button>
             <Button fullWidth sx={{ mt: 1 }} disabled>
               Reports
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ marginX: "auto", mt: 1 }}
+              onClick={() => dispatch(setCurrentUserRole("substitute"))}
+            >
+              Switch to Substitute
             </Button>
           </>
         )}
