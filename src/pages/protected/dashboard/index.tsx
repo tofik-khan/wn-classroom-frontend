@@ -18,6 +18,7 @@ import { Loading } from "@/components/Loading";
 import { User } from "@/types/user";
 import { CreateStudentByParentModal } from "../modals/CreateStudentByParentModal";
 import { useState } from "react";
+import { useClassroomQuery } from "@/queries/classrooms";
 
 const EmptyClassSection = () => {
   return (
@@ -248,11 +249,47 @@ export const TeacherDashboard = () => {
   );
 };
 
+const SubstituteDashboard = () => {
+  const { currentUser } = useAppSelector((state) => state.user);
+  const { isLoading, data: classroomsData } = useClassroomQuery();
+
+  if (isLoading) return <Loading />;
+
+  const classrooms = classroomsData?.map((classroom) => ({
+    label: classroom.name,
+    value: classroom._id,
+  }));
+
+  return (
+    <>
+      <Typography variant="h2">
+        Welcome {currentUser.name.split(" ")[0] ?? ""} - Substitute Teacher
+      </Typography>
+      <Paper
+        sx={(theme) => ({
+          padding: 4,
+          marginTop: 4,
+          border: `1px solid ${theme.palette.grey[300]}`,
+          borderRadius: 2,
+        })}
+      >
+        <Typography variant="h4">My Classes</Typography>
+        {classrooms!.length > 0 ? (
+          <ClassContainer classrooms={classrooms} />
+        ) : (
+          <EmptyClassSection />
+        )}
+      </Paper>
+    </>
+  );
+};
+
 export const PageDashboard = () => {
   const { currentUser } = useAppSelector((state) => state.user);
   if (currentUser.role === "student") return <StudentDashboard />;
   if (currentUser.role === "parent") return <ParentDashboard />;
   if (currentUser.role === "teacher") return <TeacherDashboard />;
+  if (currentUser.role === "substitute") return <SubstituteDashboard />;
   return (
     <>
       <Typography variant="h2">
