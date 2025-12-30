@@ -110,8 +110,8 @@ export const PageEditClassroom = () => {
                     row
                   >
                     <FormControlLabel
-                      value={"regular"}
-                      label="Regular"
+                      value={"syllabus"}
+                      label="Syllabus"
                       control={<Radio />}
                     />
                     <FormControlLabel

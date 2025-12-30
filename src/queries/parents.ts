@@ -54,16 +54,19 @@ export const useUpdateParentMutation = ({ onSuccess, onError }) => {
   });
 };
 
-export const useMyStudentsQuery = () => {
+export const useMyStudentsQuery = (email = "") => {
   const { getAccessTokenSilently, user } = useAuth0();
 
   return useQuery({
     queryKey: ["myStudents"],
     queryFn: async () => {
       const token = await getAccessTokenSilently();
-      return API.getMyStudents({ authToken: token, email: user?.email });
+      return API.getMyStudents({
+        authToken: token,
+        email: email === "" ? user?.email : email,
+      });
     },
-    enabled: !!user?.email,
+    enabled: !!user?.email && email !== "",
     select: (response) => response.data,
   });
 };

@@ -1,11 +1,17 @@
 import { Loading } from "@/components/Loading";
 import { JAMMAT } from "@/constants/jammat";
-import { useOneParentsQuery, useUpdateParentMutation } from "@/queries/parents";
+import {
+  useMyStudentsQuery,
+  useOneParentsQuery,
+  useUpdateParentMutation,
+} from "@/queries/parents";
 import { User } from "@/types/user";
 import {
   Autocomplete,
   Box,
   Button,
+  List,
+  ListItem,
   TextField,
   Typography,
 } from "@mui/material";
@@ -15,6 +21,8 @@ import { useNavigate, useParams } from "react-router";
 export const PageEditParents = () => {
   const { id } = useParams();
   const { isLoading, data } = useOneParentsQuery(id);
+  const { data: students } = useMyStudentsQuery(data?.email);
+
   const { control, handleSubmit } = useForm<User>({
     defaultValues: data,
   });
@@ -132,6 +140,16 @@ export const PageEditParents = () => {
           </Button>
         </Box>
       </form>
+      <Typography variant="h2" my={2}>
+        Students Connected
+      </Typography>
+      <List>
+        {students?.map((student) => (
+          <ListItem key={student._id}>
+            {student.name} - {student.membercode} - {student.waqfenauId}
+          </ListItem>
+        ))}
+      </List>
     </>
   );
 };

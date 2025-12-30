@@ -62,4 +62,11 @@ export const userAPI = {
       }
     );
   },
+  getMembercodes: ({ authToken }) => {
+    return axios.get(`${API_BASE}/users/membercodes`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
 };
