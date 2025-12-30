@@ -20,13 +20,13 @@ import { useNavigate, useParams } from "react-router";
 
 const hasAccessToClass = (user: User, classroomId: string | undefined) => {
   if (!user || !classroomId) return false;
+  if (user.role === "admin" || user.role === "substitute") return true;
   const userClassrooms = user.classrooms?.map((classroom) => classroom.value);
   return userClassrooms?.includes(classroomId) || false;
 };
 
 const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
   const { data: classroomSession } = useSessionQuery(classroom?._id);
-  console.log(classroomSession);
 
   const schedule = classroom?.schedule.map((schedule) => dayjs(schedule));
   return (
@@ -145,6 +145,8 @@ export const PageClass = () => {
    */
   if (!hasAccessToClass(currentUser, id)) navigate("/protected/dashboard");
 
+  const allowedRoles = ["admin", "substitute", "teacher"];
+
   const sessionMutation = useSessionMutation();
 
   const createSession = () => {
@@ -173,7 +175,7 @@ export const PageClass = () => {
               {data?.name}
             </Typography>
             <Typography>{data?.description}</Typography>
-            {currentUser.role === "teacher" ? (
+            {allowedRoles.includes(currentUser.role) ? (
               <Paper
                 elevation={0}
                 sx={(theme) => ({
