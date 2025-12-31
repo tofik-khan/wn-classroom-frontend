@@ -1,15 +1,21 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Typography,
-} from "@mui/material";
-import LaptopMacIcon from "@mui/icons-material/LaptopMac";
+import { Box, Button, Container, Typography } from "@mui/material";
+import WNLogo from "@/assets/wn-logo.png";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const IntroSection: React.FC = () => {
+  const { loginWithRedirect } = useAuth0();
+
+  const handleLogin = async () => {
+    await loginWithRedirect({
+      appState: {
+        returnTo: "/protected/dashboard",
+      },
+    });
+  };
+
   return (
-    <Box sx={{ py: 8, px: { xs: 2, sm: 4, md: 16, lg: 24 },  }}>
+    <Box sx={{ py: 8, px: { xs: 2, sm: 4, md: 16, lg: 24 } }}>
       <Container maxWidth="lg">
         <Box
           sx={{
@@ -28,22 +34,15 @@ const IntroSection: React.FC = () => {
               flexDirection: "column",
             }}
           >
-            <LaptopMacIcon
-              sx={{
-                fontSize: { xs: 140, md: 200 },
-              }}
-            />
+            <img src={WNLogo} width={"140px"} />
             <Button
               variant="contained"
-              size="small"
+              onClick={handleLogin}
               sx={{
                 mt: 2,
-                backgroundColor: "#8b1538",
-                "&:hover": { backgroundColor: "#6f102c" },
               }}
-              href="/login"
             >
-              Log in
+              Log in / Register
             </Button>
           </Box>
 
@@ -72,7 +71,6 @@ const IntroSection: React.FC = () => {
               Waqf-e-Nau Department.
             </Typography>
           </Box>
-
         </Box>
       </Container>
     </Box>
@@ -80,4 +78,3 @@ const IntroSection: React.FC = () => {
 };
 
 export default IntroSection;
-

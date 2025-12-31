@@ -5,37 +5,39 @@ interface FeatureCardProps {
   title: string;
   description: string;
   icon: React.ReactNode;
-  color: string;
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
   title,
   description,
   icon,
-  color,
 }) => {
   return (
     <Paper
       elevation={0}
-      sx={{
-        height: "100%",
+      sx={(theme) => ({
         display: "flex",
-        gap: 3,
-        alignItems: "flex-start",
+        alignItems: "center",
+        border: `1px solid ${theme.palette.primary.main}`,
         borderRadius: 4,
-        backgroundColor: color,
-      }}
+        padding: 2,
+        minHeight: "120px",
+        backgroundColor: theme.palette.common.white,
+        gap: 2,
+      })}
     >
       <Box
-        sx={{
-          p: 2,
+        sx={(theme) => ({
           borderRadius: "50%",
-          backgroundColor: "#f3d1dc",
-          color: "#8b1538",
+          height: "5px",
+          width: "5px",
+          backgroundColor: theme.palette.primary.light,
+          color: theme.palette.primary.main,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-        }}
+          padding: 3,
+        })}
       >
         {icon}
       </Box>
