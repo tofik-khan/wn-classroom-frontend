@@ -15,7 +15,7 @@ import { Close, Logout, Menu } from "@mui/icons-material";
 
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import AppLogo from "@/assets/app-logomark.png";
+import AppLogo from "/assets/app-logomark.png";
 import { useUnenrolledUserQuery } from "@/queries/users";
 import { useState } from "react";
 import { setCurrentUserRole } from "@/reducers/user";

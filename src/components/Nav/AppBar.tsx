@@ -12,7 +12,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Close } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import { useAuth0 } from "@auth0/auth0-react";
-import ClassroomLogo from "@/assets/app-logomark.png";
+import ClassroomLogo from "/assets/app-logomark.png";
 
 export const AppBar = () => {
   const [open, setOpen] = useState(false);

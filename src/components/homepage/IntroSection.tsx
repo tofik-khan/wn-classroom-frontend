@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Container, Typography } from "@mui/material";
-import WNLogo from "@/assets/wn-logo.png";
+import WNLogo from "/assets/wn-logo.png";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const IntroSection: React.FC = () => {
