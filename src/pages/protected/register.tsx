@@ -283,17 +283,20 @@ const StudentQuestionaire = ({ control }) => {
     <>
       <Box sx={{ my: 2 }}>
         <Controller
-          render={({ field, fieldState }) => (
-            <TextField
-              fullWidth
-              {...field}
-              className="materialUIInput"
-              label="Member Code"
-              error={!!fieldState.error}
-              helperText={fieldState.error?.message}
-              onChange={(event) => field.onChange(event.target.value)}
-            />
-          )}
+          render={({ field, fieldState }) => {
+            return (
+              <TextField
+                fullWidth
+                {...field}
+                required
+                className="materialUIInput"
+                label="Member Code"
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+                onChange={(event) => field.onChange(event.target.value)}
+              />
+            );
+          }}
           name="membercode"
           control={control}
           key={"membercode-input"}
@@ -301,7 +304,7 @@ const StudentQuestionaire = ({ control }) => {
             validate: (value) =>
               membercodes.includes(value)
                 ? "This membercode already exists"
-                : "",
+                : true,
           }}
         />
       </Box>
