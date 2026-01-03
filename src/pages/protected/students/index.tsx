@@ -139,7 +139,9 @@ export const PageStudents = () => {
       <Typography variant="h2">Students</Typography>
       <DataGridPro
         loading={isLoading || isRefetching}
-        rows={data ?? []}
+        rows={
+          data?.filter((student) => (student.classrooms?.length ?? 0) > 0) ?? []
+        }
         columns={columns}
         getRowId={(row) => row._id}
         rowHeight={150}
