@@ -25,7 +25,7 @@ import { useClassroomQuery } from "@/queries/classrooms";
 export const PageRegister = () => {
   const { control, handleSubmit, watch } = useForm<User>({
     defaultValues: {
-      role: "student",
+      role: "parent",
       parentEmail: "",
       membercode: "",
     },
@@ -87,13 +87,13 @@ export const PageRegister = () => {
                     row
                   >
                     <FormControlLabel
-                      value={"student"}
-                      label="Student"
+                      value={"parent"}
+                      label="Parent"
                       control={<Radio />}
                     />
                     <FormControlLabel
-                      value={"parent"}
-                      label="Parent"
+                      value={"student"}
+                      label="Student"
                       control={<Radio />}
                     />
                   </RadioGroup>
@@ -174,11 +174,20 @@ export const PageRegister = () => {
                           label={role === "student" ? "Boy" : "Father"}
                           control={<Radio />}
                         />
+                        {role === "parent" && (
+                          <FormControlLabel
+                            value={"female"}
+                            label={"Mother"}
+                            control={<Radio />}
+                          />
+                        )}
                       </RadioGroup>
-                      <Typography variant="caption" color={"text.secondary"}>
-                        The Online Classes are currently only available for
-                        Waqf-e-Nau Boys
-                      </Typography>
+                      {role === "student" && (
+                        <Typography variant="caption" color={"text.secondary"}>
+                          The Online Classes are currently only available for
+                          Waqf-e-Nau Boys
+                        </Typography>
+                      )}
                     </FormControl>
                   );
                 }}
