@@ -21,8 +21,6 @@ export const PageEditStudent = () => {
   const { id } = useParams();
   const { isLoading, data } = useOneStudentsQuery(id);
 
-  const selectedJammat = JAMMAT.find((jammat) => jammat.value === data?.jammat);
-
   const { isLoading: isLoadingClassrooms, data: classrooms } =
     useClassroomQuery();
   const classroomsOptions =
@@ -36,7 +34,6 @@ export const PageEditStudent = () => {
   const { control, handleSubmit } = useForm<User>({
     defaultValues: {
       ...data,
-      jammat: selectedJammat?.value,
     },
   });
 
@@ -72,6 +69,9 @@ export const PageEditStudent = () => {
   };
 
   if (isLoading) return <Loading />;
+
+  const selectedJammat =
+    JAMMAT.find((jammat) => jammat.value === data?.jammat) ?? JAMMAT[0];
 
   const selectedMonth =
     MONTHS.find((month) => month.value === (data?.dob?.month ?? 0)) ??
@@ -223,7 +223,6 @@ export const PageEditStudent = () => {
           <Controller
             render={({ field }) => (
               <TextField
-                required
                 {...field}
                 label="Phone"
                 defaultValue={data?.phone ?? ""}
@@ -252,18 +251,16 @@ export const PageEditStudent = () => {
           <Controller
             render={({ field }) => (
               <Autocomplete
-                sx={{ width: "300px" }}
+                sx={{ width: "500px" }}
                 className="materialUIInput"
                 options={JAMMAT}
-                value={
-                  JAMMAT.find((jammat) => jammat.value === field.value) ?? null
-                }
+                defaultValue={selectedJammat}
                 isOptionEqualToValue={(opt, val) => opt.value === val.value}
                 onChange={(_, option) => {
-                  field.onChange(option?.value);
+                  field.onChange(option);
                 }}
                 renderInput={(params) => (
-                  <TextField {...params} required label="Jammat / Chapter" />
+                  <TextField {...params} label="Jammat / Chapter" />
                 )}
               />
             )}
