@@ -66,7 +66,7 @@ export const useMyStudentsQuery = (email = "") => {
         email: email === "" ? user?.email : email,
       });
     },
-    enabled: !!user?.email && email !== "",
+    enabled: !!user?.email,
     select: (response) => response.data,
   });
 };
