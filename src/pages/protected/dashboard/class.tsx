@@ -3,6 +3,7 @@ import { MultiDatePicker } from "@/components/DatePicker";
 import { Loading } from "@/components/Loading";
 import { useAppSelector } from "@/hooks";
 import { useOneClassroomQuery } from "@/queries/classrooms";
+import { useMyStudentsQuery } from "@/queries/parents";
 import { useSessionMutation, useSessionQuery } from "@/queries/session";
 import { useTeacherByClassIdQuery } from "@/queries/teachers";
 import { Classroom } from "@/types/classroom";
@@ -19,7 +20,16 @@ import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router";
 
 const hasAccessToClass = (user: User, classroomId: string | undefined) => {
+  const { data: myStudents } = useMyStudentsQuery();
   if (!user || !classroomId) return false;
+  if (user.role === "parent") {
+    const myStudentsClassrooms = myStudents!
+      .map((student) => {
+        return student!.classrooms!.map((classroom) => classroom.value);
+      })
+      .flat();
+    return myStudentsClassrooms?.includes(classroomId) || false;
+  }
   if (user.role === "admin" || user.role === "substitute") return true;
   const userClassrooms = user.classrooms?.map((classroom) => classroom.value);
   return userClassrooms?.includes(classroomId) || false;

@@ -150,6 +150,33 @@ const ParentDashboard = () => {
           <EmptyStudentCard />
         )}
       </Paper>
+      {myStudets?.map((student) => {
+        return (
+          <>
+            <Paper
+              sx={(theme) => ({
+                padding: 4,
+                marginTop: 4,
+                border: `1px solid ${theme.palette.grey[300]}`,
+                borderRadius: 2,
+              })}
+            >
+              <Typography variant="h4">
+                {student.name.split(" ")[0]}&apos;s Classes
+              </Typography>
+              <Typography variant="subtitle1">
+                The currently enrolled classes for{" "}
+                <strong>{student.name}</strong>
+              </Typography>
+              {student.classrooms!.length > 0 ? (
+                <ClassContainer classrooms={student.classrooms} />
+              ) : (
+                <EmptyClassSection />
+              )}
+            </Paper>
+          </>
+        );
+      })}
       <CreateStudentByParentModal open={open} onClose={() => setOpen(false)} />
     </>
   );
