@@ -92,7 +92,10 @@ const MenuItems = () => {
             <Button
               variant="contained"
               sx={{ marginX: "auto", mt: 1 }}
-              onClick={() => dispatch(setCurrentUserRole("substitute"))}
+              onClick={() => {
+                dispatch(setCurrentUserRole("substitute"));
+                navigate("/protected/dashboard");
+              }}
             >
               Switch to Substitute
             </Button>
