@@ -1,6 +1,8 @@
 import { MultiDatePicker } from "@/components/DatePicker";
 import { TIMEOPTIONS } from "@/constants";
+import { useAppDispatch } from "@/hooks";
 import { useClassroomMutation } from "@/queries/classrooms";
+import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { Classroom } from "@/types/classroom";
 import { Close } from "@mui/icons-material";
 import {
@@ -31,13 +33,27 @@ export const CreateClassroomModal = ({
   open: boolean;
   onClose: () => void;
 }) => {
+  const dispatch = useAppDispatch();
   const createClassroom = useClassroomMutation({
     onSuccess: () => {
       onClose();
       reset();
       setSchedule([]);
+      dispatch(
+        setSuccessSnackbar({
+          title: "Classroom Created",
+          content: "The classroom is created and available to all users",
+        })
+      );
     },
-    onError: (error) => console.log("error", error),
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
+    },
   });
 
   const { control, handleSubmit, reset } = useForm<Classroom>();
@@ -204,7 +220,13 @@ export const CreateClassroomModal = ({
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button type="submit">Save changes</Button>
+            <Button
+              loading={createClassroom.isPending}
+              disabled={createClassroom.isPending}
+              type="submit"
+            >
+              Save changes
+            </Button>
           </DialogActions>
         </form>
       </Dialog>

@@ -1,7 +1,9 @@
 import { MONTHS, YEARS } from "@/constants";
 import { JAMMAT } from "@/constants/jammat";
+import { useAppDispatch } from "@/hooks";
 import { useClassroomQuery } from "@/queries/classrooms";
 import { useMyStudentsMutation } from "@/queries/parents";
+import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { User } from "@/types/user";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Close } from "@mui/icons-material";
@@ -32,9 +34,27 @@ export const CreateStudentByParentModal = ({
 }) => {
   const { user } = useAuth0();
   const { control, handleSubmit, reset } = useForm<User>();
+  const dispatch = useAppDispatch();
   const createStudent = useMyStudentsMutation({
-    onSuccess: () => onClose(),
-    onError: () => console.log("ERROR!"),
+    onSuccess: () => {
+      reset();
+      dispatch(
+        setSuccessSnackbar({
+          title: "Student Created",
+          content:
+            "The student account is created. The admin team will assign a class in a few days",
+        })
+      );
+      onClose();
+    },
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
+    },
   });
 
   const { isLoading: isLoadingClassrooms, data: classrooms } =

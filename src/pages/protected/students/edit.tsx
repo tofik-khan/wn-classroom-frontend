@@ -1,11 +1,13 @@
 import { Loading } from "@/components/Loading";
 import { GENDERS, MONTHS, YEARS } from "@/constants";
 import { JAMMAT } from "@/constants/jammat";
+import { useAppDispatch } from "@/hooks";
 import { useClassroomQuery } from "@/queries/classrooms";
 import {
   useOneStudentsQuery,
   useStudentUpdateMutation,
 } from "@/queries/students";
+import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { User } from "@/types/user";
 import {
   Autocomplete,
@@ -37,12 +39,23 @@ export const PageEditStudent = () => {
     },
   });
 
+  const dispatch = useAppDispatch();
   const updateStudent = useStudentUpdateMutation({
     onSuccess: () => {
-      navigate("/protected/students");
+      dispatch(
+        setSuccessSnackbar({
+          title: "Student Updated",
+          content: "The student's account is updated",
+        })
+      );
     },
-    onError: () => {
-      console.log("ERROR");
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
     },
   });
 
@@ -277,7 +290,12 @@ export const PageEditStudent = () => {
           >
             Cancel
           </Button>
-          <Button variant="outlined" type="submit">
+          <Button
+            loading={updateStudent.isPending}
+            disabled={updateStudent.isPending}
+            variant="outlined"
+            type="submit"
+          >
             Save changes
           </Button>
         </Box>

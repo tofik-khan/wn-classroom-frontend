@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { User } from "@/types/user";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import { JAMMAT } from "@/constants/jammat";
 import { MONTHS, YEARS } from "@/constants";
 import { useMembercodesQuery, useUserMutation } from "@/queries/users";
@@ -23,6 +23,7 @@ import { useNavigate } from "react-router";
 import { useClassroomQuery } from "@/queries/classrooms";
 import { InfoOutline } from "@mui/icons-material";
 import { RegisterParentStudentAccountDetails } from "./modals/RegisterParentStudentAccountDetails";
+import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 
 export const PageRegister = () => {
   const [openInfoDialog, setOpenInfoDialog] = useState(false);
@@ -35,27 +36,32 @@ export const PageRegister = () => {
   });
   const { isAuthenticated } = useAuth0();
   const { currentUser } = useAppSelector((state) => state.user);
-  const [btn, setBtn] = useState({ loading: false, error: "" });
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const updateUser = useUserMutation({
     onSuccess: () => {
-      setBtn({ loading: false, error: "" });
       navigate("/protected/dashboard");
+      dispatch(
+        setSuccessSnackbar({
+          title: "Registration Completed",
+          content:
+            "Your data is recorded and you'll be directed to your Dashboard shortly",
+        })
+      );
     },
-    onError: () => {
-      console.log("ERROR!!");
-      setBtn({
-        loading: false,
-        error:
-          "There was an unknown error with your submission, please call the IT Team",
-      });
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
     },
   });
 
   const role = watch("role");
 
   const handleUpdate = async (data: User) => {
-    setBtn({ loading: true, error: "" });
     if (isAuthenticated) {
       updateUser.mutate({
         data: {
@@ -223,7 +229,8 @@ export const PageRegister = () => {
               type="submit"
               variant="contained"
               fullWidth
-              loading={btn.loading}
+              loading={updateUser.isPending}
+              disabled={updateUser.isPending}
             >
               Save changes
             </Button>
