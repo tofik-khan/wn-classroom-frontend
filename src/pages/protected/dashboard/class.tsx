@@ -10,14 +10,22 @@ import { Classroom } from "@/types/classroom";
 import { User } from "@/types/user";
 import { getNextSession } from "@/utils/datetime";
 import {
+  Add,
   InfoOutline,
   InsertDriveFileOutlined,
+  Person,
   SchoolOutlined,
 } from "@mui/icons-material";
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Chip, Grid, Paper, Typography } from "@mui/material";
 import { ClockIcon } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { AnnoucementModal } from "../modals/ClassAnnouncementModal";
+import { useAnnouncementQuery } from "@/queries/announcements";
+import { Editor } from "@/components/wysiwyg/editor";
+
+const teacherRoles = ["admin", "teacher", "substitute"];
 
 const hasAccessToClass = (user: User, classroomId: string | undefined) => {
   const { data: myStudents } = useMyStudentsQuery();
@@ -117,26 +125,87 @@ const ClassResourcesContainer = () => {
 };
 
 const ClassAnnouncementsContainer = () => {
+  const [open, setOpen] = useState(false);
+  const { currentUser } = useAppSelector((state) => state.user);
+  const { id } = useParams();
+  const { isLoading, data } = useAnnouncementQuery(id);
+
+  if (isLoading)
+    return (
+      <>
+        <Paper sx={{ padding: 4, my: 3, minHeight: "300px" }}>
+          <Loading height="100px" />
+        </Paper>
+      </>
+    );
+
   return (
-    <Paper sx={{ padding: 4, my: 3, minHeight: "300px" }}>
-      <Typography variant="h5">Annoucements</Typography>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          p: 3,
-          my: 2,
-        }}
-      >
-        <InsertDriveFileOutlined
-          color="disabled"
-          sx={{ width: "40px", height: "40px" }}
-        />
-        <Typography color="textSecondary">No Annoucements...</Typography>
-      </Box>
-    </Paper>
+    <>
+      <Paper sx={{ padding: 4, my: 3, minHeight: "300px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography variant="h5">Annoucements</Typography>
+          {teacherRoles.includes(currentUser.role) && (
+            <Button variant="contained" onClick={() => setOpen(true)}>
+              <Add />
+            </Button>
+          )}
+        </Box>
+        {data && data?.length > 0 ? (
+          data.map((announcement) => (
+            <Paper
+              elevation={0}
+              sx={(theme) => ({
+                mt: 2,
+                p: 2,
+                border: `1px solid ${theme.palette.grey[300]}`,
+              })}
+              key={announcement._id}
+            >
+              <Typography variant="button" color="primary">
+                {announcement.title}
+              </Typography>
+              <Editor
+                content={announcement.content}
+                setContent={() => {}}
+                readonly
+              />
+              <Box>
+                <Chip
+                  sx={{ mt: 2 }}
+                  variant="outlined"
+                  label={announcement.teacher.name}
+                  icon={<Person />}
+                />
+              </Box>
+            </Paper>
+          ))
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 3,
+              my: 2,
+            }}
+          >
+            <InsertDriveFileOutlined
+              color="disabled"
+              sx={{ width: "40px", height: "40px" }}
+            />
+            <Typography color="textSecondary">No Annoucements...</Typography>
+          </Box>
+        )}
+      </Paper>
+      <AnnoucementModal open={open} onClose={() => setOpen(false)} />
+    </>
   );
 };
 
@@ -252,10 +321,10 @@ export const PageClass = () => {
         </Grid>
       </Paper>
       <Grid rowSpacing={1} height={"fit-content"} columnSpacing={1} container>
-        <Grid size={{ xs: 12, md: 8 }}>
+        <Grid size={{ xs: 12, lg: 8 }} order={{ xs: 2, md: 1 }}>
           <ClassResourcesContainer />
         </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, lg: 4 }} order={{ xs: 1, md: 2 }}>
           <ClassAnnouncementsContainer />
         </Grid>
       </Grid>
