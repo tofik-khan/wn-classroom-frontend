@@ -11,7 +11,7 @@ const Contact = () => {
 		flexDirection: "column",
 		justifyContent: "center",
 		alignItems: "center",
-		gap: 1.5,
+		gap: 2,
 		mt: 6,
 		mb: 6,
     })}>

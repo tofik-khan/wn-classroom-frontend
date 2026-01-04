@@ -1,14 +1,15 @@
-import {Box, Accordion, AccordionActions, AccordionSummary, AccordionDetails, Typography} from "@mui/material";
+import {Box, Accordion, AccordionSummary, AccordionDetails, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const Faq = () => {
   return (
-	<div>
+	<>
 	<Box 
 	sx={(theme) => ({display: "flex", justifyContent: "center", alignItems: "center", mt: 3, mb: 3,})}>
 		<Typography variant="h4" fontWeight="bold">Frequently asked questions</Typography>
 	</Box>
 
+	<Box sx={{ maxWidth: "800px", marginX: "auto" }}>
 	<Accordion>
 		<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1-content" id="panel1-header">
 			<Typography component="span" variant="body1" fontWeight="bold">Who can access this platform?</Typography>
@@ -74,7 +75,8 @@ const Faq = () => {
 			</Typography>
 		</AccordionDetails>
 	</Accordion>
-    </div>
+	</Box>
+    </>
   );
 };
 
