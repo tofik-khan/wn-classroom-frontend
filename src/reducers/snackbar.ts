@@ -41,8 +41,8 @@ export const snackbarSlice = createSlice({
         ...action.payload,
       });
     },
-    closeSnackbar: (state) => {
-      return (state = initialState);
+    closeSnackbar: () => {
+      return initialState;
     },
   },
 });
