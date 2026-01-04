@@ -1,4 +1,5 @@
 import { adminAPI } from "./admins";
+import { AnnouncementAPI } from "./announcements";
 import { classroomAPI } from "./classrooms";
 import { parentsAPI } from "./parents";
 import { SessionAPI } from "./sessions";
@@ -14,4 +15,5 @@ export const API = {
   ...studentsAPI,
   ...parentsAPI,
   ...SessionAPI,
+  ...AnnouncementAPI,
 };

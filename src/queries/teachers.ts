@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { API } from "@/api";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Teacher } from "@/types/teacher";
-import { useAppSelector } from "@/hooks";
 
 export const useTeacherQuery = () => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
@@ -73,14 +72,13 @@ export const useTeacherUpdateMutation = ({ onSuccess, onError }) => {
 
 export const useTeacherByClassIdQuery = (id) => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
-  const { currentUser } = useAppSelector((state) => state.user);
   return useQuery({
     queryKey: ["teacherByClassId", id],
     queryFn: async () => {
       const token = await getAccessTokenSilently();
       return API.getTeacherByClassId({ authToken: token, id });
     },
-    enabled: isAuthenticated && currentUser.role !== "teacher",
+    enabled: isAuthenticated,
     select: (response) => response.data,
   });
 };
