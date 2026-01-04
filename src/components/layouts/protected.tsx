@@ -1,18 +1,22 @@
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { Outlet, useNavigate } from "react-router";
 import { AdminSideBar } from "../Nav/AdminSideBar";
-import { Box } from "@mui/material";
+import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
 import { Loading } from "../Loading";
-import { useAppDispatch } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import { setCurrentUser } from "@/reducers/user";
 import { useUserQuery } from "@/queries/users";
 import { useEffect } from "react";
+import { closeSnackbar } from "@/reducers/snackbar";
 
 export const ProtectedLayout = withAuthenticationRequired(
   () => {
     const { isLoading: isLoadingAuth, logout } = useAuth0();
     const { isLoading: isLoadingUser, data: currentUser } = useUserQuery();
     const navigate = useNavigate();
+    const { open, type, title, content } = useAppSelector(
+      (state) => state.snackbar
+    );
 
     const dispatch = useAppDispatch();
 
@@ -62,6 +66,22 @@ export const ProtectedLayout = withAuthenticationRequired(
         >
           <Outlet />
         </Box>
+        <Snackbar
+          open={open}
+          autoHideDuration={7000}
+          onClose={() => dispatch(closeSnackbar())}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert
+            onClose={() => dispatch(closeSnackbar())}
+            severity={type}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            <AlertTitle>{title}</AlertTitle>
+            {content}
+          </Alert>
+        </Snackbar>
       </>
     );
   },
