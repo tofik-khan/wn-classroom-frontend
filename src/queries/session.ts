@@ -16,7 +16,7 @@ export const useSessionQuery = (classroomId) => {
   });
 };
 
-export const useSessionMutation = () => {
+export const useSessionMutation = ({ onSuccess, onError }) => {
   const { getAccessTokenSilently } = useAuth0();
   const queryClient = useQueryClient();
 
@@ -25,8 +25,10 @@ export const useSessionMutation = () => {
       const token = await getAccessTokenSilently();
       return API.createSession({ authToken: token, data });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["session"] });
+      onSuccess(data);
     },
+    onError,
   });
 };

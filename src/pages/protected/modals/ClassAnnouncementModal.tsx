@@ -1,6 +1,7 @@
 import { Editor } from "@/components/wysiwyg/editor";
-import { useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import { useAnnouncementMutation } from "@/queries/announcements";
+import { setErrorSnackbar, setSuccessSnackbar } from "@/reducers/snackbar";
 import { Close } from "@mui/icons-material";
 import {
   Button,
@@ -28,12 +29,25 @@ export const AnnoucementModal = ({
   const { control, handleSubmit, reset } = useForm();
   const { currentUser } = useAppSelector((state) => state.user);
   const { id } = useParams();
+  const dispatch = useAppDispatch();
   const createAnnouncement = useAnnouncementMutation({
     onSuccess: () => {
-      console.log("Success");
+      dispatch(
+        setSuccessSnackbar({
+          title: "Announcement Created",
+          content: "The announcement is sent to all users of this class",
+        })
+      );
       onClose();
     },
-    onError: () => console.log("ERROR"),
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
+    },
   });
   const onSubmit = (data) => {
     const payload = {
@@ -132,7 +146,12 @@ export const AnnoucementModal = ({
             <Button variant="outlined" onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="contained" type="submit">
+            <Button
+              loading={createAnnouncement.isPending}
+              disabled={createAnnouncement.isPending}
+              variant="contained"
+              type="submit"
+            >
               Save changes
             </Button>
           </DialogActions>
