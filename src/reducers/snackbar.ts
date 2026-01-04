@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { JSX } from "react";
 
 type SnackbarSliceType = {
   type: "success" | "error";
   title?: string;
-  content: string;
+  content: string | JSX.Element;
   open: boolean;
 };
 

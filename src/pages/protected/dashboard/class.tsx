@@ -1,7 +1,7 @@
 import { API_BASE } from "@/api/constants";
 import { MultiDatePicker } from "@/components/DatePicker";
 import { Loading } from "@/components/Loading";
-import { useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import { useOneClassroomQuery } from "@/queries/classrooms";
 import { useMyStudentsQuery } from "@/queries/parents";
 import { useSessionMutation, useSessionQuery } from "@/queries/session";
@@ -24,6 +24,7 @@ import { useNavigate, useParams } from "react-router";
 import { AnnoucementModal } from "../modals/ClassAnnouncementModal";
 import { useAnnouncementQuery } from "@/queries/announcements";
 import { Editor } from "@/components/wysiwyg/editor";
+import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 
 const teacherRoles = ["admin", "teacher", "substitute"];
 
@@ -227,7 +228,34 @@ export const PageClass = () => {
 
   const allowedRoles = ["admin", "substitute", "teacher"];
 
-  const sessionMutation = useSessionMutation();
+  const dispatch = useAppDispatch();
+
+  const sessionMutation = useSessionMutation({
+    onSuccess: () => {
+      dispatch(
+        setSuccessSnackbar({
+          title: "Session Created",
+          content: "The session is created and will go live in a few moments",
+        })
+      );
+    },
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: (
+            <>
+              <Typography>{error?.message}</Typography>
+              <Typography>
+                This might be caused by invalid credentials. Make sure you log
+                into Google (Step # 1) before creating a session
+              </Typography>
+            </>
+          ),
+        })
+      );
+    },
+  });
 
   const createSession = () => {
     const payload = {
@@ -284,7 +312,13 @@ export const PageClass = () => {
                 <Typography variant="body1" fontWeight={"bold"}>
                   Step # 2
                 </Typography>
-                <Button onClick={createSession}>Create Session</Button>
+                <Button
+                  loading={sessionMutation.isPending}
+                  disabled={sessionMutation.isPending}
+                  onClick={createSession}
+                >
+                  Create Session
+                </Button>
               </Paper>
             ) : (
               <Paper
