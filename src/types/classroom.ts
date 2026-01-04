@@ -1,9 +1,11 @@
+import { Dayjs } from "dayjs";
+
 export type Classroom = {
   _id?: string;
   name: string;
   description: string;
-  googleDrive: string;
-  schedule: any[];
+  type: "syllabus" | "urdu";
+  schedule: Dayjs[];
   start: {
     label: string;
     value: string;

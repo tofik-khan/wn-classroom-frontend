@@ -56,4 +56,17 @@ export const teacherAPI = {
       },
     });
   },
+  getTeacherByClassId: ({
+    authToken,
+    id,
+  }: {
+    authToken: string;
+    id: string;
+  }): Promise<{ data: Teacher; status: string }> => {
+    return axios.get(`${API_BASE}/teachers/classrooms/${id}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
 };

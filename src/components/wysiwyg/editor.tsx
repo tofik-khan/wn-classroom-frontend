@@ -5,15 +5,30 @@ export const Editor = ({
   placeholder,
   content,
   setContent,
+  readonly = false,
 }: {
   placeholder?: string;
   content: string;
   setContent: any;
+  readonly?: boolean;
 }) => {
   const editor = useRef(null);
 
+  const readOnlyProperties = readonly
+    ? {
+        toolbar: false,
+        readonly: true,
+        showCharsCounter: false,
+        showWordsCounter: false,
+        showXPathInStatusbar: false,
+        containerStyle: {
+          border: "none",
+        },
+        height: "100px",
+      }
+    : {};
+
   const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
     placeholder: placeholder ?? "Start typing...",
     disablePlugins: [
       "video",
@@ -27,6 +42,7 @@ export const Editor = ({
       "clean-html",
       "source",
     ],
+    ...readOnlyProperties,
   };
 
   return (

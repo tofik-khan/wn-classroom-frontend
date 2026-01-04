@@ -1,8 +1,10 @@
 import { Loading } from "@/components/Loading";
 import { TIMEZONES } from "@/constants";
 import { JAMMAT } from "@/constants/jammat";
+import { useAppDispatch } from "@/hooks";
 import { useClassroomQuery } from "@/queries/classrooms";
 import { useTeachersMutation } from "@/queries/teachers";
+import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { Teacher } from "@/types/teacher";
 import { Close } from "@mui/icons-material";
 import {
@@ -39,12 +41,26 @@ export const CreateTeacherModal = ({
         value: classroom._id ?? "",
       }))) ??
     [];
+  const dispatch = useAppDispatch();
   const createTeacher = useTeachersMutation({
     onSuccess: () => {
-      onClose();
       reset();
+      dispatch(
+        setSuccessSnackbar({
+          title: "Success!",
+          content: "The Teacher's account is created",
+        })
+      );
+      onClose();
     },
-    onError: (error) => console.log(`error`, error),
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
+    },
   });
   const { control, handleSubmit, reset } = useForm<Teacher>();
 
@@ -227,9 +243,9 @@ export const CreateTeacherModal = ({
                   )}
                 />
               )}
-              name="class"
+              name="classrooms"
               control={control}
-              key="class-input"
+              key="classrooms-input"
             />
           </DialogContent>
           <DialogActions>

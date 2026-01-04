@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { API } from "@/api";
 import { useAuth0 } from "@auth0/auth0-react";
 import { User } from "@/types/user";
+import { useAppSelector } from "@/hooks";
 
 export const useUserQuery = () => {
   const { getAccessTokenSilently, isAuthenticated, user } = useAuth0();
@@ -35,13 +36,14 @@ export const useUserMutation = ({ onSuccess, onError }) => {
 
 export const useUnenrolledUserQuery = () => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  const { currentUser } = useAppSelector((state) => state.user);
   return useQuery({
     queryKey: ["users/unenrolled"],
     queryFn: async () => {
       const token = await getAccessTokenSilently();
       return API.getUnenrolledUsers({ authToken: token });
     },
-    enabled: !!isAuthenticated,
+    enabled: !!isAuthenticated && currentUser.role === "admin",
     select: (response) => response.data,
   });
 };
@@ -59,5 +61,18 @@ export const useEnrollInClassMutation = ({ onSuccess, onError }) => {
       onSuccess();
     },
     onError,
+  });
+};
+
+export const useMembercodesQuery = () => {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  return useQuery({
+    queryKey: ["membercodes"],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently();
+      return API.getMembercodes({ authToken: token });
+    },
+    enabled: isAuthenticated,
+    select: (response) => response.data,
   });
 };

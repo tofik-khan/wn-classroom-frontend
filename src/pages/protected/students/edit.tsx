@@ -1,11 +1,13 @@
 import { Loading } from "@/components/Loading";
 import { GENDERS, MONTHS, YEARS } from "@/constants";
 import { JAMMAT } from "@/constants/jammat";
+import { useAppDispatch } from "@/hooks";
 import { useClassroomQuery } from "@/queries/classrooms";
 import {
   useOneStudentsQuery,
   useStudentUpdateMutation,
 } from "@/queries/students";
+import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { User } from "@/types/user";
 import {
   Autocomplete,
@@ -20,6 +22,7 @@ import { useNavigate, useParams } from "react-router";
 export const PageEditStudent = () => {
   const { id } = useParams();
   const { isLoading, data } = useOneStudentsQuery(id);
+
   const { isLoading: isLoadingClassrooms, data: classrooms } =
     useClassroomQuery();
   const classroomsOptions =
@@ -31,25 +34,48 @@ export const PageEditStudent = () => {
     [];
 
   const { control, handleSubmit } = useForm<User>({
-    defaultValues: data,
+    defaultValues: {
+      ...data,
+    },
   });
 
+  const dispatch = useAppDispatch();
   const updateStudent = useStudentUpdateMutation({
     onSuccess: () => {
-      navigate("/protected/students");
+      dispatch(
+        setSuccessSnackbar({
+          title: "Student Updated",
+          content: "The student's account is updated",
+        })
+      );
     },
-    onError: () => {
-      console.log("ERROR");
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
     },
   });
 
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
+    /**
+     * The form values are only updated when the user changes the value of the
+     * field. This causes unchanged values to be undefined. If not removed, this
+     * will remove the values from the database. The next line removes any values
+     * that are undefined.
+     */
+    Object.keys(data).forEach((key) =>
+      data[key] === undefined ? delete data[key] : {}
+    );
+
     updateStudent.mutate({
       data: {
         ...data,
-        jammat: data.jammat.value,
+        jammat: data.jammat,
       },
       id: id ?? "",
     });
@@ -57,11 +83,12 @@ export const PageEditStudent = () => {
 
   if (isLoading) return <Loading />;
 
+  const selectedJammat =
+    JAMMAT.find((jammat) => jammat.value === data?.jammat) ?? JAMMAT[0];
+
   const selectedMonth =
     MONTHS.find((month) => month.value === (data?.dob?.month ?? 0)) ??
     MONTHS[0];
-  const selectedJammat =
-    JAMMAT.find((jammat) => jammat.value === data?.jammat) ?? JAMMAT[0];
 
   return (
     <>
@@ -209,7 +236,6 @@ export const PageEditStudent = () => {
           <Controller
             render={({ field }) => (
               <TextField
-                required
                 {...field}
                 label="Phone"
                 defaultValue={data?.phone ?? ""}
@@ -223,7 +249,6 @@ export const PageEditStudent = () => {
           <Controller
             render={({ field }) => (
               <TextField
-                required
                 {...field}
                 label="Parent Email"
                 defaultValue={data?.parentEmail ?? ""}
@@ -239,11 +264,10 @@ export const PageEditStudent = () => {
           <Controller
             render={({ field }) => (
               <Autocomplete
-                sx={{ width: "250px" }}
+                sx={{ width: "500px" }}
                 className="materialUIInput"
                 options={JAMMAT}
                 defaultValue={selectedJammat}
-                disableCloseOnSelect
                 isOptionEqualToValue={(opt, val) => opt.value === val.value}
                 onChange={(_, option) => {
                   field.onChange(option);
@@ -266,7 +290,12 @@ export const PageEditStudent = () => {
           >
             Cancel
           </Button>
-          <Button variant="outlined" type="submit">
+          <Button
+            loading={updateStudent.isPending}
+            disabled={updateStudent.isPending}
+            variant="outlined"
+            type="submit"
+          >
             Save changes
           </Button>
         </Box>

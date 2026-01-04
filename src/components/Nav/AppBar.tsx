@@ -6,13 +6,13 @@ import {
   Drawer,
   AppBar as MUIAppBar,
   Toolbar,
-  Typography,
 } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Close } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import { useAuth0 } from "@auth0/auth0-react";
+import ClassroomLogo from "/assets/app-logomark.png";
 
 export const AppBar = () => {
   const [open, setOpen] = useState(false);
@@ -27,15 +27,24 @@ export const AppBar = () => {
     });
   };
 
-  const AdminSection = () => (
-    <Button onClick={handleLogin}>
-      <PersonOutlineIcon /> Admin
+  const LoginButton = ({
+    variant = "outlined",
+  }: {
+    variant?: "outlined" | "contained";
+  }) => (
+    <Button variant={variant} onClick={handleLogin}>
+      <PersonOutlineIcon /> Login
     </Button>
   );
 
   const NavItems = () => (
     <>
-      <Button>Links</Button>
+      <Button target="_blank" href="https://www.waqfenau.us/">
+        Waqf e Nau Website
+      </Button>
+      <Button target="_blank" href="https://www.waqfenau.us/wn-syllabus/">
+        Syllabus
+      </Button>
     </>
   );
 
@@ -61,14 +70,13 @@ export const AppBar = () => {
                 sx={{ "&:hover": { cursor: "pointer" } }}
                 onClick={() => navigate("/")}
               >
-                <Typography>WN Classroom</Typography>
+                <img src={ClassroomLogo} width={"150px"} />
               </Box>
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
-                  alignContent: "center",
-                  gap: 4,
+                  justifyContent: "center",
+                  gap: 1,
                 }}
               >
                 <NavItems />
@@ -80,7 +88,7 @@ export const AppBar = () => {
                   alignContent: "center",
                 }}
               >
-                <AdminSection />
+                <LoginButton />
               </Box>
             </Box>
           </Toolbar>
@@ -96,10 +104,8 @@ export const AppBar = () => {
                 width: "100%",
               }}
             >
-              <Box>
-                <Typography onClick={() => navigate("/")}>
-                  WN Classroom
-                </Typography>
+              <Box onClick={() => navigate("/")}>
+                <img src={ClassroomLogo} width={"150px"} />
               </Box>
               <Box
                 sx={{
@@ -145,7 +151,7 @@ export const AppBar = () => {
             width: "100%",
           }}
         >
-          <AdminSection />
+          <LoginButton />
         </Box>
       </Drawer>
     </>

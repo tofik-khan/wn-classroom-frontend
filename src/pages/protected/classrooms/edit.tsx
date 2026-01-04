@@ -10,7 +10,12 @@ import {
   Autocomplete,
   Box,
   Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   InputLabel,
+  Radio,
+  RadioGroup,
   TextField,
   Typography,
 } from "@mui/material";
@@ -49,7 +54,7 @@ export const PageEditClassroom = () => {
       data[key] === undefined ? delete data[key] : {}
     );
 
-    updateClassroom.mutate({ data, id: id ?? "" });
+    updateClassroom.mutate({ data: { ...data, schedule }, id: id ?? "" });
   };
 
   useEffect(() => {
@@ -94,18 +99,35 @@ export const PageEditClassroom = () => {
             defaultValue={data?.description}
           />
           <Controller
-            render={({ field }) => (
-              <TextField
-                required
-                {...field}
-                className="materialUIInput"
-                label="Google Drive ID"
-              />
-            )}
-            name="googleDrive"
+            render={({ field }) => {
+              return (
+                <FormControl>
+                  <FormLabel>Classroom Type</FormLabel>
+                  <RadioGroup
+                    {...field}
+                    value={field.value}
+                    onChange={field.onChange}
+                    row
+                  >
+                    <FormControlLabel
+                      value={"syllabus"}
+                      label="Syllabus"
+                      control={<Radio />}
+                    />
+                    <FormControlLabel
+                      value={"urdu"}
+                      label="Urdu"
+                      control={<Radio />}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              );
+            }}
+            name="type"
             control={control}
-            key="googleDrive-input"
-            defaultValue={data?.googleDrive}
+            key={"type-input"}
+            defaultValue="syllabus"
+            rules={{ required: true }}
           />
           <Box
             sx={{

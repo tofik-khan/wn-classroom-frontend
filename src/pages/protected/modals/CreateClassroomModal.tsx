@@ -1,6 +1,8 @@
 import { MultiDatePicker } from "@/components/DatePicker";
 import { TIMEOPTIONS } from "@/constants";
+import { useAppDispatch } from "@/hooks";
 import { useClassroomMutation } from "@/queries/classrooms";
+import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { Classroom } from "@/types/classroom";
 import { Close } from "@mui/icons-material";
 import {
@@ -11,8 +13,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   IconButton,
   InputLabel,
+  Radio,
+  RadioGroup,
   TextField,
 } from "@mui/material";
 import { Dayjs } from "dayjs";
@@ -26,20 +33,33 @@ export const CreateClassroomModal = ({
   open: boolean;
   onClose: () => void;
 }) => {
+  const dispatch = useAppDispatch();
   const createClassroom = useClassroomMutation({
     onSuccess: () => {
       onClose();
       reset();
       setSchedule([]);
+      dispatch(
+        setSuccessSnackbar({
+          title: "Classroom Created",
+          content: "The classroom is created and available to all users",
+        })
+      );
     },
-    onError: (error) => console.log("error", error),
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
+    },
   });
 
   const { control, handleSubmit, reset } = useForm<Classroom>();
   const [schedule, setSchedule] = useState<Dayjs[]>([]);
 
   const onSubmit = (data: Classroom) => {
-    console.log(data, schedule);
     createClassroom.mutate({ data: { ...data, schedule } });
   };
 
@@ -108,17 +128,35 @@ export const CreateClassroomModal = ({
               key="description-input"
             />
             <Controller
-              render={({ field }) => (
-                <TextField
-                  required
-                  {...field}
-                  className="materialUIInput"
-                  label="Google Drive ID"
-                />
-              )}
-              name="googleDrive"
+              render={({ field }) => {
+                return (
+                  <FormControl>
+                    <FormLabel>Classroom Type</FormLabel>
+                    <RadioGroup
+                      {...field}
+                      value={field.value}
+                      onChange={field.onChange}
+                      row
+                    >
+                      <FormControlLabel
+                        value={"syllabus"}
+                        label="Syllabus"
+                        control={<Radio />}
+                      />
+                      <FormControlLabel
+                        value={"urdu"}
+                        label="Urdu"
+                        control={<Radio />}
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                );
+              }}
+              name="type"
               control={control}
-              key="googleDrive-input"
+              key={"type-input"}
+              defaultValue="syllabus"
+              rules={{ required: true }}
             />
             <Box
               sx={{
@@ -182,7 +220,13 @@ export const CreateClassroomModal = ({
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button type="submit">Save changes</Button>
+            <Button
+              loading={createClassroom.isPending}
+              disabled={createClassroom.isPending}
+              type="submit"
+            >
+              Save changes
+            </Button>
           </DialogActions>
         </form>
       </Dialog>

@@ -1,8 +1,10 @@
+import { useAppDispatch } from "@/hooks";
 import { useClassroomQuery } from "@/queries/classrooms";
 import {
   useEnrollInClassMutation,
   useUnenrolledUserQuery,
 } from "@/queries/users";
+import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { User } from "@/types/user";
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import { DataGridPro, gridClasses } from "@mui/x-data-grid-pro";
@@ -20,9 +22,26 @@ export const PageUnenrolled = () => {
       }))) ??
     [];
 
+  const dispatch = useAppDispatch();
+
   const enrollInClass = useEnrollInClassMutation({
-    onSuccess: () => console.log("Success"),
-    onError: () => console.log("ERROR!"),
+    onSuccess: () => {
+      dispatch(
+        setSuccessSnackbar({
+          title: "Student Enrolled in Class",
+          content:
+            "The user is added to the classroom. The will be able to see the class data instantly",
+        })
+      );
+    },
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
+    },
   });
 
   const handleClassUpdate = (id, classrooms) => {
