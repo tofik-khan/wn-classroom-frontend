@@ -21,8 +21,11 @@ import { useMembercodesQuery, useUserMutation } from "@/queries/users";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useClassroomQuery } from "@/queries/classrooms";
+import { InfoOutline } from "@mui/icons-material";
+import { RegisterParentStudentAccountDetails } from "./modals/RegisterParentStudentAccountDetails";
 
 export const PageRegister = () => {
+  const [openInfoDialog, setOpenInfoDialog] = useState(false);
   const { control, handleSubmit, watch } = useForm<User>({
     defaultValues: {
       role: "parent",
@@ -112,13 +115,19 @@ export const PageRegister = () => {
           >
             <Typography variant="h4" fontSize={24}>
               Create a {role} account{" "}
+              <InfoOutline
+                sx={{ "&:hover": { cursor: "pointer" } }}
+                onClick={() => setOpenInfoDialog(true)}
+              />
             </Typography>
             <Box sx={{ my: 2 }}>
               <Controller
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <TextField
                     fullWidth
                     required
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
                     {...field}
                     className="materialUIInput"
                     label="Name"
@@ -127,11 +136,12 @@ export const PageRegister = () => {
                 name="name"
                 control={control}
                 key={"name-input"}
+                rules={{ required: "This is a required field" }}
               />
             </Box>
             <Box sx={{ my: 2 }}>
               <Controller
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <Autocomplete
                     className="materialUIInput"
                     options={JAMMAT}
@@ -148,6 +158,8 @@ export const PageRegister = () => {
                         {...params}
                         required
                         label="Jammat / Chapter"
+                        error={!!fieldState.error}
+                        helperText={fieldState.error?.message}
                       />
                     )}
                   />
@@ -155,6 +167,7 @@ export const PageRegister = () => {
                 name="jammat"
                 control={control}
                 key="jammat-input"
+                rules={{ required: "This is a required field" }}
               />
             </Box>
             <Box sx={{ my: 2 }}>
@@ -217,6 +230,11 @@ export const PageRegister = () => {
           </Paper>
         </Box>
       </form>
+      <RegisterParentStudentAccountDetails
+        role={role}
+        open={openInfoDialog}
+        onClose={() => setOpenInfoDialog(false)}
+      />
     </>
   );
 };
@@ -226,11 +244,13 @@ const ParentQuestionaire = ({ control }) => {
     <>
       <Box sx={{ my: 2 }}>
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextField
               fullWidth
               required
               {...field}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message ?? ""}
               className="materialUIInput"
               label="Member Code"
             />
@@ -238,15 +258,18 @@ const ParentQuestionaire = ({ control }) => {
           name="membercode"
           control={control}
           key={"membercode-input"}
+          rules={{ required: "This is a required field" }}
         />
       </Box>
       <Box sx={{ my: 2 }}>
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextField
               fullWidth
               required
               {...field}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message ?? ""}
               className="materialUIInput"
               label="Phone Number"
             />
@@ -254,6 +277,7 @@ const ParentQuestionaire = ({ control }) => {
           name="phone"
           control={control}
           key={"phone-input"}
+          rules={{ required: "This is a required field" }}
         />
       </Box>
     </>

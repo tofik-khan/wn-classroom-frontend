@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Link, Typography } from "@mui/material";
 import WNLogo from "/assets/wn-logo.png";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -37,6 +37,7 @@ const IntroSection: React.FC = () => {
             <img src={WNLogo} width={"140px"} />
             <Button
               variant="contained"
+              size="large"
               onClick={handleLogin}
               sx={{
                 mt: 2,
@@ -47,28 +48,32 @@ const IntroSection: React.FC = () => {
           </Box>
 
           {/* Text Content */}
-          <Box sx={{ flex: 1 }}>
+          <Box
+            sx={{
+              flex: 1,
+              textAlign: { xs: "center", md: "left" },
+            }}
+          >
             <Typography variant="h4" fontWeight={600} gutterBottom>
-              Online classes for Waqf-e-Nau
+              Online classes for Waqf&#8209;e&#8209;Nau
             </Typography>
 
             <Typography variant="body1" color="text.secondary" paragraph>
-              This platform has been developed to support the educational and
-              Tarbiyyat goals by providing a structured, secure, and organized
-              environment for learning.
+              The National Waqfe Nau Department, USA holds bi-weekly classes on
+              this platform for Waqifeen-e-Nau children to study and learn the
+              prescribed syllabus. These classes are for Waqifeen-e-Nau boys
+              ages 4 to 21. These classes cover the syllabus and include
+              interactive discussions on various Tarbiyyat topics.
             </Typography>
-
-            <Typography variant="body1" color="text.secondary" paragraph>
-              It enables teachers and administrators to guide students
-              effectively while helping Waqf-e-Nau remain consistent in their
-              academic and moral development through organized classes,
-              assignments, and supervision.
-            </Typography>
-
-            <Typography variant="body1" color="text.secondary" paragraph>
-              The system is designed to complement existing departmental
-              programs and operates under the guidance and objectives of the
-              Waqf-e-Nau Department.
+            <Typography variant="body1">
+              For Waqifaat Classes, organized and taught by Lajna Imaillah USA,
+              please visit{" "}
+              <Link
+                href="https://www.waqfenau.us/bi-weekly-online-classes-girls/"
+                target="_blank"
+              >
+                Waqf-e-Nau Girls page on the Website
+              </Link>
             </Typography>
           </Box>
         </Box>
