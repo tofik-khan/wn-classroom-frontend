@@ -68,7 +68,7 @@ export const ProtectedLayout = withAuthenticationRequired(
         </Box>
         <Snackbar
           open={open}
-          autoHideDuration={7000}
+          autoHideDuration={type === "error" ? 30000 : 5000}
           onClose={() => dispatch(closeSnackbar())}
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
         >
