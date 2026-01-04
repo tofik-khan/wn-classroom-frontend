@@ -23,11 +23,12 @@ const hasAccessToClass = (user: User, classroomId: string | undefined) => {
   const { data: myStudents } = useMyStudentsQuery();
   if (!user || !classroomId) return false;
   if (user.role === "parent") {
-    const myStudentsClassrooms = myStudents!
-      .map((student) => {
-        return student!.classrooms!.map((classroom) => classroom.value);
-      })
-      .flat();
+    const myStudentsClassrooms =
+      myStudents!
+        .map((student) => {
+          return student!.classrooms!.map((classroom) => classroom.value);
+        })
+        .flat() ?? [];
     return myStudentsClassrooms?.includes(classroomId) || false;
   }
   if (user.role === "admin" || user.role === "substitute") return true;
