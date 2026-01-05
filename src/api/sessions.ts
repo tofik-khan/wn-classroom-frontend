@@ -17,4 +17,22 @@ export const SessionAPI = {
       },
     });
   },
+  updateAttendance: ({
+    authToken,
+    data,
+    sessionId,
+  }: {
+    authToken: string;
+    data: {
+      studentId: string;
+      attendance: "present" | "tardy" | "absent";
+    };
+    sessionId: string;
+  }) => {
+    return axios.put(`${API_BASE}/sessions/${sessionId}/attendance`, data, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
 };
