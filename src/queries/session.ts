@@ -32,3 +32,26 @@ export const useSessionMutation = ({ onSuccess, onError }) => {
     onError,
   });
 };
+
+export const useAttendanceMutation = ({ onSuccess, onError }) => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  return useMutation({
+    mutationFn: async ({
+      data,
+      sessionId,
+    }: {
+      data: {
+        studentId: string;
+        attendance: "present" | "tardy" | "absent";
+        role: "teacher" | "student";
+      };
+      sessionId: string;
+    }) => {
+      const token = await getAccessTokenSilently();
+      return API.updateAttendance({ authToken: token, data, sessionId });
+    },
+    onSuccess,
+    onError,
+  });
+};

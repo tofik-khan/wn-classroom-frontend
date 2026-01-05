@@ -4,7 +4,11 @@ import { Loading } from "@/components/Loading";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { useOneClassroomQuery } from "@/queries/classrooms";
 import { useMyStudentsQuery } from "@/queries/parents";
-import { useSessionMutation, useSessionQuery } from "@/queries/session";
+import {
+  useAttendanceMutation,
+  useSessionMutation,
+  useSessionQuery,
+} from "@/queries/session";
 import { useTeacherByClassIdQuery } from "@/queries/teachers";
 import { Classroom } from "@/types/classroom";
 import { User } from "@/types/user";
@@ -20,13 +24,23 @@ import {
   Box,
   Button,
   Chip,
+  FormControl,
+  FormControlLabel,
   Grid,
   Link,
   Paper,
+  Radio,
+  RadioGroup,
   Typography,
 } from "@mui/material";
 import { ClockIcon } from "@mui/x-date-pickers";
+
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { AnnoucementModal } from "../modals/ClassAnnouncementModal";
@@ -56,8 +70,24 @@ const hasAccessToClass = (user: User, classroomId: string | undefined) => {
 
 const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
   const { data: classroomSession } = useSessionQuery(classroom?._id);
+  const { data: myStudents } = useMyStudentsQuery();
+  const { currentUser } = useAppSelector((state) => state.user);
 
   const schedule = classroom?.schedule.map((schedule) => dayjs(schedule));
+
+  const dispatch = useAppDispatch();
+  const updateAttendance = useAttendanceMutation({
+    onSuccess: () => {},
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
+    },
+  });
+
   return (
     <Paper
       elevation={0}
@@ -77,6 +107,38 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
                   variant="contained"
                   href={classroomSession.link}
                   target="_blank"
+                  onClick={() => {
+                    updateAttendance.mutate({
+                      data: {
+                        role: teacherRoles.includes(currentUser.role)
+                          ? "teacher"
+                          : "student",
+                        studentId:
+                          currentUser.role === "student"
+                            ? `${currentUser._id}`
+                            : currentUser.role === "parent"
+                            ? myStudents
+                                ?.find((student) =>
+                                  student.classrooms
+                                    ?.map((classroom) => classroom.value)
+                                    .includes(classroomSession.classroomId)
+                                )
+                                ?._id.toString() ?? ""
+                            : "",
+                        attendance: dayjs()
+                          .tz("America/New_York")
+                          .isAfter(
+                            dayjs(classroomSession.startTime.actual).add(
+                              10,
+                              "minutes"
+                            )
+                          )
+                          ? "tardy"
+                          : "present",
+                      },
+                      sessionId: classroomSession._id,
+                    });
+                  }}
                 >
                   Join Session
                 </Button>
@@ -247,6 +309,113 @@ const ClassAnnouncementsContainer = () => {
   );
 };
 
+const ClassroomAttendanceContainer = () => {
+  const { id } = useParams();
+  const { isLoading, data: classroomSession } = useSessionQuery(id);
+  const dispatch = useAppDispatch();
+  const updateAttendance = useAttendanceMutation({
+    onSuccess: () => {
+      dispatch(
+        setSuccessSnackbar({
+          title: "Attendance Updated",
+          content: "",
+        })
+      );
+    },
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
+    },
+  });
+
+  if (isLoading)
+    return (
+      <Paper
+        sx={() => ({
+          padding: 3,
+          my: 4,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        })}
+      >
+        <Loading height="100px" />
+      </Paper>
+    );
+
+  if (!classroomSession) return <></>;
+
+  return (
+    <Paper
+      sx={() => ({
+        padding: 3,
+        my: 4,
+      })}
+    >
+      <Typography variant="h5">Session Attendance</Typography>
+      <Typography variant="body1" color="text.secondary" mb={2}>
+        When a student joins the session, the attendance is updated
+        automatically. You can still override the attendance at the end of the
+        session
+      </Typography>
+      <Grid container columnSpacing={5}>
+        {classroomSession.attendance.map((student) => (
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            key={student.studentId}
+            sx={(theme) => ({
+              display: "flex",
+              gap: 1,
+              alignItems: "center",
+              justifyContent: "space-between",
+              border: `1px dashed ${theme.palette.grey[300]}`,
+              paddingX: 2,
+            })}
+          >
+            <Typography>{student.studentName}</Typography>
+            <FormControl>
+              <RadioGroup
+                defaultValue={student.attendance}
+                onChange={(_, value) => {
+                  updateAttendance.mutate({
+                    data: {
+                      role: "student",
+                      studentId: student.studentId,
+                      attendance: value as "present" | "tardy" | "absent",
+                    },
+                    sessionId: classroomSession._id,
+                  });
+                }}
+                row
+              >
+                <FormControlLabel
+                  value={"present"}
+                  label="Present"
+                  control={<Radio />}
+                />
+                <FormControlLabel
+                  value={"tardy"}
+                  label="Tardy"
+                  control={<Radio />}
+                />
+                <FormControlLabel
+                  value={"absent"}
+                  label="Absent"
+                  control={<Radio />}
+                />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        ))}
+      </Grid>
+    </Paper>
+  );
+};
+
 export const PageClass = () => {
   const { id } = useParams();
   const { currentUser } = useAppSelector((state) => state.user);
@@ -391,6 +560,9 @@ export const PageClass = () => {
           </Grid>
         </Grid>
       </Paper>
+      {teacherRoles.includes(currentUser.role) && (
+        <ClassroomAttendanceContainer />
+      )}
       <Grid rowSpacing={1} height={"fit-content"} columnSpacing={1} container>
         <Grid size={{ xs: 12, lg: 8 }} order={{ xs: 2, md: 1 }}>
           <ClassResourcesContainer classroom={data} />

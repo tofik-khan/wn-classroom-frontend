@@ -30,7 +30,7 @@ export const PageUnenrolled = () => {
         setSuccessSnackbar({
           title: "Student Enrolled in Class",
           content:
-            "The user is added to the classroom. The will be able to see the class data instantly",
+            "The user is added to the classroom. They will be able to see the class data instantly",
         })
       );
     },
