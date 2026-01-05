@@ -4,6 +4,7 @@ import { classroomAPI } from "./classrooms";
 import { parentsAPI } from "./parents";
 import { SessionAPI } from "./sessions";
 import { studentsAPI } from "./students";
+import { supportAPI } from "./support";
 import { teacherAPI } from "./teachers";
 import { userAPI } from "./users";
 
@@ -16,4 +17,5 @@ export const API = {
   ...parentsAPI,
   ...SessionAPI,
   ...AnnouncementAPI,
+  ...supportAPI,
 };

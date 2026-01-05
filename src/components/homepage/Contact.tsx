@@ -1,6 +1,9 @@
 import { Box, Typography, Button } from "@mui/material";
+import { useState } from "react";
+import { ContactModal } from "./ContactModal";
 
 const Contact = () => {
+  const [open, setOpen] = useState(false);
   return (
     <>
       <Box
@@ -21,8 +24,11 @@ const Contact = () => {
         <Typography variant="body2" color="text.secondary">
           Reach out for any concerns.
         </Typography>
-        <Button variant="contained">Contact Us</Button>
+        <Button variant="contained" onClick={() => setOpen(true)}>
+          Contact Us
+        </Button>
       </Box>
+      <ContactModal open={open} onClose={() => setOpen(false)} />
     </>
   );
 };
