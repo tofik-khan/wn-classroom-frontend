@@ -14,4 +14,8 @@ export type Classroom = {
     label: string;
     value: string;
   };
+  resources?: {
+    title: string;
+    link: string;
+  }[];
 };
