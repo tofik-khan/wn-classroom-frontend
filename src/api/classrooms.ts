@@ -52,4 +52,22 @@ export const classroomAPI = {
       },
     });
   },
+  addClassroomResource: ({
+    authToken,
+    data,
+    id,
+  }: {
+    authToken: string;
+    data: {
+      link: string;
+      title: string;
+    };
+    id?: string;
+  }) => {
+    return axios.post(`${API_BASE}/classrooms/${id}/resources`, data, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
 };
