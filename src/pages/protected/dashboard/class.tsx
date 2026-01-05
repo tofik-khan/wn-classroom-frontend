@@ -16,7 +16,15 @@ import {
   Person,
   SchoolOutlined,
 } from "@mui/icons-material";
-import { Box, Button, Chip, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Grid,
+  Link,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { ClockIcon } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -25,6 +33,7 @@ import { AnnoucementModal } from "../modals/ClassAnnouncementModal";
 import { useAnnouncementQuery } from "@/queries/announcements";
 import { Editor } from "@/components/wysiwyg/editor";
 import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
+import { ResourceModal } from "../modals/ClassResourceModal";
 
 const teacherRoles = ["admin", "teacher", "substitute"];
 
@@ -98,30 +107,58 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
   );
 };
 
-const ClassResourcesContainer = () => {
+const ClassResourcesContainer = ({ classroom }: { classroom?: Classroom }) => {
+  const [open, setOpen] = useState(false);
+  const { currentUser } = useAppSelector((state) => state.user);
   return (
-    <Paper sx={{ padding: 4, my: 3, minHeight: "300px" }}>
-      <Typography variant="h5">Class Resources</Typography>
-      <Typography color="text.secondary">
-        Materials and Resources for this class
-      </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          p: 3,
-          my: 2,
-        }}
-      >
-        <InsertDriveFileOutlined
-          color="disabled"
-          sx={{ width: "40px", height: "40px" }}
-        />
-        <Typography color="textSecondary">No Resources yet...</Typography>
-      </Box>
-    </Paper>
+    <>
+      <Paper sx={{ padding: 4, my: 3, minHeight: "300px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box>
+            <Typography variant="h5">Class Resources</Typography>
+          </Box>
+          {teacherRoles.includes(currentUser.role) && (
+            <Button variant="contained" onClick={() => setOpen(true)}>
+              <Add />
+            </Button>
+          )}
+        </Box>
+        <Typography color="text.secondary">
+          Materials and Resources for this class
+        </Typography>
+        {classroom && classroom.resources && classroom.resources?.length > 0 ? (
+          classroom.resources.map((resource) => (
+            <Link key={resource.link} href={resource.link} target="_blank">
+              <Typography>{resource.title}</Typography>
+            </Link>
+          ))
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 3,
+              my: 2,
+            }}
+          >
+            <InsertDriveFileOutlined
+              color="disabled"
+              sx={{ width: "40px", height: "40px" }}
+            />
+            <Typography color="textSecondary">No Resources yet...</Typography>
+          </Box>
+        )}
+      </Paper>
+      <ResourceModal open={open} onClose={() => setOpen(false)} />
+    </>
   );
 };
 
@@ -356,7 +393,7 @@ export const PageClass = () => {
       </Paper>
       <Grid rowSpacing={1} height={"fit-content"} columnSpacing={1} container>
         <Grid size={{ xs: 12, lg: 8 }} order={{ xs: 2, md: 1 }}>
-          <ClassResourcesContainer />
+          <ClassResourcesContainer classroom={data} />
         </Grid>
         <Grid size={{ xs: 12, lg: 4 }} order={{ xs: 1, md: 2 }}>
           <ClassAnnouncementsContainer />
