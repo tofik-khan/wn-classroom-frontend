@@ -1,18 +1,23 @@
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { Outlet, useNavigate } from "react-router";
 import { AdminSideBar } from "../Nav/AdminSideBar";
-import { Alert, AlertTitle, Box, Snackbar } from "@mui/material";
+import { Alert, AlertTitle, Box, Fab, Snackbar } from "@mui/material";
 import { Loading } from "../Loading";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { setCurrentUser } from "@/reducers/user";
 import { useUserQuery } from "@/queries/users";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { closeSnackbar } from "@/reducers/snackbar";
+import { QuestionMark } from "@mui/icons-material";
+import { SupportFormModal } from "@/pages/protected/modals/SupportFormModal";
 
 export const ProtectedLayout = withAuthenticationRequired(
   () => {
     const { isLoading: isLoadingAuth, logout } = useAuth0();
     const { isLoading: isLoadingUser, data: currentUser } = useUserQuery();
+
+    const [supportModalOpen, setSupportMoalOpen] = useState(false);
+
     const navigate = useNavigate();
     const { open, type, title, content } = useAppSelector(
       (state) => state.snackbar
@@ -82,6 +87,17 @@ export const ProtectedLayout = withAuthenticationRequired(
             {content}
           </Alert>
         </Snackbar>
+        <Fab
+          color="primary"
+          sx={{ position: "sticky", bottom: 4, left: "100%" }}
+          onClick={() => setSupportMoalOpen(true)}
+        >
+          <QuestionMark />
+        </Fab>
+        <SupportFormModal
+          open={supportModalOpen}
+          onClose={() => setSupportMoalOpen(false)}
+        />
       </>
     );
   },
