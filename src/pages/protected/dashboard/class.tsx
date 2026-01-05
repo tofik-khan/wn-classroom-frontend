@@ -34,7 +34,13 @@ import {
   Typography,
 } from "@mui/material";
 import { ClockIcon } from "@mui/x-date-pickers";
+
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { AnnoucementModal } from "../modals/ClassAnnouncementModal";
@@ -64,8 +70,24 @@ const hasAccessToClass = (user: User, classroomId: string | undefined) => {
 
 const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
   const { data: classroomSession } = useSessionQuery(classroom?._id);
+  const { data: myStudents } = useMyStudentsQuery();
+  const { currentUser } = useAppSelector((state) => state.user);
 
   const schedule = classroom?.schedule.map((schedule) => dayjs(schedule));
+
+  const dispatch = useAppDispatch();
+  const updateAttendance = useAttendanceMutation({
+    onSuccess: () => {},
+    onError: (error) => {
+      dispatch(
+        setErrorSnackbar({
+          title: "Oops! Something went wrong!",
+          content: error?.message,
+        })
+      );
+    },
+  });
+
   return (
     <Paper
       elevation={0}
@@ -85,6 +107,38 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
                   variant="contained"
                   href={classroomSession.link}
                   target="_blank"
+                  onClick={() => {
+                    updateAttendance.mutate({
+                      data: {
+                        role: teacherRoles.includes(currentUser.role)
+                          ? "teacher"
+                          : "student",
+                        studentId:
+                          currentUser.role === "student"
+                            ? `${currentUser._id}`
+                            : currentUser.role === "parent"
+                            ? myStudents
+                                ?.find((student) =>
+                                  student.classrooms
+                                    ?.map((classroom) => classroom.value)
+                                    .includes(classroomSession.classroomId)
+                                )
+                                ?._id.toString() ?? ""
+                            : "",
+                        attendance: dayjs()
+                          .tz("America/New_York")
+                          .isAfter(
+                            dayjs(classroomSession.startTime.actual).add(
+                              10,
+                              "minutes"
+                            )
+                          )
+                          ? "tardy"
+                          : "present",
+                      },
+                      sessionId: classroomSession._id,
+                    });
+                  }}
                 >
                   Join Session
                 </Button>
