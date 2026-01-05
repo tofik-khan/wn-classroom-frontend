@@ -58,3 +58,25 @@ export const useUpdateClassroomMutation = ({ onSuccess, onError }) => {
     onError,
   });
 };
+
+export const useClassroomResourceMutation = ({ onSuccess, onError }) => {
+  const { getAccessTokenSilently } = useAuth0();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      data,
+      id,
+    }: {
+      data: { link: string; title: string };
+      id?: string;
+    }) => {
+      const token = await getAccessTokenSilently();
+      return API.addClassroomResource({ authToken: token, data, id });
+    },
+    onSuccess: (params) => {
+      queryClient.invalidateQueries({ queryKey: ["classroom"] });
+      onSuccess(params);
+    },
+    onError,
+  });
+};
