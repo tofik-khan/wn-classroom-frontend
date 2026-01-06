@@ -89,7 +89,7 @@ export const ProtectedLayout = withAuthenticationRequired(
         </Snackbar>
         <Fab
           color="primary"
-          sx={{ position: "sticky", bottom: 4, left: "100%" }}
+          sx={{ position: "fixed", bottom: "16px", left: "calc(100% - 75px)" }}
           onClick={() => setSupportMoalOpen(true)}
         >
           <QuestionMark />
