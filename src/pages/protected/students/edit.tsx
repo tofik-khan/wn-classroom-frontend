@@ -222,8 +222,13 @@ export const PageEditStudent = () => {
                 onChange={(_, option) => {
                   field.onChange(option);
                 }}
+                limitTags={2}
                 renderInput={(params) => (
-                  <TextField {...params} label="Class Assigned" />
+                  <TextField
+                    sx={{ width: "400px" }}
+                    {...params}
+                    label="Class Assigned"
+                  />
                 )}
               />
             )}
