@@ -20,6 +20,10 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
@@ -59,7 +63,9 @@ export const PageEditClassroom = () => {
 
   useEffect(() => {
     if (data && data.schedule)
-      setSchedule(data.schedule.map((day) => dayjs(day)));
+      setSchedule(
+        data.schedule.map((day) => dayjs(day).tz("America/New_York"))
+      );
   }, [data]);
 
   if (isLoading) return <Loading />;
