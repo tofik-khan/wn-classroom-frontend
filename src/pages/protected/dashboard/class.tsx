@@ -73,7 +73,10 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
   const { data: myStudents } = useMyStudentsQuery();
   const { currentUser } = useAppSelector((state) => state.user);
 
-  const schedule = classroom?.schedule.map((schedule) => dayjs(schedule));
+  const schedule = classroom?.schedule.map((schedule) =>
+    dayjs(schedule).tz("America/New_York")
+  );
+  console.log(schedule);
 
   const dispatch = useAppDispatch();
   const updateAttendance = useAttendanceMutation({
@@ -554,7 +557,9 @@ export const PageClass = () => {
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
             <MultiDatePicker
-              values={data?.schedule?.map((schedule) => dayjs(schedule))}
+              values={data?.schedule?.map((schedule) =>
+                dayjs(schedule).tz("America/New_York")
+              )}
               setValues={() => {}}
             />
           </Grid>
