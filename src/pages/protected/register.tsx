@@ -18,15 +18,11 @@ import { useAppDispatch, useAppSelector } from "@/hooks";
 import { JAMMAT } from "@/constants/jammat";
 import { MONTHS, YEARS } from "@/constants";
 import { useMembercodesQuery, useUserMutation } from "@/queries/users";
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useClassroomQuery } from "@/queries/classrooms";
-import { InfoOutline } from "@mui/icons-material";
-import { RegisterParentStudentAccountDetails } from "./modals/RegisterParentStudentAccountDetails";
 import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 
 export const PageRegister = () => {
-  const [openInfoDialog, setOpenInfoDialog] = useState(false);
   const { control, handleSubmit, watch } = useForm<User>({
     defaultValues: {
       role: "parent",
@@ -121,10 +117,14 @@ export const PageRegister = () => {
           >
             <Typography variant="h4" fontSize={24}>
               Create a {role} account{" "}
-              <InfoOutline
-                sx={{ "&:hover": { cursor: "pointer" } }}
-                onClick={() => setOpenInfoDialog(true)}
-              />
+            </Typography>
+            <Typography variant="caption">
+              <strong>{currentUser.email}</strong> is the {role} email.
+            </Typography>
+            <Typography variant="caption" component={"p"}>
+              {role === "parent"
+                ? "As a parent, you can add your dependants in your dashboard and use your account to join classes for your children"
+                : "As a student, you can join the classes directly from your account"}
             </Typography>
             <Box sx={{ my: 2 }}>
               <Controller
@@ -237,11 +237,6 @@ export const PageRegister = () => {
           </Paper>
         </Box>
       </form>
-      <RegisterParentStudentAccountDetails
-        role={role}
-        open={openInfoDialog}
-        onClose={() => setOpenInfoDialog(false)}
-      />
     </>
   );
 };
