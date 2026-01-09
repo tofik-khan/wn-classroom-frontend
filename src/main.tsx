@@ -12,7 +12,16 @@ import { Provider } from "react-redux";
 
 LicenseInfo.setLicenseKey(import.meta.env.VITE_MUI_X_PRO_LICENSE);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      /**
+       * Disable window refresh when user navigates away from window
+       */
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
