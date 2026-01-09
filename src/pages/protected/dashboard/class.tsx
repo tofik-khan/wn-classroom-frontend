@@ -131,7 +131,7 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
                         attendance: dayjs()
                           .tz("America/New_York")
                           .isAfter(
-                            dayjs(classroomSession.startTime.actual).add(
+                            dayjs(classroomSession.startTime.scheduled).add(
                               10,
                               "minutes"
                             )
