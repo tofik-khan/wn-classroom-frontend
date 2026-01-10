@@ -63,7 +63,7 @@ const StudentDashboard = () => {
   return (
     <>
       <Typography variant="h2">
-        Welcome {currentUser.name?.split(" ")[0] ?? ""}
+        Assalamo Alaikum {currentUser.name?.split(" ")[0] ?? ""}
       </Typography>
       <Typography variant="body1">
         Here's an overview of your learning journey
@@ -102,7 +102,7 @@ const ParentDashboard = () => {
   return (
     <>
       <Typography variant="h2">
-        Welcome {currentUser.name?.split(" ")[0] ?? ""}
+        Assalamo Alaikum {currentUser.name?.split(" ")[0] ?? ""}
       </Typography>
       <Typography variant="body1">
         Here's an overview of your kids' learning journey
@@ -255,7 +255,7 @@ export const TeacherDashboard = () => {
   return (
     <>
       <Typography variant="h2">
-        Welcome {currentUser.name?.split(" ")[0] ?? ""} - Teacher
+        Assalamo Alaikum {currentUser.name?.split(" ")[0] ?? ""} - Teacher
       </Typography>
       <Paper
         sx={(theme) => ({
@@ -290,7 +290,8 @@ const SubstituteDashboard = () => {
   return (
     <>
       <Typography variant="h2">
-        Welcome {currentUser.name.split(" ")[0] ?? ""} - Substitute Teacher
+        Assalamo Alaikum {currentUser.name.split(" ")[0] ?? ""} - Substitute
+        Teacher
       </Typography>
       <Paper
         sx={(theme) => ({
@@ -320,7 +321,7 @@ export const PageDashboard = () => {
   return (
     <>
       <Typography variant="h2">
-        Welcome {currentUser.name?.split(" ")[0] ?? ""}
+        Assalamo Alaikum {currentUser.name?.split(" ")[0] ?? ""}
       </Typography>
     </>
   );
