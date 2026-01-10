@@ -6,6 +6,7 @@ import {
 } from "@/queries/users";
 import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { User } from "@/types/user";
+import { Check, Close } from "@mui/icons-material";
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import { DataGridPro, gridClasses } from "@mui/x-data-grid-pro";
 import dayjs from "dayjs";
@@ -72,6 +73,58 @@ export const PageUnenrolled = () => {
       width: 175,
     },
     {
+      field: "verification",
+      headerName: "Verification",
+      renderCell: ({ row }: { row: User }) => {
+        console.log(Object.keys(row).includes("verification"));
+        if (!row.verification) return "Unverified";
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <Typography sx={{ display: "flex", alignItems: "center" }}>
+              Name:{" "}
+              {row.verification.name ? (
+                <Check color="success" />
+              ) : (
+                <Close color="error" />
+              )}
+            </Typography>
+            <Typography sx={{ display: "flex", alignItems: "center" }}>
+              AMI:{" "}
+              {row.verification.membercode ? (
+                <Check color="success" />
+              ) : (
+                <Close color="error" />
+              )}
+            </Typography>
+            <Typography sx={{ display: "flex", alignItems: "center" }}>
+              WN:{" "}
+              {row.verification.waqfenauId ? (
+                <Check color="success" />
+              ) : (
+                <Close color="error" />
+              )}
+            </Typography>
+            <Typography sx={{ display: "flex", alignItems: "center" }}>
+              Age:{" "}
+              {row.verification.age ? (
+                <Check color="success" />
+              ) : (
+                <Close color="error" />
+              )}
+            </Typography>
+          </Box>
+        );
+      },
+    },
+    {
       field: "email",
       headerName: "Email & Phone",
       renderCell: ({ row }: { row: User }) => (
@@ -88,14 +141,6 @@ export const PageUnenrolled = () => {
         </Box>
       ),
       flex: 4,
-    },
-    {
-      field: "gender",
-      headerName: "Gender",
-      renderCell: ({ row }: { row: User }) => {
-        return row.gender;
-      },
-      width: 100,
     },
     {
       field: "parentEmail",
@@ -200,7 +245,7 @@ export const PageUnenrolled = () => {
           </Box>
         );
       },
-      width: 500,
+      width: 300,
     },
   ];
   return (

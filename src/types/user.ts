@@ -31,4 +31,10 @@ export type User = {
     value: string;
   }[];
   urduClass: "none" | "beginner" | "intermediate";
+  verification?: {
+    name: boolean;
+    membercode: boolean;
+    waqfenauId: boolean;
+    age: boolean;
+  };
 };
