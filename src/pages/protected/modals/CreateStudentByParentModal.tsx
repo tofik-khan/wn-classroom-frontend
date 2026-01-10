@@ -3,6 +3,7 @@ import { JAMMAT } from "@/constants/jammat";
 import { useAppDispatch } from "@/hooks";
 import { useClassroomQuery } from "@/queries/classrooms";
 import { useMyStudentsMutation } from "@/queries/parents";
+import { useMembercodesQuery } from "@/queries/users";
 import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { User } from "@/types/user";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -22,6 +23,7 @@ import {
   Radio,
   RadioGroup,
   TextField,
+  Typography,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 
@@ -35,6 +37,7 @@ export const CreateStudentByParentModal = ({
   const { user } = useAuth0();
   const { control, handleSubmit, reset } = useForm<User>();
   const dispatch = useAppDispatch();
+  const { data: membercodes } = useMembercodesQuery();
   const createStudent = useMyStudentsMutation({
     onSuccess: () => {
       reset();
@@ -103,7 +106,7 @@ export const CreateStudentByParentModal = ({
         fullWidth
         maxWidth="sm"
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <DialogTitle>Add Student</DialogTitle>
           <IconButton
             aria-label="close"
@@ -130,17 +133,20 @@ export const CreateStudentByParentModal = ({
             }}
           >
             <Controller
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <TextField
                   required
                   {...field}
                   className="materialUIInput"
                   label="Name"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
                 />
               )}
               name="name"
               control={control}
               key="name-input"
+              rules={{ required: "This is a required field" }}
             />
             <Controller
               render={({ field }) => (
@@ -155,7 +161,7 @@ export const CreateStudentByParentModal = ({
               key="email-input"
             />
             <Controller
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <Autocomplete
                   className="materialUIInput"
                   options={JAMMAT}
@@ -168,13 +174,22 @@ export const CreateStudentByParentModal = ({
                     field.onChange(option?.value);
                   }}
                   renderInput={(params) => (
-                    <TextField {...params} required label="Jammat / Chapter" />
+                    <TextField
+                      {...params}
+                      required
+                      label="Jammat / Chapter"
+                      error={!!fieldState.error}
+                      helperText={fieldState.error?.message}
+                    />
                   )}
                 />
               )}
               name="jammat"
               control={control}
               key="jammat-input"
+              rules={{
+                required: "Please select one Option",
+              }}
             />
             <Controller
               render={({ field }) => {
@@ -193,6 +208,10 @@ export const CreateStudentByParentModal = ({
                         control={<Radio />}
                       />
                     </RadioGroup>
+                    <Typography variant="caption" color={"text.secondary"}>
+                      The Online Classes are currently only available for
+                      Waqf-e-Nau Boys
+                    </Typography>
                   </FormControl>
                 );
               }}
@@ -203,45 +222,67 @@ export const CreateStudentByParentModal = ({
               rules={{ required: true }}
             />
             <Controller
-              render={({ field }) => (
-                <TextField
-                  fullWidth
-                  required
-                  {...field}
-                  className="materialUIInput"
-                  label="Member Code"
-                />
-              )}
+              render={({ field, fieldState }) => {
+                return (
+                  <TextField
+                    fullWidth
+                    {...field}
+                    required
+                    className="materialUIInput"
+                    label="Member Code"
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
+                    onChange={(event) => field.onChange(event.target.value)}
+                  />
+                );
+              }}
               name="membercode"
               control={control}
               key={"membercode-input"}
+              rules={{
+                required: "This is a required field",
+                validate: (value) =>
+                  membercodes.includes(value)
+                    ? "This membercode already exists. If the student has already created their account, please reach out to the admin team to connect the two accounts"
+                    : true,
+              }}
             />
             <Controller
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <TextField
                   fullWidth
                   {...field}
                   className="materialUIInput"
                   label="Phone Number"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
                 />
               )}
               name="phone"
               control={control}
               key={"phone-input"}
+              rules={{
+                required: "This is a required field",
+              }}
             />
             <Controller
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <TextField
                   fullWidth
                   required
                   {...field}
                   className="materialUIInput"
                   label="Waqf-e-Nau ID"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
                 />
               )}
               name="waqfenauId"
               control={control}
               key={"waqfenauId-input"}
+              rules={{
+                required: "This is a required field",
+              }}
             />
             <Controller
               render={({ field, fieldState }) => (
@@ -337,6 +378,9 @@ export const CreateStudentByParentModal = ({
                 name="dob.month"
                 control={control}
                 key="dob-month-input"
+                rules={{
+                  required: "Please select one Option",
+                }}
               />
               <Controller
                 render={({ field, fieldState }) => (
@@ -366,6 +410,9 @@ export const CreateStudentByParentModal = ({
                 name="dob.year"
                 control={control}
                 key="dob-year-input"
+                rules={{
+                  required: "Please select one Option",
+                }}
               />
             </Box>
           </DialogContent>
