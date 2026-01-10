@@ -1,5 +1,5 @@
 import { useOneClassroomQuery } from "@/queries/classrooms";
-import { Typography, Paper, Box } from "@mui/material";
+import { Typography, Paper, Box, Button } from "@mui/material";
 import { Loading } from "./Loading";
 import { getNextSession } from "@/utils/datetime";
 import { AccessTimeOutlined, CalendarTodayOutlined } from "@mui/icons-material";
@@ -67,6 +67,9 @@ export const ClassCard = ({ id }) => {
             <AccessTimeOutlined /> {data?.start.label} EST
           </Typography>
         </Box>
+        <Button variant="contained" sx={{ mt: 3 }}>
+          View Class
+        </Button>
       </Paper>
     </>
   );
