@@ -248,22 +248,17 @@ export const CreateStudentByParentModal = ({
               }}
             />
             <Controller
-              render={({ field, fieldState }) => (
+              render={({ field }) => (
                 <TextField
                   fullWidth
                   {...field}
                   className="materialUIInput"
                   label="Phone Number"
-                  error={!!fieldState.error}
-                  helperText={fieldState.error?.message}
                 />
               )}
               name="phone"
               control={control}
               key={"phone-input"}
-              rules={{
-                required: "This is a required field",
-              }}
             />
             <Controller
               render={({ field, fieldState }) => (
@@ -417,7 +412,7 @@ export const CreateStudentByParentModal = ({
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">Add Student</Button>
           </DialogActions>
         </form>
       </Dialog>
