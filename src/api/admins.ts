@@ -3,8 +3,14 @@ import { Admin } from "@/types/admin";
 import axios from "axios";
 
 export const adminAPI = {
-  getAdmins: (): Promise<{ data: Admin[]; status: string }> => {
-    return axios.get(`${API_BASE}/admins`).then((response) => response.data);
+  getAdmins: ({ authToken }): Promise<{ data: Admin[]; status: string }> => {
+    return axios
+      .get(`${API_BASE}/admins`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+      .then((response) => response.data);
   },
   createAdmin: ({
     authToken,
