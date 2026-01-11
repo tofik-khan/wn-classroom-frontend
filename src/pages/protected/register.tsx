@@ -446,7 +446,7 @@ const StudentQuestionaire = ({ control }) => {
                   label="Choose Urdu Class"
                   helperText={
                     fieldState.error?.message ??
-                    "Urdu Classes are offered for Beginners and Intermediate students"
+                    "Beginners Level Class is for those students who do not know how to speak or understand Urdu. Intermediate Level Class is for students who can understand spoken Urdu but need practice with reading and writing."
                   }
                 />
               )}
