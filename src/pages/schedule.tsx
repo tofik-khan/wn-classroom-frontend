@@ -12,7 +12,7 @@ import {
 export const PageSchedule = () => {
   const dates = [
     "January, 24, 2026",
-    "February, 21, 2026",
+    "February, 14, 2026",
     "March, 14, 2026",
     "March, 28, 2026",
     "April, 11, 2026",
