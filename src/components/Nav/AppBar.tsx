@@ -42,6 +42,7 @@ export const AppBar = () => {
       <Button target="_blank" href="https://www.waqfenau.us/">
         Waqf e Nau Website
       </Button>
+      <Button onClick={() => navigate("/schedule")}>Class Schedule</Button>
       <Button target="_blank" href="https://www.waqfenau.us/wn-syllabus/">
         Syllabus
       </Button>
