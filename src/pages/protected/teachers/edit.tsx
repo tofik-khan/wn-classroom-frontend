@@ -24,7 +24,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 export const PageEditTeacher = () => {
   const { id } = useParams();
-  const { isLoading, data } = useOneTeacherQuery(id);
+  const { isLoading, isRefetching, data } = useOneTeacherQuery(id);
   const { isLoading: isLoadingClassrooms, data: classrooms } =
     useClassroomQuery();
   const classroomsOptions =
@@ -61,12 +61,12 @@ export const PageEditTeacher = () => {
     );
 
     updateTeacher.mutate({
-      data,
+      data: { ...data, email: data.email + "@ahmadiyya.us" },
       id: id ?? "",
     });
   };
 
-  if (isLoading) return <Loading />;
+  if (isLoading || isRefetching) return <Loading />;
 
   return (
     <>
@@ -104,8 +104,9 @@ export const PageEditTeacher = () => {
                   {...field}
                   className="materialUIInput"
                   label="Email"
+                  value={field.value}
+                  onChange={field.onChange}
                   sx={{ width: "60%" }}
-                  defaultValue={data?.email.split("@")[0]}
                 />
               )}
               name="email"
