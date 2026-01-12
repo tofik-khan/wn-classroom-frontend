@@ -75,7 +75,7 @@ export const PageEditStudent = () => {
     updateStudent.mutate({
       data: {
         ...data,
-        jammat: data.jammat,
+        jammat: data.jammat.value,
       },
       id: id ?? "",
     });

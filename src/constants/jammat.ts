@@ -57,4 +57,7 @@ export const JAMMAT = [
   { value: "Richmond VA, VA", label: "Richmond VA, VA" },
   { value: "South Virginia, VA", label: "South Virginia, VA" },
   { value: "RTP, NC", label: "RTP, NC" },
+  { value: "Puerto Rico", label: "Puerto Rico" },
+  { value: "Guam", label: "Guam" },
+  { value: "Hawaii", label: "Hawaii" },
 ];
