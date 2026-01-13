@@ -21,7 +21,12 @@ import { useNavigate, useParams } from "react-router";
 export const PageEditParents = () => {
   const { id } = useParams();
   const { isLoading, data } = useOneParentsQuery(id);
-  const { data: students } = useMyStudentsQuery(data?.email);
+  const {
+    data: students,
+    isLoading: isLoadingStudents,
+    isRefetching: isRefetchingStudents,
+    refetch,
+  } = useMyStudentsQuery(data?.email);
 
   const { control, handleSubmit } = useForm<User>({
     defaultValues: data,
@@ -143,6 +148,12 @@ export const PageEditParents = () => {
       <Typography variant="h2" my={2}>
         Students Connected
       </Typography>
+      <Button
+        loading={isLoadingStudents || isRefetchingStudents}
+        onClick={() => refetch()}
+      >
+        Get Children
+      </Button>
       <List>
         {students?.map((student) => (
           <ListItem key={student._id}>
