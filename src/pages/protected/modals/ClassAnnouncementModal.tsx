@@ -68,7 +68,7 @@ export const AnnoucementModal = ({
     <>
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogTitle>Create Classroom</DialogTitle>
+          <DialogTitle>Create Announcement</DialogTitle>
           <IconButton
             aria-label="close"
             onClick={() => {
