@@ -395,6 +395,7 @@ const StudentQuestionaire = ({ control }) => {
           render={({ field, fieldState }) => (
             <Autocomplete
               className="materialUIInput"
+              multiple
               options={classroomsOptions}
               loading={isLoadingClassrooms}
               value={field.value}

@@ -194,9 +194,11 @@ export const PageUnenrolled = () => {
               height: "100%",
             }}
           >
-            {row.suggestedClass?.map((classes) => (
-              <Typography key={classes.value}>{classes.label}</Typography>
-            ))}
+            {row.suggestedClass &&
+              Array.isArray(row.suggestedClass) &&
+              row.suggestedClass?.map((classes) => (
+                <Typography key={classes.value}>{classes.label}</Typography>
+              ))}
             <Typography>Urdu Class: {row.urduClass}</Typography>
           </Box>
         );

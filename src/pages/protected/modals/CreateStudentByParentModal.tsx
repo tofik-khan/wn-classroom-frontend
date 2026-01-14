@@ -285,6 +285,8 @@ export const CreateStudentByParentModal = ({
                   className="materialUIInput"
                   options={classroomsOptions}
                   loading={isLoadingClassrooms}
+                  multiple
+                  value={field.value}
                   isOptionEqualToValue={(opt, val) => opt.value === val.value}
                   onChange={(_, option) => {
                     field.onChange(option);
