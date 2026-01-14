@@ -19,6 +19,7 @@ import { User } from "@/types/user";
 import { CreateStudentByParentModal } from "../modals/CreateStudentByParentModal";
 import { useState } from "react";
 import { useClassroomQuery } from "@/queries/classrooms";
+import { SecretaryDashboard } from "@/components/dashboard/secretary";
 
 const EmptyClassSection = () => {
   return (
@@ -318,6 +319,7 @@ export const PageDashboard = () => {
   if (currentUser.role === "parent") return <ParentDashboard />;
   if (currentUser.role === "teacher") return <TeacherDashboard />;
   if (currentUser.role === "substitute") return <SubstituteDashboard />;
+  if (currentUser.role === "secretary") return <SecretaryDashboard />;
   return (
     <>
       <Typography variant="h2">

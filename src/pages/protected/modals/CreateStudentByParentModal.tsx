@@ -283,11 +283,8 @@ export const CreateStudentByParentModal = ({
               render={({ field, fieldState }) => (
                 <Autocomplete
                   className="materialUIInput"
-                  multiple
                   options={classroomsOptions}
                   loading={isLoadingClassrooms}
-                  value={field.value}
-                  disableCloseOnSelect
                   isOptionEqualToValue={(opt, val) => opt.value === val.value}
                   onChange={(_, option) => {
                     field.onChange(option);

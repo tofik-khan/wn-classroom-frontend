@@ -9,7 +9,8 @@ export type User = {
     | "unregistered"
     | "admin"
     | "teacher"
-    | "substitute";
+    | "substitute"
+    | "secretary";
   isProfileComplete?: boolean;
   isAuthorized: boolean;
   gender?: "male" | "female";
