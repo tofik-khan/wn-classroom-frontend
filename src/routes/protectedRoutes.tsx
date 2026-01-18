@@ -15,6 +15,7 @@ import { PageEditStudent } from "@/pages/protected/students/edit";
 import { PageParents } from "@/pages/protected/parents";
 import { PageEditParents } from "@/pages/protected/parents/edit";
 import { PageSupportCase } from "@/pages/protected/support/case";
+import { PageSupport } from "@/pages/protected/support";
 
 export const ProtectedRoutes = () => {
   return (
@@ -43,7 +44,7 @@ const SupportRoute = () => {
   if (allowList.includes(currentUser.role))
     return (
       <Routes>
-        <Route path="/" element={<></>} />
+        <Route path="/" element={<PageSupport />} />
         <Route path="/:id" element={<PageSupportCase />} />
       </Routes>
     );

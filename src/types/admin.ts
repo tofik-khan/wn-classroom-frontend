@@ -1,5 +1,5 @@
 export type Admin = {
-  _id: number;
+  _id: string;
   name: string;
   email: string;
   image: string | null;

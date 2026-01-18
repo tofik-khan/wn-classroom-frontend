@@ -90,6 +90,13 @@ const MenuItems = () => {
               Reports
             </Button>
             <Button
+              fullWidth
+              sx={{ mt: 1 }}
+              onClick={() => navigate("/protected/support")}
+            >
+              Support Cases
+            </Button>
+            <Button
               variant="contained"
               sx={{ marginX: "auto", mt: 1 }}
               onClick={() => {
