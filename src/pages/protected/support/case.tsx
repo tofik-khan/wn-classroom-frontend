@@ -4,9 +4,15 @@ import {
   useSupportQuery,
   useUpdateSupportCaseMutation,
 } from "@/queries/support";
-import { Autocomplete, Box, TextField, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 export const PageSupportCase = () => {
   const { id } = useParams();
@@ -17,6 +23,7 @@ export const PageSupportCase = () => {
     onError: () => {},
   });
 
+  const navigate = useNavigate();
   if (isLoading || isLoadingAdmins) return <Loading />;
 
   return (
@@ -24,7 +31,7 @@ export const PageSupportCase = () => {
       <Typography variant="h2">Support Case</Typography>
       {data.map((supportCase) => {
         const selectedAdmin = admins?.find(
-          (admin) => admin._id === supportCase.assignedTo
+          (admin) => admin._id === supportCase.assignedTo,
         );
         return (
           <React.Fragment key={supportCase._id}>
@@ -94,6 +101,12 @@ export const PageSupportCase = () => {
                 </Box>
               )}
             />
+            <Button
+              sx={{ my: 3 }}
+              onClick={() => navigate("/protected/support")}
+            >
+              Save Changes
+            </Button>
           </React.Fragment>
         );
       })}

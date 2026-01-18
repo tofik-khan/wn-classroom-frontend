@@ -109,7 +109,9 @@ export const PageSupport = () => {
   ];
 
   const cases = data.filter((supportCase) =>
-    filter === "resolved" ? supportCase.status === "resolved" : true
+    filter === "resolved"
+      ? supportCase.status === "resolved"
+      : supportCase.status !== "resolved",
   );
 
   return (
