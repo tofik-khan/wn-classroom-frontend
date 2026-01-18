@@ -1,6 +1,6 @@
 import { API } from "@/api";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useSupportMutation = ({ onSuccess, onError }) => {
   return useMutation({
@@ -42,7 +42,7 @@ export const useUpdateSupportCaseMutation = ({ onSuccess, onError }) => {
   const { getAccessTokenSilently } = useAuth0();
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Object }) => {
-      const authToken = getAccessTokenSilently();
+      const authToken = await getAccessTokenSilently();
       return API.updateSupportCase({ authToken, id, data });
     },
     onSuccess,
