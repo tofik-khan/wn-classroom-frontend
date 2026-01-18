@@ -1,6 +1,6 @@
 import { API } from "@/api";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useSupportMutation = ({ onSuccess, onError }) => {
   return useMutation({

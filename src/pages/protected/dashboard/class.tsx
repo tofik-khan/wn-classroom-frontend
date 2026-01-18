@@ -51,9 +51,18 @@ import { ResourceModal } from "../modals/ClassResourceModal";
 
 const teacherRoles = ["admin", "teacher", "substitute"];
 
-const hasAccessToClass = (user: User, classroomId: string | undefined) => {
-  const { data: myStudents } = useMyStudentsQuery();
-  if (!user || !classroomId) return false;
+const hasAccessToClass = (
+  user: User,
+  classroomId: string | undefined,
+  myStudents: User[]
+) => {
+  if (
+    !user ||
+    !classroomId ||
+    !Array.isArray(myStudents) ||
+    myStudents.length < 1
+  )
+    return false;
   if (user.role === "parent") {
     const myStudentsClassrooms =
       myStudents!
@@ -428,12 +437,9 @@ export const PageClass = () => {
     isRefetching: isRefetchingTeacher,
     data: teacher,
   } = useTeacherByClassIdQuery(id);
+  const { data: myStudents, isLoading: isLoadingMyStudents } =
+    useMyStudentsQuery();
   const navigate = useNavigate();
-
-  /**
-   * If user does not have access to this classroom, navigate them back to the dashboard
-   */
-  if (!hasAccessToClass(currentUser, id)) navigate("/protected/dashboard");
 
   const allowedRoles = ["admin", "substitute", "teacher"];
 
@@ -477,7 +483,18 @@ export const PageClass = () => {
     sessionMutation.mutate({ data: payload });
   };
 
-  if (isLoading || isRefetching) return <Loading />;
+  if (isLoading || isRefetching || isLoadingMyStudents) return <Loading />;
+
+  if (!myStudents)
+    return (
+      <Typography color="error">Error: Student API call failed</Typography>
+    );
+
+  /**
+   * If user does not have access to this classroom, navigate them back to the dashboard
+   */
+  if (!hasAccessToClass(currentUser, id, myStudents))
+    navigate("/protected/dashboard");
 
   return (
     <>
