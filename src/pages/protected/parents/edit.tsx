@@ -26,7 +26,7 @@ export const PageEditParents = () => {
     isLoading: isLoadingStudents,
     isRefetching: isRefetchingStudents,
     refetch,
-  } = useMyStudentsQuery(data?.email);
+  } = useMyStudentsQuery({ email: data?.email });
 
   const { control, handleSubmit } = useForm<User>({
     defaultValues: data,

@@ -54,13 +54,12 @@ const teacherRoles = ["admin", "teacher", "substitute"];
 const hasAccessToClass = (
   user: User,
   classroomId: string | undefined,
-  myStudents: User[]
+  myStudents: User[] = [],
 ) => {
   if (
     !user ||
     !classroomId ||
-    !Array.isArray(myStudents) ||
-    myStudents.length < 1
+    (user.role === "parent" && myStudents.length < 1)
   )
     return false;
   if (user.role === "parent") {
@@ -79,13 +78,12 @@ const hasAccessToClass = (
 
 const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
   const { data: classroomSession } = useSessionQuery(classroom?._id);
-  const { data: myStudents } = useMyStudentsQuery();
   const { currentUser } = useAppSelector((state) => state.user);
+  const { data: myStudents } = useMyStudentsQuery({ role: currentUser.role });
 
   const schedule = classroom?.schedule.map((schedule) =>
-    dayjs(schedule).tz("America/New_York")
+    dayjs(schedule).tz("America/New_York"),
   );
-  console.log(schedule);
 
   const dispatch = useAppDispatch();
   const updateAttendance = useAttendanceMutation({
@@ -95,7 +93,7 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
         setErrorSnackbar({
           title: "Oops! Something went wrong!",
           content: error?.message,
-        })
+        }),
       );
     },
   });
@@ -129,21 +127,21 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
                           currentUser.role === "student"
                             ? `${currentUser._id}`
                             : currentUser.role === "parent"
-                            ? myStudents
-                                ?.find((student) =>
-                                  student.classrooms
-                                    ?.map((classroom) => classroom.value)
-                                    .includes(classroomSession.classroomId)
-                                )
-                                ?._id.toString() ?? ""
-                            : "",
+                              ? (myStudents
+                                  ?.find((student) =>
+                                    student.classrooms
+                                      ?.map((classroom) => classroom.value)
+                                      .includes(classroomSession.classroomId),
+                                  )
+                                  ?._id.toString() ?? "")
+                              : "",
                         attendance: dayjs()
                           .tz("America/New_York")
                           .isAfter(
                             dayjs(classroomSession.startTime.scheduled).add(
                               10,
-                              "minutes"
-                            )
+                              "minutes",
+                            ),
                           )
                           ? "tardy"
                           : "present",
@@ -331,7 +329,7 @@ const ClassroomAttendanceContainer = () => {
         setSuccessSnackbar({
           title: "Attendance Updated",
           content: "",
-        })
+        }),
       );
     },
     onError: (error) => {
@@ -339,7 +337,7 @@ const ClassroomAttendanceContainer = () => {
         setErrorSnackbar({
           title: "Oops! Something went wrong!",
           content: error?.message,
-        })
+        }),
       );
     },
   });
@@ -438,7 +436,7 @@ export const PageClass = () => {
     data: teacher,
   } = useTeacherByClassIdQuery(id);
   const { data: myStudents, isLoading: isLoadingMyStudents } =
-    useMyStudentsQuery();
+    useMyStudentsQuery({ role: currentUser.role });
   const navigate = useNavigate();
 
   const allowedRoles = ["admin", "substitute", "teacher"];
@@ -451,7 +449,7 @@ export const PageClass = () => {
         setSuccessSnackbar({
           title: "Session Created",
           content: "The session is created and will go live in a few moments",
-        })
+        }),
       );
     },
     onError: (error) => {
@@ -467,7 +465,7 @@ export const PageClass = () => {
               </Typography>
             </>
           ),
-        })
+        }),
       );
     },
   });
@@ -485,7 +483,7 @@ export const PageClass = () => {
 
   if (isLoading || isRefetching || isLoadingMyStudents) return <Loading />;
 
-  if (!myStudents)
+  if (!myStudents && currentUser.role === "parent")
     return (
       <Typography color="error">Error: Student API call failed</Typography>
     );
@@ -575,7 +573,7 @@ export const PageClass = () => {
           <Grid size={{ xs: 12, md: 4 }}>
             <MultiDatePicker
               values={data?.schedule?.map((schedule) =>
-                dayjs(schedule).tz("America/New_York")
+                dayjs(schedule).tz("America/New_York"),
               )}
               setValues={() => {}}
             />

@@ -54,7 +54,13 @@ export const useUpdateParentMutation = ({ onSuccess, onError }) => {
   });
 };
 
-export const useMyStudentsQuery = (email = "") => {
+export const useMyStudentsQuery = ({
+  email = "",
+  role = "",
+}: {
+  email?: string;
+  role?: string;
+}) => {
   const { getAccessTokenSilently, user } = useAuth0();
 
   return useQuery({
@@ -66,7 +72,7 @@ export const useMyStudentsQuery = (email = "") => {
         email: email === "" ? user?.email : email,
       });
     },
-    enabled: !!user?.email,
+    enabled: !!user?.email && ["", "parent"].includes(role),
     select: (response) => response.data,
   });
 };

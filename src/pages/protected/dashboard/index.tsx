@@ -96,7 +96,7 @@ const ParentDashboard = () => {
   const [open, setOpen] = useState(false);
 
   const { isLoading: isLoadingMyStudents, data: myStudets } =
-    useMyStudentsQuery();
+    useMyStudentsQuery({ role: currentUser.role });
 
   if (isLoadingMyStudents) return <Loading />;
 
