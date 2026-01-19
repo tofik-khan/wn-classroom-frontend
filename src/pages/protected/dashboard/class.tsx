@@ -98,6 +98,12 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
     },
   });
 
+  const classIsInSession = () => {
+    if (!classroomSession) return false;
+    return dayjs(classroomSession.endTime)
+      .tz("America/New_York")
+      .isAfter(dayjs().format());
+  };
   return (
     <Paper
       elevation={0}
@@ -112,7 +118,7 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <ClockIcon sx={{ width: "32px", height: "32px" }} />
             <Box>
-              {!!classroomSession ? (
+              {!!classroomSession && classIsInSession() ? (
                 <Button
                   variant="contained"
                   href={classroomSession.link}
