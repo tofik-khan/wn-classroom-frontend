@@ -49,7 +49,7 @@ export const CreateTeacherModal = ({
         setSuccessSnackbar({
           title: "Success!",
           content: "The Teacher's account is created",
-        })
+        }),
       );
       onClose();
     },
@@ -58,7 +58,7 @@ export const CreateTeacherModal = ({
         setErrorSnackbar({
           title: "Oops! Something went wrong!",
           content: error?.message,
-        })
+        }),
       );
     },
   });
@@ -68,7 +68,20 @@ export const CreateTeacherModal = ({
     createTeacher.mutate({ data });
   };
 
-  if (isLoadingClassrooms) return <Loading />;
+  if (isLoadingClassrooms)
+    return (
+      <Dialog
+        open={open}
+        onClose={() => {
+          reset();
+          onClose();
+        }}
+        fullWidth
+        maxWidth={"sm"}
+      >
+        <Loading />
+      </Dialog>
+    );
 
   return (
     <>
