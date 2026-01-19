@@ -8,6 +8,7 @@ export type Session = {
     scheduled: string;
     actual: string;
   };
+  endTime: string;
   attendance: {
     studentId: string;
     studentName: string;
