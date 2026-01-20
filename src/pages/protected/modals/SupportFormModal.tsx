@@ -24,7 +24,7 @@ export const SupportFormModal = ({ open, onClose }) => {
         setSuccessSnackbar({
           title: "Message Sent",
           content: "A team member may contact you to get more information",
-        })
+        }),
       );
       onClose();
     },
@@ -33,7 +33,7 @@ export const SupportFormModal = ({ open, onClose }) => {
         setErrorSnackbar({
           title: "Oops! Something went wrong!",
           content: error?.message,
-        })
+        }),
       );
     },
   });
@@ -104,7 +104,7 @@ export const SupportFormModal = ({ open, onClose }) => {
               variant="contained"
               type="submit"
             >
-              Save
+              Submit
             </Button>
           </DialogActions>
         </form>
