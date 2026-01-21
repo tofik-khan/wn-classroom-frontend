@@ -17,9 +17,10 @@ import { useMyStudentsQuery } from "@/queries/parents";
 import { Loading } from "@/components/Loading";
 import { User } from "@/types/user";
 import { CreateStudentByParentModal } from "../modals/CreateStudentByParentModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useClassroomQuery } from "@/queries/classrooms";
 import { SecretaryDashboard } from "@/components/dashboard/secretary";
+import { ClassOnboardingModal } from "../modals/ClassOnboardingModal";
 
 const EmptyClassSection = () => {
   return (
@@ -59,8 +60,18 @@ const ClassContainer = ({ classrooms }) => {
 };
 
 const StudentDashboard = () => {
+  const [openOnboardingModal, setOpenOnboardingModal] = useState(false);
   const { currentUser } = useAppSelector((state) => state.user);
   const { classrooms } = currentUser;
+
+  /**
+   * Open onboarding modal but only on first render
+   */
+  useEffect(() => {
+    if (localStorage.getItem("openOnboardingModal") !== "false")
+      setTimeout(() => setOpenOnboardingModal(true), 1000);
+  }, []);
+
   return (
     <>
       <Typography variant="h2">
@@ -87,6 +98,13 @@ const StudentDashboard = () => {
           <EmptyClassSection />
         )}
       </Paper>
+      <ClassOnboardingModal
+        open={openOnboardingModal}
+        onClose={() => {
+          setOpenOnboardingModal(false);
+          localStorage.setItem("openOnboardingModal", "false");
+        }}
+      />
     </>
   );
 };
@@ -94,9 +112,18 @@ const StudentDashboard = () => {
 const ParentDashboard = () => {
   const { currentUser } = useAppSelector((state) => state.user);
   const [open, setOpen] = useState(false);
+  const [openOnboardingModal, setOpenOnboardingModal] = useState(false);
 
   const { isLoading: isLoadingMyStudents, data: myStudets } =
     useMyStudentsQuery({ role: currentUser.role });
+
+  /**
+   * Open onboarding modal but only on first render
+   */
+  useEffect(() => {
+    if (localStorage.getItem("openOnboardingModal") !== "false")
+      setTimeout(() => setOpenOnboardingModal(true), 1000);
+  }, []);
 
   if (isLoadingMyStudents) return <Loading />;
 
@@ -179,6 +206,13 @@ const ParentDashboard = () => {
         );
       })}
       <CreateStudentByParentModal open={open} onClose={() => setOpen(false)} />
+      <ClassOnboardingModal
+        open={openOnboardingModal}
+        onClose={() => {
+          setOpenOnboardingModal(false);
+          localStorage.setItem("openOnboardingModal", "false");
+        }}
+      />
     </>
   );
 };
