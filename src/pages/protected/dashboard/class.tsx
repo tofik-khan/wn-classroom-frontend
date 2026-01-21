@@ -21,6 +21,7 @@ import {
   SchoolOutlined,
 } from "@mui/icons-material";
 import {
+  Avatar,
   Box,
   Button,
   Chip,
@@ -564,7 +565,16 @@ export const PageClass = () => {
                 ) : (
                   <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                     <Box>
-                      <SchoolOutlined sx={{ width: "32px", height: "32px" }} />
+                      {teacher?.image === "" ? (
+                        <SchoolOutlined
+                          sx={{ width: "32px", height: "32px" }}
+                        />
+                      ) : (
+                        <Avatar
+                          src={teacher?.image}
+                          sx={{ width: "75px", height: "75px" }}
+                        />
+                      )}
                     </Box>
                     <Box>
                       <Typography>{teacher?.name}</Typography>
