@@ -42,7 +42,7 @@ export const PageRegister = () => {
           title: "Registration Completed",
           content:
             "Your data is recorded and you'll be directed to your Dashboard shortly",
-        })
+        }),
       );
     },
     onError: (error) => {
@@ -50,7 +50,7 @@ export const PageRegister = () => {
         setErrorSnackbar({
           title: "Oops! Something went wrong!",
           content: error?.message,
-        })
+        }),
       );
     },
   });
@@ -376,18 +376,21 @@ const StudentQuestionaire = ({ control }) => {
       </Box>
       <Box sx={{ my: 2 }}>
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextField
               fullWidth
               required
               {...field}
               className="materialUIInput"
               label="Waqf-e-Nau ID"
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
             />
           )}
           name="waqfenauId"
           control={control}
           key={"waqfenauId-input"}
+          rules={{ required: "This is a required field" }}
         />
       </Box>
       <Box sx={{ my: 2 }}>
