@@ -137,6 +137,7 @@ export const PageSupport = () => {
         disableRowSelectionOnClick
         onRowClick={({ row }) => navigate(`/protected/support/${row._id}`)}
         sx={{
+          marginBottom: 10,
           [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
             outline: "transparent",
           },

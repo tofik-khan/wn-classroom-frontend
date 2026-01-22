@@ -137,6 +137,7 @@ export const PageTeachers = () => {
         disableColumnMenu
         disableColumnResize
         sx={{
+          marginBottom: 10,
           [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
             outline: "transparent",
           },

@@ -114,6 +114,7 @@ export const PageParents = () => {
         disableColumnResize
         disableRowSelectionOnClick
         sx={{
+          marginBottom: 10,
           [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
             outline: "transparent",
           },
