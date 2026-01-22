@@ -40,7 +40,7 @@ export const JAMMAT = [
   { value: "Seattle, WA", label: "Seattle, WA" },
   { value: "Lehigh Valley, PA", label: "Lehigh Valley, PA" },
   { value: "Philadelphia PA", label: "Philadelphia PA" },
-  { value: "York, PA", label: "York, PA" },
+  { value: "Harrisburg, PA", label: "Harrisburg, PA" },
   { value: "Charlotte, NC", label: "Charlotte, NC" },
   { value: "Alabama/Tennesse", label: "Alabama/Tennesse" },
   { value: "Georgia-Carolina, GA", label: "Georgia-Carolina, GA" },
