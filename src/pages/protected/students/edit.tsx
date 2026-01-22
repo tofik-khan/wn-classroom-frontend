@@ -46,7 +46,7 @@ export const PageEditStudent = () => {
         setSuccessSnackbar({
           title: "Student Updated",
           content: "The student's account is updated",
-        })
+        }),
       );
     },
     onError: (error) => {
@@ -54,7 +54,7 @@ export const PageEditStudent = () => {
         setErrorSnackbar({
           title: "Oops! Something went wrong!",
           content: error?.message,
-        })
+        }),
       );
     },
   });
@@ -69,13 +69,16 @@ export const PageEditStudent = () => {
      * that are undefined.
      */
     Object.keys(data).forEach((key) =>
-      data[key] === undefined ? delete data[key] : {}
+      data[key] === undefined ? delete data[key] : {},
     );
+
+    const jammat =
+      data?.jammat === undefined ? {} : { jammat: data.jammat.value };
 
     updateStudent.mutate({
       data: {
         ...data,
-        jammat: data.jammat.value,
+        ...jammat,
       },
       id: id ?? "",
     });
@@ -164,7 +167,7 @@ export const PageEditStudent = () => {
                 className="materialUIInput"
                 options={GENDERS}
                 defaultValue={GENDERS.find(
-                  (gender) => gender.value === data?.gender
+                  (gender) => gender.value === data?.gender,
                 )}
                 onChange={(_, option) => {
                   field.onChange(option);
