@@ -32,7 +32,7 @@ export const PageUnenrolled = () => {
           title: "Student Enrolled in Class",
           content:
             "The user is added to the classroom. They will be able to see the class data instantly",
-        })
+        }),
       );
     },
     onError: (error) => {
@@ -40,7 +40,7 @@ export const PageUnenrolled = () => {
         setErrorSnackbar({
           title: "Oops! Something went wrong!",
           content: error?.message,
-        })
+        }),
       );
     },
   });
@@ -76,7 +76,6 @@ export const PageUnenrolled = () => {
       field: "verification",
       headerName: "Verification",
       renderCell: ({ row }: { row: User }) => {
-        console.log(Object.keys(row).includes("verification"));
         if (!row.verification) return "Unverified";
         return (
           <Box
