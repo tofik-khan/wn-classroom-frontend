@@ -514,6 +514,9 @@ export const PageClass = () => {
               {data?.name}
             </Typography>
             <Typography>{data?.description}</Typography>
+            <Typography>
+              Class Time: {`${data?.start.label} EST - ${data?.end.label} EST`}
+            </Typography>
             {allowedRoles.includes(currentUser.role) ? (
               <Paper
                 elevation={0}

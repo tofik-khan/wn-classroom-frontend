@@ -64,7 +64,8 @@ export const ClassCard = ({ id }) => {
             alignItems={"center"}
             marginTop={2}
           >
-            <AccessTimeOutlined /> {data?.start.label} EST
+            <AccessTimeOutlined /> {data?.start.label} EST - {data?.end.label}{" "}
+            EST
           </Typography>
         </Box>
         <Button variant="contained" sx={{ mt: 3 }}>
