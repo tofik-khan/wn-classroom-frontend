@@ -80,6 +80,9 @@ const StudentDashboard = () => {
       <Typography variant="body1">
         Here's an overview of your learning journey
       </Typography>
+      <Button onClick={() => setOpenOnboardingModal(true)}>
+        Instructions to Join Classes
+      </Button>
       <Paper
         sx={(theme) => ({
           padding: 4,
@@ -135,6 +138,9 @@ const ParentDashboard = () => {
       <Typography variant="body1">
         Here's an overview of your kids' learning journey
       </Typography>
+      <Button onClick={() => setOpenOnboardingModal(true)}>
+        Instructions to Join Classes
+      </Button>
       <Paper
         sx={(theme) => ({
           padding: 4,

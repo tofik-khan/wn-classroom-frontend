@@ -209,6 +209,11 @@ const ParentContent = ({ step }) => {
             That's it! You're all set for the first day of classes
           </Typography>
           <Typography>
+            We use Google Meets to hold these classes, having a Google Account
+            is not required but if you are using a phone or a tablet, having the
+            Google Meets App makes the experience very smooth.
+          </Typography>
+          <Typography>
             If you have any issues, please reach out to the Admin Team using the
             "?" button on the bottom right
           </Typography>
