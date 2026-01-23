@@ -46,7 +46,7 @@ export const CreateStudentByParentModal = ({
           title: "Student Created",
           content:
             "The student account is created. The admin team will assign a class in a few days",
-        })
+        }),
       );
       onClose();
     },
@@ -55,7 +55,7 @@ export const CreateStudentByParentModal = ({
         setErrorSnackbar({
           title: "Oops! Something went wrong!",
           content: error?.message,
-        })
+        }),
       );
     },
   });
@@ -411,7 +411,13 @@ export const CreateStudentByParentModal = ({
             </Box>
           </DialogContent>
           <DialogActions>
-            <Button type="submit">Add Student</Button>
+            <Button
+              type="submit"
+              loading={createStudent.isPending}
+              disabled={createStudent.isPending}
+            >
+              Add Student
+            </Button>
           </DialogActions>
         </form>
       </Dialog>
