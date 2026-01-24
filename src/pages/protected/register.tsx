@@ -488,6 +488,7 @@ const StudentQuestionaire = ({ control }) => {
           name="dob.month"
           control={control}
           key="dob-month-input"
+          rules={{ required: "Please select one Option" }}
         />
         <Controller
           render={({ field, fieldState }) => (
@@ -515,6 +516,7 @@ const StudentQuestionaire = ({ control }) => {
           name="dob.year"
           control={control}
           key="dob-year-input"
+          rules={{ required: "Please select one Option" }}
         />
       </Box>
     </>
