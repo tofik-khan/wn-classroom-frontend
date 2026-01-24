@@ -80,3 +80,15 @@ export const useClassroomResourceMutation = ({ onSuccess, onError }) => {
     onError,
   });
 };
+
+export const useStudentsInClassroomQuery = (classroomId: string) => {
+  const { getAccessTokenSilently } = useAuth0();
+  return useQuery({
+    queryKey: ["classroomStudents"],
+    queryFn: async () => {
+      const authToken = await getAccessTokenSilently();
+      return API.getStudentsInClassroom({ authToken, classroomId });
+    },
+    select: (response) => response.data,
+  });
+};
