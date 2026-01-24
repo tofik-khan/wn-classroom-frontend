@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { API } from "@/api";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Classroom } from "@/types/classroom";
+import { useAppSelector } from "@/hooks";
 
 export const useClassroomQuery = () => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
@@ -83,6 +84,7 @@ export const useClassroomResourceMutation = ({ onSuccess, onError }) => {
 
 export const useStudentsInClassroomQuery = (classroomId: string) => {
   const { getAccessTokenSilently } = useAuth0();
+  const { currentUser } = useAppSelector((state) => state.user);
   return useQuery({
     queryKey: ["classroomStudents"],
     queryFn: async () => {
@@ -90,5 +92,6 @@ export const useStudentsInClassroomQuery = (classroomId: string) => {
       return API.getStudentsInClassroom({ authToken, classroomId });
     },
     select: (response) => response.data,
+    enabled: ["admin", "teacher", "substitute"].includes(currentUser.role),
   });
 };
