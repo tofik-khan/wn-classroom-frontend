@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 
 export const getNextSession = (schedule: Dayjs[] | undefined) => {
-  const now = dayjs();
+  const now = dayjs().tz("America/New_York").startOf("day");
 
   const nextShift = schedule
     ?.map((date) => dayjs(date).tz("America/New_York"))
