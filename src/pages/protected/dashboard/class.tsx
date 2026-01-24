@@ -49,6 +49,7 @@ import { useAnnouncementQuery } from "@/queries/announcements";
 import { Editor } from "@/components/wysiwyg/editor";
 import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { ResourceModal } from "../modals/ClassResourceModal";
+import { ClassRosterModal } from "../modals/ClassRosterModal";
 
 const teacherRoles = ["admin", "teacher", "substitute"];
 
@@ -188,6 +189,7 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
 
 const ClassResourcesContainer = ({ classroom }: { classroom?: Classroom }) => {
   const [open, setOpen] = useState(false);
+  const [openClassRoster, setOpenClassRoster] = useState(false);
   const { currentUser } = useAppSelector((state) => state.user);
   return (
     <>
@@ -235,7 +237,20 @@ const ClassResourcesContainer = ({ classroom }: { classroom?: Classroom }) => {
             <Typography color="textSecondary">No Resources yet...</Typography>
           </Box>
         )}
+        {teacherRoles.includes(currentUser.role) && (
+          <Button
+            sx={{ my: 2 }}
+            variant="contained"
+            onClick={() => setOpenClassRoster(true)}
+          >
+            Class Roster
+          </Button>
+        )}
       </Paper>
+      <ClassRosterModal
+        open={openClassRoster}
+        onClose={() => setOpenClassRoster(false)}
+      />
       <ResourceModal open={open} onClose={() => setOpen(false)} />
     </>
   );

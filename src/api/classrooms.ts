@@ -1,5 +1,6 @@
 import { API_BASE } from "./constants";
 import { Classroom } from "@/types/classroom";
+import { User } from "@/types/user";
 import axios from "axios";
 
 export const classroomAPI = {
@@ -65,6 +66,19 @@ export const classroomAPI = {
     id?: string;
   }) => {
     return axios.post(`${API_BASE}/classrooms/${id}/resources`, data, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
+  getStudentsInClassroom: ({
+    authToken,
+    classroomId,
+  }: {
+    authToken: string;
+    classroomId: string;
+  }): Promise<{ status: string; data: User[] }> => {
+    return axios.get(`${API_BASE}/classrooms/${classroomId}/students`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
