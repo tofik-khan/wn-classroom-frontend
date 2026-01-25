@@ -1,5 +1,6 @@
 import { Loading } from "@/components/Loading";
 import { useSessionReportQuery } from "@/queries/reports";
+import { AccessTimeOutlined } from "@mui/icons-material";
 import { Box, Chip, Paper, Typography } from "@mui/material";
 import { DataGridPro, gridClasses, GridColDef } from "@mui/x-data-grid-pro";
 import dayjs from "dayjs";
@@ -12,6 +13,13 @@ export const PageSessionReport = () => {
   const { isLoading, data } = useSessionReportQuery(date);
 
   if (isLoading) return <Loading />;
+
+  const lateStartByTeacher = ({ scheduled, actual }) => {
+    const scheduledStart = dayjs(scheduled).tz("America/New_York");
+    const actualStart = dayjs(actual).tz("America/New_York");
+
+    return actualStart.isAfter(scheduledStart.add(2, "minutes"));
+  };
 
   const columns: GridColDef[] = [
     {
@@ -49,6 +57,7 @@ export const PageSessionReport = () => {
       headerName: "Class Time",
       minWidth: 200,
       renderCell: ({ row }) => {
+        const lateStart = lateStartByTeacher(row.startTime);
         return (
           <Box
             sx={{
@@ -59,7 +68,13 @@ export const PageSessionReport = () => {
             }}
           >
             <Typography>{`Scheduled: ${dayjs(row.startTime.scheduled).tz("America/New_York").format("HH:mm a z")}`}</Typography>
-            <Typography>{`Actual: ${dayjs(row.startTime.actual).tz("America/New_York").format("HH:mm a z")}`}</Typography>
+            <Typography
+              color={lateStart ? "warning" : "text.primary"}
+              sx={{ display: "flex", alignItems: "center", gap: 1 }}
+            >
+              {lateStart && <AccessTimeOutlined />}
+              {`Actual: ${dayjs(row.startTime.actual).tz("America/New_York").format("HH:mm a z")}`}
+            </Typography>
           </Box>
         );
       },
