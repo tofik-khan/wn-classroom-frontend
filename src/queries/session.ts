@@ -43,7 +43,7 @@ export const useAttendanceMutation = ({ onSuccess, onError }) => {
     }: {
       data: {
         studentId: string;
-        attendance: "present" | "tardy" | "absent";
+        attendance: "present" | "tardy" | "absent" | "excused";
         role: "teacher" | "student";
       };
       sessionId: string;

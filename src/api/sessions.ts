@@ -25,7 +25,7 @@ export const SessionAPI = {
     authToken: string;
     data: {
       studentId: string;
-      attendance: "present" | "tardy" | "absent";
+      attendance: "present" | "tardy" | "absent" | "excused";
     };
     sessionId: string;
   }) => {

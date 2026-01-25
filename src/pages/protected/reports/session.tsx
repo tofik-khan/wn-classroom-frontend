@@ -109,6 +109,28 @@ export const PageSessionReport = () => {
       },
     },
     {
+      field: "excused",
+      headerName: "Excused",
+      minWidth: 120,
+      headerAlign: "center",
+      align: "center",
+      renderCell: ({ row }) => {
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <Typography>{`${row.excused}`}</Typography>
+            <Typography>{`(${((row.excused / row.totalStudents) * 100).toLocaleString("en", { maximumFractionDigits: 2 })}%)`}</Typography>
+          </Box>
+        );
+      },
+    },
+    {
       field: "absent",
       headerName: "Absent",
       minWidth: 120,

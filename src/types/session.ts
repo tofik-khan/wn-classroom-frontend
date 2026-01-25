@@ -12,7 +12,7 @@ export type Session = {
   attendance: {
     studentId: string;
     studentName: string;
-    attendance: "absent" | "tardy" | "present";
+    attendance: "absent" | "tardy" | "present" | "excused";
   }[];
   link: string;
   createdAt: string;

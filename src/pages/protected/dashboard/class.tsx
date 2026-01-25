@@ -417,7 +417,11 @@ const ClassroomAttendanceContainer = () => {
                     data: {
                       role: "student",
                       studentId: student.studentId,
-                      attendance: value as "present" | "tardy" | "absent",
+                      attendance: value as
+                        | "present"
+                        | "tardy"
+                        | "absent"
+                        | "excused",
                     },
                     sessionId: classroomSession._id,
                   });
@@ -432,6 +436,11 @@ const ClassroomAttendanceContainer = () => {
                 <FormControlLabel
                   value={"tardy"}
                   label="Tardy"
+                  control={<Radio />}
+                />
+                <FormControlLabel
+                  value={"excused"}
+                  label="Excused"
                   control={<Radio />}
                 />
                 <FormControlLabel
