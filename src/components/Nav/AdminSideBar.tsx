@@ -86,7 +86,11 @@ const MenuItems = () => {
             >
               Admins
             </Button>
-            <Button fullWidth sx={{ mt: 1 }} disabled>
+            <Button
+              fullWidth
+              sx={{ mt: 1 }}
+              onClick={() => navigate("/protected/reports")}
+            >
               Reports
             </Button>
             <Button

@@ -10,3 +10,7 @@ export const getNextSession = (schedule: Dayjs[] | undefined) => {
 
   return nextShift;
 };
+
+export const months = Array.from({ length: 12 }, (_, i) =>
+  dayjs().month(i).format("MMMM").toLowerCase(),
+);

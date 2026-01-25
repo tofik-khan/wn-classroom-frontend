@@ -16,6 +16,8 @@ import { PageParents } from "@/pages/protected/parents";
 import { PageEditParents } from "@/pages/protected/parents/edit";
 import { PageSupportCase } from "@/pages/protected/support/case";
 import { PageSupport } from "@/pages/protected/support";
+import { PageReports } from "@/pages/protected/reports";
+import { PageSessionReport } from "@/pages/protected/reports/session";
 
 export const ProtectedRoutes = () => {
   return (
@@ -32,10 +34,24 @@ export const ProtectedRoutes = () => {
           <Route path="/students/*" element={<StudentsRoute />} />
           <Route path="/parents/*" element={<ParenstsRoute />} />
           <Route path="/support/*" element={<SupportRoute />} />
+          <Route path="/reports/*" element={<ReportsRoute />} />
         </Route>
       </Routes>
     </>
   );
+};
+
+const ReportsRoute = () => {
+  const { currentUser } = useAppSelector((state) => state.user);
+  const allowList = ["admin"];
+  if (allowList.includes(currentUser.role))
+    return (
+      <Routes>
+        <Route path="/" element={<PageReports />} />
+        <Route path="/:date" element={<PageSessionReport />} />
+      </Routes>
+    );
+  else return <></>;
 };
 
 const SupportRoute = () => {
