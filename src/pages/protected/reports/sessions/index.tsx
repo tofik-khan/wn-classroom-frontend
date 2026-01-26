@@ -1,25 +1,20 @@
 import { Loading } from "@/components/Loading";
 import { useSessionReportQuery } from "@/queries/reports";
+import { lateStartByTeacher } from "@/utils/datetime";
 import { AccessTimeOutlined } from "@mui/icons-material";
 import { Box, Chip, Paper, Typography } from "@mui/material";
 import { DataGridPro, gridClasses, GridColDef } from "@mui/x-data-grid-pro";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 dayjs.extend(timezone);
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 export const PageSessionReport = () => {
   const { date } = useParams();
   const { isLoading, data } = useSessionReportQuery(date);
+  const navigate = useNavigate();
 
   if (isLoading) return <Loading />;
-
-  const lateStartByTeacher = ({ scheduled, actual }) => {
-    const scheduledStart = dayjs(scheduled).tz("America/New_York");
-    const actualStart = dayjs(actual).tz("America/New_York");
-
-    return actualStart.isAfter(scheduledStart.add(2, "minutes"));
-  };
 
   const columns: GridColDef[] = [
     {
@@ -186,6 +181,9 @@ export const PageSessionReport = () => {
           columns={columns}
           getRowId={(row) => `${row.classroomId}---${row.startTime.actual}`}
           rowHeight={100}
+          onRowClick={({ row }) =>
+            navigate(`/protected/reports/${date}/${row.classroomId}`)
+          }
           disableColumnMenu
           disableColumnResize
           disableRowSelectionOnClick
@@ -207,6 +205,11 @@ export const PageSessionReport = () => {
             loadingOverlay: {
               variant: "linear-progress",
               noRowsVariant: "skeleton",
+            },
+            row: {
+              style: {
+                cursor: "pointer",
+              },
             },
           }}
         />
