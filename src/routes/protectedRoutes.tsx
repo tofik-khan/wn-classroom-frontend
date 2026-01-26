@@ -17,7 +17,8 @@ import { PageEditParents } from "@/pages/protected/parents/edit";
 import { PageSupportCase } from "@/pages/protected/support/case";
 import { PageSupport } from "@/pages/protected/support";
 import { PageReports } from "@/pages/protected/reports";
-import { PageSessionReport } from "@/pages/protected/reports/session";
+import { PageSessionReport } from "@/pages/protected/reports/sessions";
+import { PageSingleSessionReport } from "@/pages/protected/reports/sessions/:id";
 
 export const ProtectedRoutes = () => {
   return (
@@ -49,6 +50,10 @@ const ReportsRoute = () => {
       <Routes>
         <Route path="/" element={<PageReports />} />
         <Route path="/:date" element={<PageSessionReport />} />
+        <Route
+          path="/:date/:classroomId"
+          element={<PageSingleSessionReport />}
+        />
       </Routes>
     );
   else return <></>;
