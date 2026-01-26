@@ -14,3 +14,10 @@ export const getNextSession = (schedule: Dayjs[] | undefined) => {
 export const months = Array.from({ length: 12 }, (_, i) =>
   dayjs().month(i).format("MMMM").toLowerCase(),
 );
+
+export const lateStartByTeacher = ({ scheduled, actual }) => {
+  const scheduledStart = dayjs(scheduled).tz("America/New_York");
+  const actualStart = dayjs(actual).tz("America/New_York");
+
+  return actualStart.isAfter(scheduledStart.add(2, "minutes"));
+};

@@ -177,10 +177,15 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
           size={{ xs: 12, md: 6 }}
           sx={{ display: "flex", alignItems: "center", gap: 1 }}
         >
-          <InfoOutline />
-          <Typography>
-            Meeting link will be available when the session starts
-          </Typography>
+          {!classroomSession ||
+            (!classIsInSession() && (
+              <>
+                <InfoOutline />
+                <Typography>
+                  Meeting link will be available when the session starts
+                </Typography>
+              </>
+            ))}
         </Grid>
       </Grid>
     </Paper>
