@@ -35,4 +35,15 @@ export const SessionAPI = {
       },
     });
   },
+  getClassroomSessionReport: (
+    authToken,
+    date,
+    classroomId,
+  ): Promise<{ data: Session }> => {
+    return axios.get(`${API_BASE}/reports/sessions/${date}/${classroomId}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
 };

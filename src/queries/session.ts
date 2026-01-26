@@ -16,6 +16,18 @@ export const useSessionQuery = (classroomId) => {
   });
 };
 
+export const useClassroomSessionReport = (date, classroomId) => {
+  const { getAccessTokenSilently } = useAuth0();
+  return useQuery({
+    queryKey: ["sessionReport", date, classroomId],
+    queryFn: async () => {
+      const authToken = await getAccessTokenSilently();
+      return API.getClassroomSessionReport(authToken, date, classroomId);
+    },
+    select: (response) => response.data,
+  });
+};
+
 export const useSessionMutation = ({ onSuccess, onError }) => {
   const { getAccessTokenSilently } = useAuth0();
   const queryClient = useQueryClient();
