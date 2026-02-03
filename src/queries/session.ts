@@ -16,13 +16,13 @@ export const useSessionQuery = (classroomId) => {
   });
 };
 
-export const useClassroomSessionReport = (date, classroomId) => {
+export const useClassroomSessionReportOnDateQuery = (date, classroomId) => {
   const { getAccessTokenSilently } = useAuth0();
   return useQuery({
     queryKey: ["sessionReport", date, classroomId],
     queryFn: async () => {
       const authToken = await getAccessTokenSilently();
-      return API.getClassroomSessionReport(authToken, date, classroomId);
+      return API.getClassroomSessionReportOnDate(authToken, date, classroomId);
     },
     select: (response) => response.data,
   });
