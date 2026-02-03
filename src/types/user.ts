@@ -38,4 +38,8 @@ export type User = {
     waqfenauId: boolean;
     age: boolean;
   };
+  sessions?: {
+    date: string;
+    attendance: "present" | "absent" | "excused" | "tardy";
+  }[];
 };

@@ -35,7 +35,7 @@ export const SessionAPI = {
       },
     });
   },
-  getClassroomSessionReport: (
+  getClassroomSessionReportOnDate: (
     authToken,
     date,
     classroomId,

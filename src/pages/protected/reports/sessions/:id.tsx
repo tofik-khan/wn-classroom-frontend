@@ -1,5 +1,5 @@
 import { Loading } from "@/components/Loading";
-import { useClassroomSessionReport } from "@/queries/session";
+import { useClassroomSessionReportOnDateQuery } from "@/queries/session";
 import { lateStartByTeacher } from "@/utils/datetime";
 import { Grid, Paper, Typography } from "@mui/material";
 import dayjs from "dayjs";
@@ -9,7 +9,10 @@ import { useParams } from "react-router";
 
 export const PageSingleSessionReport = () => {
   const { date, classroomId } = useParams();
-  const { isLoading, data } = useClassroomSessionReport(date, classroomId);
+  const { isLoading, data } = useClassroomSessionReportOnDateQuery(
+    date,
+    classroomId,
+  );
 
   if (isLoading || !data) return <Loading />;
 
