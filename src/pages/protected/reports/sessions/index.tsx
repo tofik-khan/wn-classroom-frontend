@@ -3,11 +3,72 @@ import { useSessionReportQuery } from "@/queries/reports";
 import { lateStartByTeacher } from "@/utils/datetime";
 import { AccessTimeOutlined } from "@mui/icons-material";
 import { Box, Chip, Paper, Typography } from "@mui/material";
-import { DataGridPro, gridClasses, GridColDef } from "@mui/x-data-grid-pro";
+import {
+  DataGridPro,
+  gridClasses,
+  GridColDef,
+  useGridApiContext,
+  gridFilteredSortedRowIdsSelector,
+  useGridSelector,
+} from "@mui/x-data-grid-pro";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 dayjs.extend(timezone);
 import { useNavigate, useParams } from "react-router";
+
+const CustomFooterTotalComponent = () => {
+  const apiRef = useGridApiContext();
+  const filteredSortedRowIds = useGridSelector(
+    apiRef,
+    gridFilteredSortedRowIdsSelector,
+  );
+
+  // Calculate Totals
+  const present = filteredSortedRowIds.reduce((sum, id) => {
+    const row = apiRef.current.getRow(id);
+    return sum + row.present;
+  }, 0);
+
+  const tardy = filteredSortedRowIds.reduce((sum, id) => {
+    const row = apiRef.current.getRow(id);
+    return sum + row.tardy;
+  }, 0);
+
+  const excused = filteredSortedRowIds.reduce((sum, id) => {
+    const row = apiRef.current.getRow(id);
+    return sum + row.excused;
+  }, 0);
+
+  const absent = filteredSortedRowIds.reduce((sum, id) => {
+    const row = apiRef.current.getRow(id);
+    return sum + row.absent;
+  }, 0);
+
+  return (
+    <Box
+      sx={(theme) => ({
+        p: 1,
+        display: "flex",
+        justifyContent: "flex-end",
+        border: `1px solid ${theme.palette.grey[200]}`,
+      })}
+    >
+      <Typography sx={{ width: "120px", textAlign: "center" }}>
+        {present}
+      </Typography>
+      <Typography sx={{ width: "120px", textAlign: "center" }}>
+        {tardy}
+      </Typography>
+      <Typography sx={{ width: "120px", textAlign: "center" }}>
+        {excused}
+      </Typography>
+      <Typography sx={{ width: "120px", textAlign: "center" }}>
+        {absent}
+      </Typography>
+      <Typography sx={{ width: "120px" }}></Typography>
+    </Box>
+  );
+};
 
 export const PageSessionReport = () => {
   const { date } = useParams();
@@ -164,10 +225,10 @@ export const PageSessionReport = () => {
     },
     {
       field: "totalStudents",
-      headerName: "Total Students",
+      headerName: "Total",
       headerAlign: "center",
       align: "center",
-      minWidth: 150,
+      minWidth: 120,
     },
   ];
 
@@ -200,6 +261,9 @@ export const PageSessionReport = () => {
             [`& .${gridClasses.columnSeparator}`]: {
               display: "none",
             },
+          }}
+          slots={{
+            footer: CustomFooterTotalComponent,
           }}
           slotProps={{
             loadingOverlay: {
