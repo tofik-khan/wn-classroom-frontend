@@ -11,12 +11,69 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGridPro, gridClasses } from "@mui/x-data-grid-pro";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import { useParams } from "react-router";
+import { User } from "@/types/user";
+import { StudentAttendanceChip } from "@/components/StudentAttendanceChip";
 
 export const ClassRosterModal = ({ open, onClose }) => {
   const { id } = useParams();
 
   const { isLoading, data } = useStudentsInClassroomQuery(id ?? "");
+
+  // Extract all dates from students' sessions
+  let dates =
+    data &&
+    data
+      .map((student) => student.sessions?.map((session) => session.date))
+      .flat();
+
+  // Only keep unique dates
+  const uniqueDates = dates?.filter((value, index, array) => {
+    return array.indexOf(value) === index;
+  });
+
+  const attendanceColumns =
+    uniqueDates
+      ?.sort((a, b) => {
+        return dayjs(a).isAfter(b) ? -1 : 1;
+      })
+      .map((date) => ({
+        field: `attendance-${date}`,
+        headerName: date,
+        renderHeader: () => (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography>
+              {dayjs(date).tz("America/New_York").format("MMM")}
+            </Typography>
+            <Typography>
+              {dayjs(date).tz("America/New_York").format("DD")}
+            </Typography>
+          </Box>
+        ),
+        renderCell: ({ row }: { row: User }) => {
+          return (
+            <StudentAttendanceChip
+              attendance={
+                row.sessions?.find((session) => session.date === date)
+                  ?.attendance ?? "absent"
+              }
+            />
+          );
+        },
+      })) ?? [];
+
   const columns = [
     {
       field: "name",
@@ -55,10 +112,11 @@ export const ClassRosterModal = ({ open, onClose }) => {
       headerName: "Jamamt",
       minWidth: 200,
     },
+    ...attendanceColumns,
   ];
   return (
     <>
-      <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
         <DialogTitle>Class Roster</DialogTitle>
         <IconButton
           aria-label="close"
