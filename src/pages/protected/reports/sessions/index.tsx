@@ -65,6 +65,12 @@ const CustomFooterTotalComponent = () => {
       <Typography sx={{ width: "120px", textAlign: "center" }}>
         {absent}
       </Typography>
+      <Typography sx={{ width: "120px", textAlign: "center" }}>
+        {parseInt(`${present.valueOf()}`) +
+          parseInt(`${tardy.valueOf()}`) +
+          parseInt(`${excused.valueOf()}`) +
+          parseInt(`${absent.valueOf()}`)}
+      </Typography>
       <Typography sx={{ width: "120px" }}></Typography>
     </Box>
   );
