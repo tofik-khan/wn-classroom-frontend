@@ -71,7 +71,6 @@ const CustomFooterTotalComponent = () => {
           parseInt(`${excused.valueOf()}`) +
           parseInt(`${absent.valueOf()}`)}
       </Typography>
-      <Typography sx={{ width: "120px" }}></Typography>
     </Box>
   );
 };
