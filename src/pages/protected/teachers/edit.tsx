@@ -57,11 +57,11 @@ export const PageEditTeacher = () => {
      * that are undefined.
      */
     Object.keys(data).forEach((key) =>
-      data[key] === undefined ? delete data[key] : {}
+      data[key] === undefined ? delete data[key] : {},
     );
 
     updateTeacher.mutate({
-      data: { ...data, email: data.email + "@ahmadiyya.us" },
+      data: { ...data, email: data.email.toLowerCase() + "@ahmadiyya.us" },
       id: id ?? "",
     });
   };

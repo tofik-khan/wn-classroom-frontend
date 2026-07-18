@@ -62,7 +62,7 @@ export const CreateTeacherModal = ({
       );
     },
   });
-  const { control, handleSubmit, reset } = useForm<Teacher>();
+  const { control, handleSubmit, reset, register } = useForm<Teacher>();
 
   const onSubmit = (data: Teacher) => {
     createTeacher.mutate({ data });
@@ -143,6 +143,9 @@ export const CreateTeacherModal = ({
                     className="materialUIInput"
                     label="Email"
                     sx={{ width: "60%" }}
+                    {...register("email", {
+                      setValueAs: (value) => value.toLowerCase(),
+                    })}
                   />
                 )}
                 name="email"
