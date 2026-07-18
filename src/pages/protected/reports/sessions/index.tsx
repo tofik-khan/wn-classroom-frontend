@@ -49,7 +49,8 @@ const CustomFooterTotalComponent = () => {
       sx={(theme) => ({
         p: 1,
         display: "flex",
-        justifyContent: "flex-end",
+        paddingLeft: "800px",
+        width: "100%",
         border: `1px solid ${theme.palette.grey[200]}`,
       })}
     >
