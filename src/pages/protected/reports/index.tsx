@@ -25,7 +25,7 @@ export const PageReports = () => {
         <Button onClick={() => navigate("/protected/reports/teachers")}>
           Teacher Reports
         </Button>
-        <Button>Classroom Reports</Button>
+        {/* <Button>Classroom Reports</Button> */}
       </Paper>
       {months.map((month) => {
         return (
