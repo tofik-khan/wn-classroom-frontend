@@ -23,4 +23,11 @@ export const reportsAPI = {
       },
     });
   },
+  getTeachersAnnualReport: ({ authToken, year }) => {
+    return axios.get(`${API_BASE}/reports/teachers/${year}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
 };

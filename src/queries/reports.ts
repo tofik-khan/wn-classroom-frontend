@@ -37,3 +37,15 @@ export const useStudentAnnualReportQuery = (year) => {
     select: (response) => response.data,
   });
 };
+
+export const useTeachersAnnualReportQuery = (year) => {
+  const { getAccessTokenSilently } = useAuth0();
+  return useQuery({
+    queryKey: ["teacherAnnualReport", year],
+    queryFn: async () => {
+      const authToken = await getAccessTokenSilently();
+      return API.getTeachersAnnualReport({ authToken, year });
+    },
+    select: (response) => response.data,
+  });
+};
