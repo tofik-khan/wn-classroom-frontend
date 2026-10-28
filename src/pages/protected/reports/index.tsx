@@ -17,6 +17,14 @@ export const PageReports = () => {
   return (
     <>
       <Typography variant="h2">Reports - {year}</Typography>
+      <Paper sx={{ minHeight: "100px", my: 2, p: 4 }}>
+        <Typography variant="subtitle1">Annual Reports</Typography>
+        <Button onClick={() => navigate("/protected/reports/students")}>
+          Student Reports
+        </Button>
+        <Button>Teacher Reports</Button>
+        <Button>Classroom Reports</Button>
+      </Paper>
       {months.map((month) => {
         return (
           <React.Fragment key={month}>
