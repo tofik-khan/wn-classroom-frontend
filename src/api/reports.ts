@@ -16,4 +16,18 @@ export const reportsAPI = {
       },
     });
   },
+  getStudentAnnualReport: ({ authToken, year }) => {
+    return axios.get(`${API_BASE}/reports/students/${year}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
+  getTeachersAnnualReport: ({ authToken, year }) => {
+    return axios.get(`${API_BASE}/reports/teachers/${year}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+  },
 };
