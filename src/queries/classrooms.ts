@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { API } from "@/api";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Classroom } from "@/types/classroom";
@@ -27,6 +32,24 @@ export const useOneClassroomQuery = (id) => {
     },
     enabled: isAuthenticated,
     select: (response) => response.data,
+  });
+};
+
+export const useClassroomsByIdsQuery = (ids: string[]) => {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+  return useQueries({
+    queries: ids.map((id) => ({
+      queryKey: ["classroom", id],
+      queryFn: async () => {
+        const token = await getAccessTokenSilently();
+        return API.getOneClass({ authToken: token, id });
+      },
+      enabled: isAuthenticated,
+      select: (response: { data: Classroom }) => response.data,
+      // Reuse cached classrooms; a refetch here flips `isRefetching` on pages
+      // that render a full-page loader for the same ["classroom", id] key
+      refetchOnMount: false,
+    })),
   });
 };
 
