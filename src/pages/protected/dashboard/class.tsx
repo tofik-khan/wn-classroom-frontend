@@ -32,6 +32,7 @@ import {
   Paper,
   Radio,
   RadioGroup,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { ClockIcon } from "@mui/x-date-pickers";
@@ -50,6 +51,8 @@ import { Editor } from "@/components/wysiwyg/editor";
 import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
 import { ResourceModal } from "../modals/ClassResourceModal";
 import { ClassRosterModal } from "../modals/ClassRosterModal";
+import { RequestLeaveButton } from "@/components/RequestLeaveButton";
+import { useClassroomLeaveRequestsQuery } from "@/queries/leaveRequests";
 
 const teacherRoles = ["admin", "teacher", "substitute"];
 
@@ -106,6 +109,18 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
       .tz("America/New_York")
       .isAfter(dayjs().format());
   };
+
+  // Students request leave for themselves; parents for each enrolled child
+  const leaveStudents =
+    currentUser.role === "student"
+      ? [currentUser]
+      : currentUser.role === "parent"
+        ? (myStudents ?? []).filter((student) =>
+            student.classrooms
+              ?.map((classroom) => classroom.value)
+              .includes(classroom?._id ?? ""),
+          )
+        : [];
   return (
     <Paper
       elevation={0}
@@ -168,6 +183,10 @@ const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
                     {getNextSession(schedule)?.format("MM/DD/YYYY") ??
                       "Not Scheduled"}
                   </Typography>
+                  <RequestLeaveButton
+                    classroom={classroom}
+                    students={leaveStudents}
+                  />
                 </>
               )}
             </Box>
@@ -349,6 +368,12 @@ const ClassAnnouncementsContainer = () => {
 const ClassroomAttendanceContainer = () => {
   const { id } = useParams();
   const { isLoading, data: classroomSession } = useSessionQuery(id);
+  const { isLoading: isLoadingLeaveRequests, data: leaveRequests } =
+    useClassroomLeaveRequestsQuery(
+      id,
+      classroomSession?.date ??
+        dayjs().tz("America/New_York").format("YYYY-MM-DD"),
+    );
   const dispatch = useAppDispatch();
   const updateAttendance = useAttendanceMutation({
     onSuccess: () => {
@@ -369,7 +394,7 @@ const ClassroomAttendanceContainer = () => {
     },
   });
 
-  if (isLoading)
+  if (isLoading || isLoadingLeaveRequests)
     return (
       <Paper
         sx={() => ({
@@ -413,7 +438,26 @@ const ClassroomAttendanceContainer = () => {
               paddingX: 2,
             })}
           >
-            <Typography>{student.studentName}</Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography>{student.studentName}</Typography>
+              {(() => {
+                const leaveRequest = leaveRequests?.find(
+                  (request) =>
+                    `${request.studentId}` === `${student.studentId}`,
+                );
+                return (
+                  leaveRequest && (
+                    <Tooltip
+                      title={`Reason: ${leaveRequest.reason}`}
+                      enterTouchDelay={0}
+                      arrow
+                    >
+                      <Chip size="small" color="info" label="Leave requested" />
+                    </Tooltip>
+                  )
+                );
+              })()}
+            </Box>
             <FormControl>
               <RadioGroup
                 defaultValue={student.attendance}
