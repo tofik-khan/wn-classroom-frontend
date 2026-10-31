@@ -1,6 +1,7 @@
 import { adminAPI } from "./admins";
 import { AnnouncementAPI } from "./announcements";
 import { classroomAPI } from "./classrooms";
+import { leaveRequestAPI } from "./leaveRequests";
 import { parentsAPI } from "./parents";
 import { reportsAPI } from "./reports";
 import { secretariesAPI } from "./secretaries";
@@ -22,4 +23,5 @@ export const API = {
   ...supportAPI,
   ...secretariesAPI,
   ...reportsAPI,
+  ...leaveRequestAPI,
 };

@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import {
+  EventBusy,
   ImportContactsOutlined,
   PersonAddAlt1Outlined,
 } from "@mui/icons-material";
@@ -21,6 +22,7 @@ import { useEffect, useState } from "react";
 import { useClassroomQuery } from "@/queries/classrooms";
 import { SecretaryDashboard } from "@/components/dashboard/secretary";
 import { ClassOnboardingModal } from "../modals/ClassOnboardingModal";
+import { RequestLeaveModal } from "../modals/RequestLeaveModal";
 
 const EmptyClassSection = () => {
   return (
@@ -263,6 +265,10 @@ const EmptyStudentCard = () => {
 };
 
 const MyStudentCard = ({ student }: { student: User }) => {
+  const [openLeaveModal, setOpenLeaveModal] = useState(false);
+  const classroomIds =
+    student.classrooms?.map((classroom) => classroom.value) ?? [];
+
   return (
     <>
       <Paper
@@ -285,7 +291,26 @@ const MyStudentCard = ({ student }: { student: User }) => {
           <Typography>{student.email}</Typography>
           <Typography>{`${student.dob?.month} / ${student.dob?.year}`}</Typography>
         </Box>
+        {classroomIds.length > 0 && (
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<EventBusy />}
+            sx={{ ml: { md: "auto" } }}
+            onClick={() => setOpenLeaveModal(true)}
+          >
+            Request Leave
+          </Button>
+        )}
       </Paper>
+      {classroomIds.length > 0 && (
+        <RequestLeaveModal
+          open={openLeaveModal}
+          onClose={() => setOpenLeaveModal(false)}
+          student={student}
+          classroomIds={classroomIds}
+        />
+      )}
     </>
   );
 };
