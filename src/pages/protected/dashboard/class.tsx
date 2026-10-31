@@ -53,6 +53,7 @@ import { ResourceModal } from "../modals/ClassResourceModal";
 import { ClassRosterModal } from "../modals/ClassRosterModal";
 import { RequestLeaveButton } from "@/components/RequestLeaveButton";
 import { useClassroomLeaveRequestsQuery } from "@/queries/leaveRequests";
+import { DataGridPro, gridClasses } from "@mui/x-data-grid-pro";
 
 const teacherRoles = ["admin", "teacher", "substitute"];
 
@@ -411,6 +412,86 @@ const ClassroomAttendanceContainer = () => {
 
   if (!classroomSession) return <></>;
 
+  const columns = [
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+      renderCell: ({ row }) => row.studentName,
+    },
+    {
+      field: "leaveRequested",
+      headerName: "",
+      width: 200,
+      renderCell: ({ row }) => {
+        const leaveRequest = leaveRequests?.find(
+          (request) => `${request.studentId}` === `${row.studentId}`,
+        );
+        return (
+          leaveRequest && (
+            <Tooltip
+              title={`Reason: ${leaveRequest.reason}`}
+              enterTouchDelay={0}
+              arrow
+            >
+              <Chip size="small" color="info" label="Leave requested" />
+            </Tooltip>
+          )
+        );
+      },
+    },
+    {
+      field: "attendance",
+      headerName: "Attendance",
+      width: 450,
+      renderCell: ({ row }) => (
+        <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
+          <FormControl>
+            <RadioGroup
+              defaultValue={row.attendance}
+              onChange={(_, value) => {
+                updateAttendance.mutate({
+                  data: {
+                    role: "student",
+                    studentId: row.studentId,
+                    attendance: value as
+                      | "present"
+                      | "tardy"
+                      | "absent"
+                      | "excused",
+                  },
+                  sessionId: classroomSession._id,
+                });
+              }}
+              row
+            >
+              <FormControlLabel
+                value={"present"}
+                label="Present"
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value={"tardy"}
+                label="Tardy"
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value={"excused"}
+                label="Excused"
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value={"absent"}
+                label="Absent"
+                control={<Radio />}
+              />
+            </RadioGroup>
+          </FormControl>
+        </Box>
+      ),
+    },
+  ];
+
   return (
     <Paper
       sx={() => ({
@@ -424,84 +505,25 @@ const ClassroomAttendanceContainer = () => {
         automatically. You can still override the attendance at the end of the
         session
       </Typography>
-      <Grid container columnSpacing={5}>
-        {classroomSession.attendance.map((student) => (
-          <Grid
-            size={{ xs: 12, md: 6 }}
-            key={student.studentId}
-            sx={(theme) => ({
-              display: "flex",
-              gap: 1,
-              alignItems: "center",
-              justifyContent: "space-between",
-              border: `1px dashed ${theme.palette.grey[300]}`,
-              paddingX: 2,
-            })}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Typography>{student.studentName}</Typography>
-              {(() => {
-                const leaveRequest = leaveRequests?.find(
-                  (request) =>
-                    `${request.studentId}` === `${student.studentId}`,
-                );
-                return (
-                  leaveRequest && (
-                    <Tooltip
-                      title={`Reason: ${leaveRequest.reason}`}
-                      enterTouchDelay={0}
-                      arrow
-                    >
-                      <Chip size="small" color="info" label="Leave requested" />
-                    </Tooltip>
-                  )
-                );
-              })()}
-            </Box>
-            <FormControl>
-              <RadioGroup
-                defaultValue={student.attendance}
-                onChange={(_, value) => {
-                  updateAttendance.mutate({
-                    data: {
-                      role: "student",
-                      studentId: student.studentId,
-                      attendance: value as
-                        | "present"
-                        | "tardy"
-                        | "absent"
-                        | "excused",
-                    },
-                    sessionId: classroomSession._id,
-                  });
-                }}
-                row
-              >
-                <FormControlLabel
-                  value={"present"}
-                  label="Present"
-                  control={<Radio />}
-                />
-                <FormControlLabel
-                  value={"tardy"}
-                  label="Tardy"
-                  control={<Radio />}
-                />
-                <FormControlLabel
-                  value={"excused"}
-                  label="Excused"
-                  control={<Radio />}
-                />
-                <FormControlLabel
-                  value={"absent"}
-                  label="Absent"
-                  control={<Radio />}
-                />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-        ))}
-      </Grid>
+      <DataGridPro
+        rows={classroomSession.attendance}
+        getRowId={(row) => row.studentId}
+        columns={columns}
+        disableColumnMenu
+        disableColumnResize
+        sx={{
+          [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
+            outline: "transparent",
+          },
+          [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]:
+            {
+              outline: "none",
+            },
+          [`& .${gridClasses.columnSeparator}`]: {
+            display: "none",
+          },
+        }}
+      />
     </Paper>
   );
 };
