@@ -21,6 +21,23 @@ import { useMembercodesQuery, useUserMutation } from "@/queries/users";
 import { useNavigate } from "react-router";
 import { useClassroomQuery } from "@/queries/classrooms";
 import { setSuccessSnackbar, setErrorSnackbar } from "@/reducers/snackbar";
+import {
+  EMAIL_PATTERN,
+  MEMBERCODE_PATTERN,
+  PHONE_PATTERN,
+  formatMembercode,
+  formatPhoneNumber,
+} from "@/utils/inputMasks";
+
+const membercodePattern = {
+  value: MEMBERCODE_PATTERN,
+  message: "Member code must be 5 digits",
+};
+
+const phonePattern = {
+  value: PHONE_PATTERN,
+  message: "Enter a 10 digit phone number",
+};
 
 export const PageRegister = () => {
   const { control, handleSubmit, watch } = useForm<User>({
@@ -255,12 +272,19 @@ const ParentQuestionaire = ({ control }) => {
               helperText={fieldState.error?.message ?? ""}
               className="materialUIInput"
               label="Member Code"
+              slotProps={{ htmlInput: { inputMode: "numeric", maxLength: 5 } }}
+              onChange={(event) =>
+                field.onChange(formatMembercode(event.target.value))
+              }
             />
           )}
           name="membercode"
           control={control}
           key={"membercode-input"}
-          rules={{ required: "This is a required field" }}
+          rules={{
+            required: "This is a required field",
+            pattern: membercodePattern,
+          }}
         />
       </Box>
       <Box sx={{ my: 2 }}>
@@ -274,12 +298,20 @@ const ParentQuestionaire = ({ control }) => {
               helperText={fieldState.error?.message ?? ""}
               className="materialUIInput"
               label="Phone Number"
+              placeholder="(xxx) xxx-xxxx"
+              slotProps={{ htmlInput: { inputMode: "tel" } }}
+              onChange={(event) =>
+                field.onChange(formatPhoneNumber(event.target.value))
+              }
             />
           )}
           name="phone"
           control={control}
           key={"phone-input"}
-          rules={{ required: "This is a required field" }}
+          rules={{
+            required: "This is a required field",
+            pattern: phonePattern,
+          }}
         />
       </Box>
     </>
@@ -328,7 +360,12 @@ const StudentQuestionaire = ({ control }) => {
                 label="Member Code"
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
-                onChange={(event) => field.onChange(event.target.value)}
+                slotProps={{
+                  htmlInput: { inputMode: "numeric", maxLength: 5 },
+                }}
+                onChange={(event) =>
+                  field.onChange(formatMembercode(event.target.value))
+                }
               />
             );
           }}
@@ -336,8 +373,10 @@ const StudentQuestionaire = ({ control }) => {
           control={control}
           key={"membercode-input"}
           rules={{
+            required: "This is a required field",
+            pattern: membercodePattern,
             validate: (value) =>
-              membercodes.includes(value)
+              membercodes?.includes(value)
                 ? "This membercode already exists"
                 : true,
           }}
@@ -345,10 +384,13 @@ const StudentQuestionaire = ({ control }) => {
       </Box>
       <Box sx={{ my: 2 }}>
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextField
               fullWidth
+              type="email"
               {...field}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
               className="materialUIInput"
               label="Parent Email"
             />
@@ -356,22 +398,39 @@ const StudentQuestionaire = ({ control }) => {
           name="parentEmail"
           control={control}
           key={"parentEmail-input"}
+          rules={{
+            pattern: {
+              value: EMAIL_PATTERN,
+              message: "Enter a valid email address",
+            },
+          }}
         />
       </Box>
       <Box sx={{ my: 2 }}>
         <Controller
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <TextField
               fullWidth
               required
               {...field}
+              error={!!fieldState.error}
+              helperText={fieldState.error?.message}
               className="materialUIInput"
               label="Phone Number"
+              placeholder="(xxx) xxx-xxxx"
+              slotProps={{ htmlInput: { inputMode: "tel" } }}
+              onChange={(event) =>
+                field.onChange(formatPhoneNumber(event.target.value))
+              }
             />
           )}
           name="phone"
           control={control}
           key={"phone-input"}
+          rules={{
+            required: "This is a required field",
+            pattern: phonePattern,
+          }}
         />
       </Box>
       <Box sx={{ my: 2 }}>
