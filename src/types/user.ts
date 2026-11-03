@@ -40,6 +40,8 @@ export type User = {
   };
   sessions?: {
     date: string;
+    classroomId?: string;
+    classroomName?: string;
     attendance: "present" | "absent" | "excused" | "tardy";
   }[];
 };
