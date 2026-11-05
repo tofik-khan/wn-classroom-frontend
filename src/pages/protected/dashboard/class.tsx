@@ -82,6 +82,44 @@ const hasAccessToClass = (
   return userClassrooms?.includes(classroomId) || false;
 };
 
+const SabaqLink = () => {
+  return (
+    <>
+      <Link
+        underline="none"
+        sx={{ color: "white" }}
+        href="https://sabaq.waqfenau.us/"
+        target="_blank"
+      >
+        <Box
+          sx={{
+            p: 4,
+            background: `linear-gradient(135deg, #0b2040 0%, #1a4a8a 50%, #1e56a0 100%)`,
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+            borderRadius: 2,
+            "&:hover": {
+              cursor: "pointer",
+            },
+          }}
+        >
+          <img src="/assets/sabaq-white.png" width={200} />
+          <Box sx={{ textAlign: "center", width: "100%" }}>
+            <Typography variant="h6" sx={{ color: "white" }}>
+              Syllabus Learning App
+            </Typography>
+
+            <Typography>Click here to Learn More</Typography>
+          </Box>
+        </Box>
+      </Link>
+    </>
+  );
+};
+
 const ClassScheduleContainer = ({ classroom }: { classroom?: Classroom }) => {
   const { data: classroomSession } = useSessionQuery(classroom?._id);
   const { currentUser } = useAppSelector((state) => state.user);
@@ -271,6 +309,7 @@ const ClassResourcesContainer = ({ classroom }: { classroom?: Classroom }) => {
             Class Roster
           </Button>
         )}
+        <SabaqLink />
       </Paper>
       <ClassRosterModal
         open={openClassRoster}
